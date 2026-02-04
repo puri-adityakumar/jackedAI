@@ -1,137 +1,115 @@
-import { ApiKeyCheck } from "@/components/ApiKeyCheck";
-import Image from "next/image";
+"use client";
 
-const KeyFilesSection = () => (
-  <div className="bg-white px-8 py-4">
-    <h2 className="text-xl font-semibold mb-4">How it works:</h2>
-    <ul className="space-y-4 text-gray-600">
-      <li className="flex items-start gap-2">
-        <span>📄</span>
-        <span>
-          <code className="font-medium">src/app/layout.tsx</code> - Main layout
-          with TamboProvider
-        </span>
-      </li>
-      <li className="flex items-start gap-2">
-        <span>📄</span>
-        <span>
-          <code className="font-medium font-mono">src/app/chat/page.tsx</code> -
-          Chat page with TamboProvider and MCP integration
-        </span>
-      </li>
-      <li className="flex items-start gap-2">
-        <span>📄</span>
-        <span>
-          <code className="font-medium font-mono">
-            src/app/interactables/page.tsx
-          </code>{" "}
-          - Interactive demo page with tools and components
-        </span>
-      </li>
-      <li className="flex items-start gap-2">
-        <span>📄</span>
-        <span>
-          <code className="font-medium font-mono">
-            src/components/tambo/message-thread-full.tsx
-          </code>{" "}
-          - Chat UI
-        </span>
-      </li>
-      <li className="flex items-start gap-2">
-        <span>📄</span>
-        <span>
-          <code className="font-medium font-mono">
-            src/components/tambo/graph.tsx
-          </code>{" "}
-          - A generative graph component
-        </span>
-      </li>
-      <li className="flex items-start gap-2">
-        <span>📄</span>
-        <span>
-          <code className="font-medium font-mono">
-            src/services/population-stats.ts
-          </code>{" "}
-          - Example tool implementation with mock population data
-        </span>
-      </li>
-      <li className="flex items-start gap-2">
-        <span className="text-blue-500">📄</span>
-        <span>
-          <code className="font-medium font-mono">src/lib/tambo.ts</code> -
-          Component and tool registration
-        </span>
-      </li>
-      <li className="flex items-start gap-2">
-        <span className="text-blue-500">📄</span>
-        <span>
-          <code className="font-medium font-mono">README.md</code> - For more
-          details check out the README
-        </span>
-      </li>
-    </ul>
-    <div className="flex gap-4 flex-wrap mt-4">
-      <a
-        href="https://docs.tambo.co"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="px-6 py-3 rounded-md font-medium transition-colors text-lg mt-4 border border-gray-300 hover:bg-gray-50"
-      >
-        View Docs
-      </a>
-      <a
-        href="https://tambo.co/dashboard"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="px-6 py-3 rounded-md font-medium transition-colors text-lg mt-4 border border-gray-300 hover:bg-gray-50"
-      >
-        Dashboard
-      </a>
-    </div>
-  </div>
-);
+import { ChatSidebar } from "@/components/chat/ChatSidebar";
+import { DashboardPanel } from "@/components/dashboard/DashboardPanel";
+import { DietPanel } from "@/components/diet/DietPanel";
+import { ExercisePanel } from "@/components/exercise/ExercisePanel";
+import { OnboardingWizard } from "@/components/onboarding/OnboardingWizard";
+import { components, tools } from "@/lib/tambo";
+import { cn } from "@/lib/utils";
+import { TamboProvider } from "@tambo-ai/react";
+import { useQuery } from "convex/react";
+import { Dumbbell, LayoutDashboard, Settings, Utensils } from "lucide-react";
+import { useState } from "react";
+import { api } from "../../convex/_generated/api";
+
+type Tab = "dashboard" | "exercise" | "diet";
+
+const tabs = [
+  { id: "dashboard" as const, label: "Dashboard", icon: LayoutDashboard },
+  { id: "exercise" as const, label: "Exercise Log", icon: Dumbbell },
+  { id: "diet" as const, label: "Diet Log", icon: Utensils },
+];
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<Tab>("dashboard");
+  const [showOnboarding, setShowOnboarding] = useState(true);
+
+  const profile = useQuery(api.userProfile.get);
+
+  // Show loading while checking profile
+  const isLoading = profile === undefined;
+
+  // Show onboarding if no profile exists
+  const needsOnboarding = profile === null && showOnboarding;
+
   return (
-    <div className="min-h-screen p-8 flex flex-col items-center justify-center font-[family-name:var(--font-geist-sans)]">
-      <main className="max-w-2xl w-full space-y-8">
-        <div className="flex flex-col items-center">
-          <a href="https://tambo.co" target="_blank" rel="noopener noreferrer">
-            <Image
-              src="/Octo-Icon.svg"
-              alt="Tambo AI Logo"
-              width={80}
-              height={80}
-              className="mb-4"
-            />
-          </a>
-          <h1 className="text-4xl text-center">tambo-ai chat template</h1>
-        </div>
+    <TamboProvider
+      apiKey={process.env.NEXT_PUBLIC_TAMBO_API_KEY!}
+      components={components}
+      tools={tools}
+      tamboUrl={process.env.NEXT_PUBLIC_TAMBO_URL}
+    >
+      {/* Onboarding Wizard */}
+      {needsOnboarding && (
+        <OnboardingWizard onComplete={() => setShowOnboarding(false)} />
+      )}
 
-        <div className="w-full space-y-8">
-          <div className="bg-white px-8 py-4">
-            <h2 className="text-xl font-semibold mb-4">Setup Checklist</h2>
-            <ApiKeyCheck>
-              <div className="flex gap-4 flex-wrap">
-                <a
-                  href="/chat"
-                  className="px-6 py-3 rounded-md font-medium shadow-sm transition-colors text-lg mt-4 bg-[#7FFFC3] hover:bg-[#72e6b0] text-gray-800"
-                >
-                  Go to Chat →
-                </a>
-                <a
-                  href="/interactables"
-                  className="px-6 py-3 rounded-md font-medium shadow-sm transition-colors text-lg mt-4 bg-[#FFE17F] hover:bg-[#f5d570] text-gray-800"
-                >
-                  Interactables Demo →
-                </a>
+      <div className="flex h-screen bg-gray-50">
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Header */}
+          <header className="bg-white border-b border-gray-200 px-6 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-8">
+                {/* Logo */}
+                <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                  <Dumbbell className="w-6 h-6 text-green-600" />
+                  JackedAI
+                </h1>
+
+                {/* Tabs */}
+                <nav className="flex items-center gap-1">
+                  {tabs.map((tab) => {
+                    const Icon = tab.icon;
+                    return (
+                      <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={cn(
+                          "flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors",
+                          activeTab === tab.id
+                            ? "bg-green-100 text-green-700"
+                            : "text-gray-600 hover:bg-gray-100"
+                        )}
+                      >
+                        <Icon className="w-4 h-4" />
+                        {tab.label}
+                      </button>
+                    );
+                  })}
+                </nav>
               </div>
-            </ApiKeyCheck>
-          </div>
 
-          <KeyFilesSection />
+              {/* Settings */}
+              <button
+                className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                title="Settings"
+              >
+                <Settings className="w-5 h-5" />
+              </button>
+            </div>
+          </header>
+
+          {/* Tab Content */}
+          <main className="flex-1 overflow-auto p-6">
+            {isLoading ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-gray-500">Loading...</div>
+              </div>
+            ) : (
+              <>
+                {activeTab === "dashboard" && <DashboardPanel />}
+                {activeTab === "exercise" && <ExercisePanel />}
+                {activeTab === "diet" && <DietPanel />}
+              </>
+            )}
+          </main>
         </div>
-      </main>
-    </div>
+
+        {/* Chat Sidebar */}
+        <ChatSidebar />
+      </div>
+    </TamboProvider>
   );
 }
