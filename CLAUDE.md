@@ -2,124 +2,103 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Important: This is a Tambo AI Template
+## Project Overview
 
-**This is a template application for Tambo AI.** Before writing any new code:
-
-1. **Check the package** - Read `node_modules/@tambo-ai/react` to understand the latest available hooks, components, and features
-
-Always check the `@tambo-ai/react` package exports for the most up-to-date functionality. The template may not showcase all available features.
+JackedAI is an AI-powered gym tracking web application. Users track exercises, meals, and calories through natural language conversations with two AI modes: **Butler** (quick data logging) and **Trainer** (fitness advice).
 
 ## Essential Commands
 
 ```bash
-# Development
-npm run dev          # Start development server (localhost:3000)
-npm run build        # Build production bundle
-npm run start        # Start production server
-npm run lint         # Run ESLint
-npm run lint:fix     # Run ESLint with auto-fix
-
-
-## Architecture Overview
-
-This is a Next.js 15 app with Tambo AI integration for building generative UI/UX applications. The architecture enables AI to dynamically generate and control React components.
-
-### Core Technologies
-- **Next.js 15.4.1** with App Router
-- **React 19.1.0** with TypeScript
-- **Tambo AI SDK**
-- **Tailwind CSS v4** with dark mode support
-- **Zod** for schema validation
-
-### Key Architecture Patterns
-
-1. **Component Registration System**
-   - Components are registered in `src/lib/tambo.ts` with Zod schemas
-   - AI can dynamically render these components based on user input
-   - Each component has a name, description, component reference, and propsSchema
-
-2. **Tool System**
-   - External functions registered as "tools" in `src/lib/tambo.ts`
-   - AI can invoke these tools to fetch data or perform actions
-   - Tools have schemas defining their inputs and outputs
-
-3. **Provider Pattern**
-   - `TamboProvider` wraps the app in `src/app/layout.tsx`
-   - Provides API key, registered components, and tools to the entire app
-
-4. **Streaming Architecture**
-   - Real-time streaming of AI-generated content via `useTamboStreaming` hook
-   - Support for progressive UI updates during generation
-
-### File Structure
-
+npm run dev          # Run Convex + Next.js in parallel (required for development)
+npm run dev:next     # Next.js only (port 3000)
+npm run dev:convex   # Convex dev server only
+npm run build        # Production build
+npm run lint         # ESLint
+npm run lint:fix     # ESLint with auto-fix
 ```
 
-src/
-├── app/ # Next.js App Router pages
-│ ├── chat/ # Chat interface route
-│ ├── interactables/ # Interactive components demo
-│ └── layout.tsx # Root layout with TamboProvider
-├── components/
-│ ├── tambo/ # Tambo-specific components
-│ │ ├── graph.tsx # Recharts data visualization
-│ │ ├── message*.tsx # Chat UI components
-│ │ └── thread*.tsx # Thread management UI
-│ └── ApiKeyCheck.tsx # API key validation
-├── lib/
-│ ├── tambo.ts # CENTRAL CONFIG: Component & tool registration
-│ ├── thread-hooks.ts # Custom thread management hooks
-│ └── utils.ts # Utility functions
-└── services/
-└── population-stats.ts # Demo data service
+## Architecture
+
+### Tech Stack
+- **Next.js 15** (App Router) + **React 19** + **TypeScript**
+- **Convex** for real-time database and backend functions
+- **Tambo AI** for generative UI and natural language processing
+- **Tailwind CSS v4**
+
+### Data Flow
 
 ```
-
-## Key Tambo Hooks
-
-- **`useTamboRegistry`**: Component and tool registration
-- **`useTamboThread`**: Thread state and message management
-- **`useTamboThreadInput`**: Input handling for chat
-- **`useTamboStreaming`**: Real-time content streaming
-- **`useTamboSuggestions`**: AI suggestion management
-- **`withInteractable`**: Interactable component wrapper
-
-## When Working on This Codebase
-
-1. **Adding New Components for AI Control**
-   - Define component in `src/components/tambo/`
-   - Create Zod schema for props validation
-   - use z.infer<typeof schema> to type the props
-   - Register in `src/lib/tambo.ts` components array
-
-2. **Adding New Tools**
-   - Implement tool function in `src/services/`
-   - Define Zod schema for inputs/outputs
-   - Register in `src/lib/tambo.ts` tools array
-
-3. **Styling Guidelines**
-   - Use Tailwind CSS classes
-   - Follow existing dark mode patterns using CSS variables
-   - Components should support variant and size props
-
-4. **TypeScript Requirements**
-   - Strict mode is enabled
-   - All components and tools must be fully typed
-   - Use Zod schemas for runtime validation
-
-5. **Testing Approach**
-   - No test framework is currently configured
-   - Manual testing via development server
-   - Verify AI can properly invoke components and tools
+User Input → Tambo AI → Tool Selection → API Route → ConvexHttpClient → Convex DB
+                                                                            ↓
+                          Component Render ← Tool Output ← Convex Response ←
 ```
 
-<!-- tambo-docs-v1.0 -->
+### Key Files
 
-## Tambo AI Framework
+- **`src/lib/tambo.ts`** - Central hub: register all AI components and tools here
+- **`convex/schema.ts`** - Database schema (userProfile, exerciseLogs, mealLogs, workoutPlans)
+- **`src/services/fitness-tools.ts`** - Tool implementations with nutrition estimation
+- **`src/app/api/`** - API routes that bridge tools to Convex
 
-This project uses **Tambo AI** for building AI assistants with generative UI and MCP support.
+### Two-Mode Pattern
 
-**Documentation**: https://docs.tambo.co/llms.txt
+Single AI model with different system prompts controlled by `ModeToggle` component:
+- **Butler Mode**: Quick logging ("Log 3 sets of bench press at 60kg")
+- **Trainer Mode**: Expert advice ("How do I improve my deadlift form?")
 
-**CLI**: Use `npx tambo` to add UI components or upgrade. Run `npx tambo help` to learn more.
+### Registered Tools (src/lib/tambo.ts)
+
+| Tool | Purpose |
+|------|---------|
+| `logExercise` | Save workout to exerciseLogs |
+| `logMeal` | Estimate nutrition & save to mealLogs |
+| `getDailyProgress` | Fetch daily summary |
+| `getUserProfile` | Get user stats for personalization |
+
+### Registered Components
+
+| Component | Use Case |
+|-----------|----------|
+| `ExerciseLogCard` | Confirmation after logging exercise |
+| `MealLogCard` | Shows meal with macro breakdown |
+| `DailyProgressCard` | Daily stats summary |
+| `Graph` | Recharts visualization |
+
+## Adding New Features
+
+### New AI Component
+1. Create component in `src/components/tambo/`
+2. Export Zod schema for props, type with `z.infer<typeof schema>`
+3. Register in `src/lib/tambo.ts` components array
+
+### New AI Tool
+1. Implement in `src/services/fitness-tools.ts`
+2. Create API route in `src/app/api/` if needed
+3. Define input/output Zod schemas
+4. Register in `src/lib/tambo.ts` tools array
+
+### Database Changes
+1. Edit `convex/schema.ts`
+2. Add queries/mutations in `convex/*.ts`
+3. Types auto-generate in `convex/_generated/`
+
+## Convex Database Tables
+
+- **userProfile**: name, height, weight, age, fitnessGoal, dailyCalorieTarget
+- **exerciseLogs**: date, exerciseName, sets, reps, weight, duration (indexed by date)
+- **mealLogs**: date, mealType, foodName, calories, protein, carbs, fat (indexed by date)
+- **workoutPlans**: name, exercises array
+
+## Environment Variables
+
+```env
+NEXT_PUBLIC_TAMBO_API_KEY=     # Tambo API key (get from tambo.co/dashboard)
+NEXT_PUBLIC_CONVEX_URL=        # Convex deployment URL
+CONVEX_DEPLOYMENT=             # Convex project reference
+```
+
+## Tambo AI Reference
+
+- **Docs**: https://docs.tambo.co/llms.txt
+- **CLI**: `npx tambo help` - add components, upgrade SDK
+- Before writing new code, check `node_modules/@tambo-ai/react` for latest hooks and features
