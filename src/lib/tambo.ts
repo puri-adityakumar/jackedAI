@@ -19,6 +19,10 @@ import {
   mealLogCardSchema,
 } from "@/components/tambo/MealLogCard";
 import {
+  ReminderCard,
+  reminderCardSchema,
+} from "@/components/tambo/ReminderCard";
+import {
   getDailyProgress,
   getUserProfile,
   logExercise,
@@ -28,6 +32,10 @@ import {
   getBodyParts,
   getTargetMuscles,
   getEquipmentList,
+  createReminder,
+  completeReminder,
+  getTodayReminders,
+  updateReminderInventory,
 } from "@/services/fitness-tools";
 import type { TamboComponent } from "@tambo-ai/react";
 import { TamboTool } from "@tambo-ai/react";
@@ -213,6 +221,102 @@ export const tools: TamboTool[] = [
       message: z.string(),
     }),
   },
+  // Reminder Tools
+  {
+    name: "createReminder",
+    description:
+      "Create a new reminder for medicine, supplements, workouts, meals, water, or anything custom. Use this when the user wants to set up a recurring reminder or one-time alert. Supports inventory tracking for medicine and supplements. When using 'custom' category, include a customCategoryName to label it.",
+    tool: createReminder,
+    inputSchema: z.object({
+      title: z.string().describe("Title of the reminder (e.g., 'Take Vitamin D', 'Drink Water')"),
+      description: z.string().optional().describe("Optional description or notes"),
+      category: z.enum(["medicine", "supplement", "workout", "meal", "water", "custom"]).describe("Category of the reminder"),
+      customCategoryName: z.string().optional().describe("Custom category name when category is 'custom' (e.g., 'Pet Care', 'Self Care', 'Study')"),
+      frequency: z.enum(["once", "daily", "weekly", "monthly"]).describe("How often the reminder should repeat"),
+      time: z.string().describe("Time in HH:MM 24-hour format (e.g., '08:00', '20:30')"),
+      repeatDays: z.array(z.string()).optional().describe("Days of week for weekly reminders: mon, tue, wed, thu, fri, sat, sun"),
+      dayOfMonth: z.number().optional().describe("Day of month for monthly reminders (1-31)"),
+      startDate: z.string().optional().describe("Start date in YYYY-MM-DD format (defaults to today)"),
+      endDate: z.string().optional().describe("Optional end date in YYYY-MM-DD format"),
+      trackInventory: z.boolean().optional().describe("Enable inventory tracking (for medicine/supplements)"),
+      quantityRemaining: z.number().optional().describe("Initial quantity if tracking inventory"),
+      refillThreshold: z.number().optional().describe("Alert when quantity falls to this level"),
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      title: z.string(),
+      category: z.enum(["medicine", "supplement", "workout", "meal", "water", "custom"]),
+      customCategoryName: z.string().optional(),
+      time: z.string(),
+      frequency: z.enum(["once", "daily", "weekly", "monthly"]),
+      repeatDays: z.array(z.string()).optional(),
+      startDate: z.string(),
+      trackInventory: z.boolean().optional(),
+      quantityRemaining: z.number().optional(),
+      message: z.string(),
+      action: z.literal("created"),
+    }),
+  },
+  {
+    name: "completeReminder",
+    description:
+      "Mark a reminder as completed for today. Use this when the user says they took their medicine, drank water, finished a workout, etc. Match the reminder by title.",
+    tool: completeReminder,
+    inputSchema: z.object({
+      title: z.string().describe("Title or partial title of the reminder to mark complete"),
+      date: z.string().optional().describe("Date in YYYY-MM-DD format (defaults to today)"),
+      notes: z.string().optional().describe("Optional notes about the completion"),
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      title: z.string(),
+      date: z.string(),
+      status: z.enum(["completed", "skipped"]),
+      message: z.string(),
+    }),
+  },
+  {
+    name: "getTodayReminders",
+    description:
+      "Get all reminders scheduled for today with their completion status. Use this when the user asks about their reminders, what they need to do today, or their medicine/supplement schedule.",
+    tool: getTodayReminders,
+    inputSchema: z.object({
+      date: z.string().optional().describe("Date in YYYY-MM-DD format (defaults to today)"),
+      category: z.enum(["medicine", "supplement", "workout", "meal", "water", "custom"]).optional().describe("Filter by category"),
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      date: z.string(),
+      reminders: z.array(z.object({
+        id: z.string(),
+        title: z.string(),
+        category: z.enum(["medicine", "supplement", "workout", "meal", "water", "custom"]),
+        time: z.string(),
+        status: z.enum(["pending", "completed", "skipped", "missed"]),
+        quantityRemaining: z.number().optional(),
+      })),
+      completedCount: z.number(),
+      totalCount: z.number(),
+      message: z.string(),
+    }),
+  },
+  {
+    name: "updateReminderInventory",
+    description:
+      "Update the remaining quantity for a medicine or supplement reminder. Use this when the user refills their medicine or supplements, or wants to update the count.",
+    tool: updateReminderInventory,
+    inputSchema: z.object({
+      title: z.string().describe("Title or partial title of the reminder to update"),
+      quantity: z.number().describe("New quantity remaining"),
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      title: z.string(),
+      quantity: z.number(),
+      needsRefill: z.boolean(),
+      message: z.string(),
+    }),
+  },
 ];
 
 /**
@@ -252,5 +356,12 @@ export const components: TamboComponent[] = [
       "A component that renders various types of charts (bar, line, pie) using Recharts. Use for visualizing progress data over time.",
     component: Graph,
     propsSchema: graphSchema,
+  },
+  {
+    name: "ReminderCard",
+    description:
+      "Display a confirmation card when a reminder has been created, completed, or updated. Shows reminder title, category, time, frequency, and optional inventory information. Use this after creating or completing a reminder.",
+    component: ReminderCard,
+    propsSchema: reminderCardSchema,
   },
 ];

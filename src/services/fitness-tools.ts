@@ -540,3 +540,383 @@ export async function getEquipmentList(): Promise<GetEquipmentListOutput> {
     };
   }
 }
+
+// ========== Reminder Tools ==========
+
+type ReminderCategory = "medicine" | "supplement" | "workout" | "meal" | "water" | "custom";
+type ReminderFrequency = "once" | "daily" | "weekly" | "monthly";
+
+interface CreateReminderInput {
+  title: string;
+  description?: string;
+  category: ReminderCategory;
+  customCategoryName?: string;
+  frequency: ReminderFrequency;
+  time: string;
+  repeatDays?: string[];
+  dayOfMonth?: number;
+  startDate?: string;
+  endDate?: string;
+  trackInventory?: boolean;
+  quantityRemaining?: number;
+  refillThreshold?: number;
+}
+
+interface CreateReminderOutput {
+  success: boolean;
+  title: string;
+  category: ReminderCategory;
+  customCategoryName?: string;
+  time: string;
+  frequency: ReminderFrequency;
+  repeatDays?: string[];
+  startDate: string;
+  trackInventory?: boolean;
+  quantityRemaining?: number;
+  message: string;
+  action: "created";
+}
+
+/**
+ * Create a new reminder for medicine, supplements, workouts, or anything
+ */
+export async function createReminder(
+  input: CreateReminderInput
+): Promise<CreateReminderOutput> {
+  const startDate = input.startDate || format(new Date(), "yyyy-MM-dd");
+
+  try {
+    const response = await fetch(`${API_BASE}/reminders`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: input.title,
+        description: input.description,
+        category: input.category,
+        customCategoryName: input.customCategoryName,
+        frequency: input.frequency,
+        time: input.time,
+        repeatDays: input.repeatDays,
+        dayOfMonth: input.dayOfMonth,
+        startDate,
+        endDate: input.endDate,
+        trackInventory: input.trackInventory,
+        quantityRemaining: input.quantityRemaining,
+        refillThreshold: input.refillThreshold,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create reminder");
+    }
+
+    const frequencyLabel =
+      input.frequency === "once"
+        ? "one-time"
+        : input.frequency === "daily"
+        ? "daily"
+        : input.frequency === "weekly"
+        ? `weekly (${input.repeatDays?.join(", ") || ""})`
+        : "monthly";
+
+    const categoryDisplay = input.category === "custom" && input.customCategoryName
+      ? input.customCategoryName
+      : input.category;
+
+    return {
+      success: true,
+      title: input.title,
+      category: input.category,
+      customCategoryName: input.customCategoryName,
+      time: input.time,
+      frequency: input.frequency,
+      repeatDays: input.repeatDays,
+      startDate,
+      trackInventory: input.trackInventory,
+      quantityRemaining: input.quantityRemaining,
+      message: `Created ${frequencyLabel} ${categoryDisplay} reminder "${input.title}" at ${input.time}`,
+      action: "created",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      title: input.title,
+      category: input.category,
+      customCategoryName: input.customCategoryName,
+      time: input.time,
+      frequency: input.frequency,
+      startDate,
+      message: "Failed to create reminder. Please try again.",
+      action: "created",
+    };
+  }
+}
+
+interface CompleteReminderInput {
+  title: string;
+  date?: string;
+  notes?: string;
+}
+
+interface CompleteReminderOutput {
+  success: boolean;
+  title: string;
+  date: string;
+  status: "completed" | "skipped";
+  message: string;
+}
+
+/**
+ * Mark a reminder as completed for today
+ */
+export async function completeReminder(
+  input: CompleteReminderInput
+): Promise<CompleteReminderOutput> {
+  const date = input.date || format(new Date(), "yyyy-MM-dd");
+
+  try {
+    // First, get today's reminders to find the matching one
+    const todayResponse = await fetch(`${API_BASE}/reminders?action=today&date=${date}`);
+    
+    if (!todayResponse.ok) {
+      throw new Error("Failed to fetch reminders");
+    }
+
+    const { reminders } = await todayResponse.json();
+    
+    // Find reminder by title (case-insensitive partial match)
+    const reminder = reminders.find(
+      (r: { title: string; _id: string; time: string }) =>
+        r.title.toLowerCase().includes(input.title.toLowerCase())
+    );
+
+    if (!reminder) {
+      return {
+        success: false,
+        title: input.title,
+        date,
+        status: "completed",
+        message: `Could not find a reminder matching "${input.title}" for today.`,
+      };
+    }
+
+    // Mark it as completed
+    const response = await fetch(`${API_BASE}/reminders`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "complete",
+        id: reminder._id,
+        date,
+        scheduledTime: reminder.time,
+        notes: input.notes,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to complete reminder");
+    }
+
+    return {
+      success: true,
+      title: reminder.title,
+      date,
+      status: "completed",
+      message: `Marked "${reminder.title}" as completed!`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      title: input.title,
+      date,
+      status: "completed",
+      message: "Failed to complete reminder. Please try again.",
+    };
+  }
+}
+
+interface GetTodayRemindersInput {
+  date?: string;
+  category?: ReminderCategory;
+}
+
+interface TodayReminder {
+  id: string;
+  title: string;
+  category: ReminderCategory;
+  time: string;
+  status: "pending" | "completed" | "skipped" | "missed";
+  quantityRemaining?: number;
+}
+
+interface GetTodayRemindersOutput {
+  success: boolean;
+  date: string;
+  reminders: TodayReminder[];
+  completedCount: number;
+  totalCount: number;
+  message: string;
+}
+
+/**
+ * Get all reminders scheduled for today
+ */
+export async function getTodayReminders(
+  input: GetTodayRemindersInput
+): Promise<GetTodayRemindersOutput> {
+  const date = input.date || format(new Date(), "yyyy-MM-dd");
+
+  try {
+    const params = new URLSearchParams({
+      action: "today",
+      date,
+    });
+
+    const response = await fetch(`${API_BASE}/reminders?${params.toString()}`);
+
+    if (!response.ok) {
+      throw new Error("Failed to get reminders");
+    }
+
+    const { reminders } = await response.json();
+
+    // Filter by category if provided
+    let filtered = reminders;
+    if (input.category) {
+      filtered = reminders.filter(
+        (r: { category: ReminderCategory }) => r.category === input.category
+      );
+    }
+
+    const mapped: TodayReminder[] = filtered.map(
+      (r: {
+        _id: string;
+        title: string;
+        category: ReminderCategory;
+        time: string;
+        todayStatus?: string;
+        quantityRemaining?: number;
+      }) => ({
+        id: r._id,
+        title: r.title,
+        category: r.category,
+        time: r.time,
+        status: r.todayStatus || "pending",
+        quantityRemaining: r.quantityRemaining,
+      })
+    );
+
+    const completedCount = mapped.filter((r) => r.status === "completed").length;
+
+    let message = "";
+    if (mapped.length === 0) {
+      message = "No reminders scheduled for today.";
+    } else if (completedCount === mapped.length) {
+      message = "All reminders completed! Great job!";
+    } else {
+      message = `${completedCount} of ${mapped.length} reminders completed.`;
+    }
+
+    return {
+      success: true,
+      date,
+      reminders: mapped,
+      completedCount,
+      totalCount: mapped.length,
+      message,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      date,
+      reminders: [],
+      completedCount: 0,
+      totalCount: 0,
+      message: "Failed to get reminders. Please try again.",
+    };
+  }
+}
+
+interface UpdateInventoryInput {
+  title: string;
+  quantity: number;
+}
+
+interface UpdateInventoryOutput {
+  success: boolean;
+  title: string;
+  quantity: number;
+  needsRefill: boolean;
+  message: string;
+}
+
+/**
+ * Update the remaining quantity for a medicine or supplement reminder
+ */
+export async function updateReminderInventory(
+  input: UpdateInventoryInput
+): Promise<UpdateInventoryOutput> {
+  try {
+    // Get all reminders to find the matching one
+    const response = await fetch(`${API_BASE}/reminders?action=all`);
+    
+    if (!response.ok) {
+      throw new Error("Failed to fetch reminders");
+    }
+
+    const { reminders } = await response.json();
+    
+    // Find reminder by title
+    const reminder = reminders.find(
+      (r: { title: string; trackInventory?: boolean }) =>
+        r.title.toLowerCase().includes(input.title.toLowerCase()) && r.trackInventory
+    );
+
+    if (!reminder) {
+      return {
+        success: false,
+        title: input.title,
+        quantity: input.quantity,
+        needsRefill: false,
+        message: `Could not find a reminder with inventory tracking matching "${input.title}".`,
+      };
+    }
+
+    // Update the inventory
+    const updateResponse = await fetch(`${API_BASE}/reminders`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "updateInventory",
+        id: reminder._id,
+        quantity: input.quantity,
+      }),
+    });
+
+    if (!updateResponse.ok) {
+      throw new Error("Failed to update inventory");
+    }
+
+    const needsRefill = reminder.refillThreshold
+      ? input.quantity <= reminder.refillThreshold
+      : false;
+
+    return {
+      success: true,
+      title: reminder.title,
+      quantity: input.quantity,
+      needsRefill,
+      message: needsRefill
+        ? `Updated "${reminder.title}" to ${input.quantity} remaining. Time to refill soon!`
+        : `Updated "${reminder.title}" to ${input.quantity} remaining.`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      title: input.title,
+      quantity: input.quantity,
+      needsRefill: false,
+      message: "Failed to update inventory. Please try again.",
+    };
+  }
+}

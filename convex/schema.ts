@@ -1,6 +1,32 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
+// Reminder category validator
+const reminderCategoryValidator = v.union(
+  v.literal("medicine"),
+  v.literal("supplement"),
+  v.literal("workout"),
+  v.literal("meal"),
+  v.literal("water"),
+  v.literal("custom")
+);
+
+// Reminder frequency validator
+const reminderFrequencyValidator = v.union(
+  v.literal("once"),
+  v.literal("daily"),
+  v.literal("weekly"),
+  v.literal("monthly")
+);
+
+// Reminder status validator
+const reminderStatusValidator = v.union(
+  v.literal("completed"),
+  v.literal("missed"),
+  v.literal("skipped"),
+  v.literal("snoozed")
+);
+
 export default defineSchema({
   userProfile: defineTable({
     name: v.string(),
@@ -98,4 +124,51 @@ export default defineSchema({
     ),
     createdAt: v.number(),
   }),
+
+  // Universal Reminder System
+  reminders: defineTable({
+    title: v.string(), // "Take Vitamin D", "Refill Creatine", "Leg Day"
+    description: v.optional(v.string()),
+    category: reminderCategoryValidator,
+    customCategoryName: v.optional(v.string()), // User-defined category name when category is "custom"
+
+    // Schedule
+    frequency: reminderFrequencyValidator,
+    time: v.string(), // "08:00" (24-hour format)
+    repeatDays: v.optional(v.array(v.string())), // ["mon", "wed", "fri"] for weekly
+    dayOfMonth: v.optional(v.number()), // 1-31 for monthly
+
+    // Date range
+    startDate: v.string(), // "YYYY-MM-DD"
+    endDate: v.optional(v.string()),
+
+    // Inventory tracking (for medicine/supplements)
+    trackInventory: v.optional(v.boolean()),
+    quantityRemaining: v.optional(v.number()), // Pills/scoops left
+    refillThreshold: v.optional(v.number()), // Alert when below this
+
+    // State
+    isActive: v.boolean(),
+    isPaused: v.optional(v.boolean()),
+    lastTriggered: v.optional(v.number()),
+
+    createdAt: v.number(),
+    updatedAt: v.optional(v.number()),
+  })
+    .index("by_category", ["category"])
+    .index("by_active", ["isActive"])
+    .index("by_time", ["time"]),
+
+  reminderLogs: defineTable({
+    reminderId: v.id("reminders"),
+    date: v.string(), // "YYYY-MM-DD"
+    scheduledTime: v.string(), // "08:00"
+    completedAt: v.optional(v.number()), // Timestamp when marked done
+    status: reminderStatusValidator,
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+  })
+    .index("by_date", ["date"])
+    .index("by_reminder", ["reminderId"])
+    .index("by_status", ["status"]),
 });
