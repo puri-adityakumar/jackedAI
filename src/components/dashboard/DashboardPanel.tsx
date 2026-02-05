@@ -2,13 +2,21 @@
 
 import { useQuery } from "convex/react";
 import { format, subDays } from "date-fns";
+import { useMemo } from "react";
 import { api } from "../../../convex/_generated/api";
 import { StatsCard } from "./StatsCard";
 import { WeeklyChart } from "./WeeklyChart";
 
 export function DashboardPanel() {
-  const today = format(new Date(), "yyyy-MM-dd");
-  const weekAgo = format(subDays(new Date(), 6), "yyyy-MM-dd");
+  // Memoize date calculations to avoid recreating Date objects on every render
+  // See: Vercel best practices rule rerender-lazy-state-init
+  const { today, weekAgo } = useMemo(() => {
+    const now = new Date();
+    return {
+      today: format(now, "yyyy-MM-dd"),
+      weekAgo: format(subDays(now, 6), "yyyy-MM-dd"),
+    };
+  }, []);
 
   const profile = useQuery(api.userProfile.get);
   const todayExercises = useQuery(api.exerciseLogs.getByDate, { date: today });

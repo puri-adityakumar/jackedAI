@@ -164,3 +164,23 @@ Animated gradient for thinking text, creates a shimmering effect that moves acro
   -webkit-text-fill-color: transparent;
   animation: thinking-gradient 2s linear infinite;
 }
+
+/*
+Performance optimization: content-visibility for long lists
+Defers rendering of off-screen items for faster initial paint
+See: Vercel best practices rule rendering-content-visibility
+*/
+.message-item {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 80px;
+}
+
+.exercise-item {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 60px;
+}
+
+.meal-item {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 70px;
+}

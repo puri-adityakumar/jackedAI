@@ -31,7 +31,7 @@ export function ExerciseItem({ exercise, compact = false }: ExerciseItemProps) {
   return (
     <div
       className={cn(
-        "flex items-center justify-between group",
+        "flex items-center justify-between group exercise-item",
         compact ? "py-1" : "p-4"
       )}
     >
@@ -52,8 +52,8 @@ export function ExerciseItem({ exercise, compact = false }: ExerciseItemProps) {
           </p>
           <p className="text-sm text-gray-500">
             {exercise.sets} sets × {exercise.reps} reps
-            {exercise.weight && ` @ ${exercise.weight}kg`}
-            {exercise.duration && ` • ${exercise.duration} min`}
+            {exercise.weight !== undefined && exercise.weight > 0 ? ` @ ${exercise.weight}kg` : null}
+            {exercise.duration !== undefined && exercise.duration > 0 ? ` • ${exercise.duration} min` : null}
           </p>
         </div>
       </div>

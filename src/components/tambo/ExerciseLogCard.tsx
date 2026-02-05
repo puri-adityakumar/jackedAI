@@ -38,8 +38,8 @@ export function ExerciseLogCard({
           </div>
           <p className="text-sm text-green-700 mt-1">
             {sets} sets × {reps} reps
-            {weight && ` @ ${weight}kg`}
-            {duration && ` • ${duration} min`}
+            {weight !== undefined && weight > 0 ? ` @ ${weight}kg` : null}
+            {duration !== undefined && duration > 0 ? ` • ${duration} min` : null}
           </p>
           {message && (
             <p className="text-xs text-green-600 mt-2">{message}</p>

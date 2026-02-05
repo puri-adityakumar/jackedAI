@@ -10,17 +10,15 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const date = searchParams.get("date") ?? format(new Date(), "yyyy-MM-dd");
 
-    // Get profile for calorie target
-    const profile = await convex.query(api.userProfile.get);
+    // Fetch all data in parallel - these queries are independent
+    // See: Vercel best practices rule async-parallel (CRITICAL: 2-10× improvement)
+    const [profile, exercises, mealSummary] = await Promise.all([
+      convex.query(api.userProfile.get),
+      convex.query(api.exerciseLogs.getByDate, { date }),
+      convex.query(api.mealLogs.getDailySummary, { date }),
+    ]);
+
     const calorieTarget = profile?.dailyCalorieTarget ?? 2000;
-
-    // Get today's exercises
-    const exercises = await convex.query(api.exerciseLogs.getByDate, { date });
-
-    // Get today's meal summary
-    const mealSummary = await convex.query(api.mealLogs.getDailySummary, {
-      date,
-    });
 
     return NextResponse.json({
       caloriesConsumed: mealSummary.totalCalories,

@@ -533,7 +533,7 @@ const ThreadHistoryList = React.forwardRef<
                     onClick={(e) => e.stopPropagation()}
                     placeholder="Thread name..."
                   />
-                  <p className="text-xs text-muted-foreground truncate">
+                  <p className="text-xs text-muted-foreground truncate" suppressHydrationWarning>
                     {new Date(thread.createdAt).toLocaleString(undefined, {
                       month: "short",
                       day: "numeric",
@@ -547,7 +547,7 @@ const ThreadHistoryList = React.forwardRef<
                   <span className="font-medium line-clamp-1">
                     {thread.name ?? `Thread ${thread.id.substring(0, 8)}`}
                   </span>
-                  <p className="text-xs text-muted-foreground truncate mt-1">
+                  <p className="text-xs text-muted-foreground truncate mt-1" suppressHydrationWarning>
                     {new Date(thread.createdAt).toLocaleString(undefined, {
                       month: "short",
                       day: "numeric",

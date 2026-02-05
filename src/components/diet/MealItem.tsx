@@ -47,7 +47,7 @@ export function MealItem({ meal, compact = false }: MealItemProps) {
   return (
     <div
       className={cn(
-        "flex items-center justify-between group",
+        "flex items-center justify-between group meal-item",
         compact ? "py-1" : ""
       )}
     >

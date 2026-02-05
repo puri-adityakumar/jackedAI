@@ -29,12 +29,35 @@ interface FormData {
   dailyCalorieTarget: number | "";
 }
 
+// Hoisted static data outside component to avoid re-creation on each render
+// See: Vercel best practices rule rendering-hoist-jsx
 const STEPS = [
   { id: 1, title: "Welcome", icon: User },
   { id: 2, title: "Body Stats", icon: Scale },
   { id: 3, title: "Goal", icon: Target },
   { id: 4, title: "Calories", icon: Dumbbell },
-];
+] as const;
+
+const FITNESS_GOALS = [
+  {
+    id: "lose_weight" as const,
+    label: "Lose Weight",
+    desc: "Calorie deficit for fat loss",
+    icon: "🔥",
+  },
+  {
+    id: "build_muscle" as const,
+    label: "Build Muscle",
+    desc: "Calorie surplus for gains",
+    icon: "💪",
+  },
+  {
+    id: "maintain" as const,
+    label: "Maintain",
+    desc: "Stay at your current weight",
+    icon: "⚖️",
+  },
+] as const;
 
 function calculateCalories(
   weight: number,
@@ -271,26 +294,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 </p>
               </div>
               <div className="space-y-3">
-                {[
-                  {
-                    id: "lose_weight",
-                    label: "Lose Weight",
-                    desc: "Calorie deficit for fat loss",
-                    icon: "🔥",
-                  },
-                  {
-                    id: "build_muscle",
-                    label: "Build Muscle",
-                    desc: "Calorie surplus for gains",
-                    icon: "💪",
-                  },
-                  {
-                    id: "maintain",
-                    label: "Maintain",
-                    desc: "Stay at your current weight",
-                    icon: "⚖️",
-                  },
-                ].map((goal) => (
+                {FITNESS_GOALS.map((goal) => (
                   <button
                     key={goal.id}
                     onClick={() =>
