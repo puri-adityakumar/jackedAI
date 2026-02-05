@@ -155,19 +155,19 @@ function Section({
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border border-gray-200 rounded-lg overflow-hidden">
+    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-800">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+        className="w-full flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
       >
         <div className="flex items-center gap-3">
           {icon}
-          <span className="font-semibold text-gray-900">{title}</span>
+          <span className="font-semibold text-gray-900 dark:text-white">{title}</span>
         </div>
         {isOpen ? (
-          <ChevronUp className="w-5 h-5 text-gray-500" />
+          <ChevronUp className="w-5 h-5 text-gray-500 dark:text-gray-400" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-gray-500" />
+          <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
         )}
       </button>
       {isOpen && <div className="p-4 space-y-4">{children}</div>}
@@ -293,14 +293,14 @@ export function SettingsPanel() {
     return (
       <div className="flex items-center justify-center p-8">
         <Loader2 className="w-6 h-6 animate-spin text-green-600" />
-        <span className="ml-2 text-gray-600">Loading settings...</span>
+        <span className="ml-2 text-gray-600 dark:text-gray-400">Loading settings...</span>
       </div>
     );
   }
 
   if (profile === null) {
     return (
-      <div className="p-6 text-center text-gray-500">
+      <div className="p-6 text-center text-gray-500 dark:text-gray-400">
         No profile found. Please complete onboarding first.
       </div>
     );
@@ -309,7 +309,7 @@ export function SettingsPanel() {
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
         <button
           onClick={handleSave}
           disabled={!hasChanges || isSaving}
@@ -318,8 +318,8 @@ export function SettingsPanel() {
             hasChanges && !isSaving
               ? "bg-green-600 text-white hover:bg-green-700"
               : saveSuccess
-              ? "bg-green-100 text-green-700"
-              : "bg-gray-200 text-gray-400 cursor-not-allowed"
+              ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+              : "bg-gray-200 text-gray-400 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed"
           )}
         >
           {isSaving ? (
@@ -343,7 +343,7 @@ export function SettingsPanel() {
 
       {/* Error Message */}
       {saveError && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+        <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg">
           {saveError}
         </div>
       )}
@@ -355,18 +355,18 @@ export function SettingsPanel() {
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Name
             </label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => updateField("name", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Height (cm)
             </label>
             <input
@@ -378,11 +378,11 @@ export function SettingsPanel() {
               onChange={(e) =>
                 updateField("height", e.target.value ? Number(e.target.value) : "")
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Weight (kg)
             </label>
             <input
@@ -394,11 +394,11 @@ export function SettingsPanel() {
               onChange={(e) =>
                 updateField("weight", e.target.value ? Number(e.target.value) : "")
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Age
             </label>
             <input
@@ -409,7 +409,7 @@ export function SettingsPanel() {
               onChange={(e) =>
                 updateField("age", e.target.value ? Number(e.target.value) : "")
               }
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
             />
           </div>
         </div>
@@ -434,8 +434,8 @@ export function SettingsPanel() {
                   className={cn(
                     "flex-1 px-4 py-2 rounded-lg border-2 font-medium transition-all",
                     formData.gender === g.id
-                      ? "border-green-500 bg-green-50 text-green-700"
-                      : "border-gray-200 hover:border-gray-300 text-gray-700"
+                      ? "border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                      : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 text-gray-700 dark:text-gray-300"
                   )}
                 >
                   {g.label}
@@ -457,12 +457,12 @@ export function SettingsPanel() {
                   className={cn(
                     "p-3 rounded-lg border-2 text-left transition-all",
                     formData.activityLevel === level.id
-                      ? "border-green-500 bg-green-50"
-                      : "border-gray-200 hover:border-gray-300"
+                      ? "border-green-500 bg-green-50 dark:bg-green-900/30"
+                      : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500"
                   )}
                 >
-                  <p className="font-medium text-gray-900">{level.label}</p>
-                  <p className="text-xs text-gray-500">{level.desc}</p>
+                  <p className="font-medium text-gray-900 dark:text-white">{level.label}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{level.desc}</p>
                 </button>
               ))}
             </div>
@@ -481,8 +481,8 @@ export function SettingsPanel() {
                   className={cn(
                     "flex-1 px-4 py-3 rounded-lg border-2 font-medium transition-all",
                     formData.fitnessGoal === goal.id
-                      ? "border-green-500 bg-green-50 text-green-700"
-                      : "border-gray-200 hover:border-gray-300 text-gray-700"
+                      ? "border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                      : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 text-gray-700 dark:text-gray-300"
                   )}
                 >
                   <span className="text-lg mr-2">{goal.icon}</span>
@@ -508,7 +508,7 @@ export function SettingsPanel() {
               "w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-all",
               formData.weight && formData.height && formData.fitnessGoal
                 ? "bg-blue-600 text-white hover:bg-blue-700"
-                : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
             )}
           >
             <Calculator className="w-4 h-4" />
@@ -517,7 +517,7 @@ export function SettingsPanel() {
 
           {/* Calorie Target */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Daily Calorie Target
             </label>
             <div className="relative">
@@ -533,9 +533,9 @@ export function SettingsPanel() {
                     e.target.value ? Number(e.target.value) : ""
                   )
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-sm">
                 kcal/day
               </span>
             </div>
@@ -544,7 +544,7 @@ export function SettingsPanel() {
           {/* Macro Targets */}
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Protein
               </label>
               <div className="relative">
@@ -560,15 +560,15 @@ export function SettingsPanel() {
                       e.target.value ? Number(e.target.value) : ""
                     )
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none pr-8"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-8"
                 />
-                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
+                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-xs">
                   g
                 </span>
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Carbs
               </label>
               <div className="relative">
@@ -584,15 +584,15 @@ export function SettingsPanel() {
                       e.target.value ? Number(e.target.value) : ""
                     )
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none pr-8"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-8"
                 />
-                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
+                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-xs">
                   g
                 </span>
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Fat
               </label>
               <div className="relative">
@@ -608,9 +608,9 @@ export function SettingsPanel() {
                       e.target.value ? Number(e.target.value) : ""
                     )
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none pr-8"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-8"
                 />
-                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 text-xs">
+                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-xs">
                   g
                 </span>
               </div>
@@ -618,7 +618,7 @@ export function SettingsPanel() {
           </div>
 
           {formData.dailyCalorieTarget && formData.proteinTarget && formData.carbsTarget && formData.fatTarget && (
-            <p className="text-sm text-gray-500 text-center">
+            <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
               Total from macros:{" "}
               {(formData.proteinTarget as number) * 4 +
                 (formData.carbsTarget as number) * 4 +

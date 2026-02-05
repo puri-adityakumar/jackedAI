@@ -46,15 +46,15 @@ export default function Home() {
         <OnboardingWizard onComplete={() => setShowOnboarding(false)} />
       )}
 
-      <div className="flex h-screen bg-gray-50">
+      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
         {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Header */}
-          <header className="bg-white border-b border-gray-200 px-6 py-4">
+          <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-8">
                 {/* Logo */}
-                <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                   <Dumbbell className="w-6 h-6 text-green-600" />
                   JackedAI
                 </h1>
@@ -70,8 +70,8 @@ export default function Home() {
                         className={cn(
                           "flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors",
                           activeTab === tab.id
-                            ? "bg-green-100 text-green-700"
-                            : "text-gray-600 hover:bg-gray-100"
+                            ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                            : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                         )}
                       >
                         <Icon className="w-4 h-4" />
@@ -88,8 +88,8 @@ export default function Home() {
                 className={cn(
                   "p-2 rounded-lg transition-colors",
                   activeTab === "settings"
-                    ? "bg-green-100 text-green-700"
-                    : "text-gray-500 hover:bg-gray-100"
+                    ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                    : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
                 )}
                 title="Settings"
               >
@@ -102,7 +102,7 @@ export default function Home() {
           <main className="flex-1 overflow-auto p-6">
             {isLoading ? (
               <div className="flex items-center justify-center h-full">
-                <div className="text-gray-500">Loading...</div>
+                <div className="text-gray-500 dark:text-gray-400">Loading...</div>
               </div>
             ) : (
               <>
