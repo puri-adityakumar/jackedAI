@@ -23,6 +23,11 @@ import {
   getUserProfile,
   logExercise,
   logMeal,
+  searchExercises,
+  getExerciseDetails,
+  getBodyParts,
+  getTargetMuscles,
+  getEquipmentList,
 } from "@/services/fitness-tools";
 import type { TamboComponent } from "@tambo-ai/react";
 import { TamboTool } from "@tambo-ai/react";
@@ -120,6 +125,93 @@ export const tools: TamboTool[] = [
         dailyCalorieTarget: z.number(),
       })
       .nullable(),
+  },
+  {
+    name: "searchExercises",
+    description:
+      "Search the ExerciseDB database for exercises. Can search by name, body part, target muscle, or equipment. Use this when the user asks for exercise recommendations, wants to find exercises for a specific muscle group, or needs workout suggestions.",
+    tool: searchExercises,
+    inputSchema: z.object({
+      query: z.string().optional().describe("Search term to find exercises by name (e.g., 'bench press', 'squat')"),
+      bodyPart: z.string().optional().describe("Filter by body part (e.g., 'chest', 'back', 'legs')"),
+      target: z.string().optional().describe("Filter by target muscle (e.g., 'biceps', 'triceps', 'glutes')"),
+      equipment: z.string().optional().describe("Filter by equipment (e.g., 'dumbbell', 'barbell', 'bodyweight')"),
+      limit: z.number().optional().describe("Maximum number of results to return (default 10)"),
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      exercises: z.array(z.object({
+        id: z.string(),
+        name: z.string(),
+        bodyPart: z.string(),
+        target: z.string(),
+        equipment: z.string(),
+        gifUrl: z.string(),
+        secondaryMuscles: z.array(z.string()),
+        instructions: z.array(z.string()),
+      })),
+      total: z.number(),
+      message: z.string(),
+    }),
+  },
+  {
+    name: "getExerciseDetails",
+    description:
+      "Get detailed information about a specific exercise including instructions, target muscles, and an animated GIF demonstration. Use this when the user wants to learn how to perform a specific exercise.",
+    tool: getExerciseDetails,
+    inputSchema: z.object({
+      exerciseId: z.string().describe("The unique ID of the exercise to get details for"),
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      exercise: z.object({
+        id: z.string(),
+        name: z.string(),
+        bodyPart: z.string(),
+        target: z.string(),
+        equipment: z.string(),
+        gifUrl: z.string(),
+        secondaryMuscles: z.array(z.string()),
+        instructions: z.array(z.string()),
+      }).nullable(),
+      message: z.string(),
+    }),
+  },
+  {
+    name: "getBodyParts",
+    description:
+      "Get a list of all available body parts that can be used to filter exercises. Use this to show the user what body parts they can search for.",
+    tool: getBodyParts,
+    inputSchema: z.object({}),
+    outputSchema: z.object({
+      success: z.boolean(),
+      bodyParts: z.array(z.string()),
+      message: z.string(),
+    }),
+  },
+  {
+    name: "getTargetMuscles",
+    description:
+      "Get a list of all available target muscles that can be used to filter exercises. Use this to show the user what specific muscles they can target.",
+    tool: getTargetMuscles,
+    inputSchema: z.object({}),
+    outputSchema: z.object({
+      success: z.boolean(),
+      targets: z.array(z.string()),
+      message: z.string(),
+    }),
+  },
+  {
+    name: "getEquipmentList",
+    description:
+      "Get a list of all available equipment types that can be used to filter exercises. Use this when the user has specific equipment available or wants to find bodyweight exercises.",
+    tool: getEquipmentList,
+    inputSchema: z.object({}),
+    outputSchema: z.object({
+      success: z.boolean(),
+      equipment: z.array(z.string()),
+      message: z.string(),
+    }),
   },
 ];
 

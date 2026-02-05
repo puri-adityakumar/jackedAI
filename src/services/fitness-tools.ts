@@ -291,3 +291,245 @@ export async function getUserProfile(): Promise<UserProfileOutput | null> {
     return null;
   }
 }
+
+// ========== ExerciseDB API Tools ==========
+
+interface ExerciseDBExercise {
+  id: string;
+  name: string;
+  bodyPart: string;
+  target: string;
+  equipment: string;
+  gifUrl: string;
+  secondaryMuscles: string[];
+  instructions: string[];
+}
+
+interface SearchExercisesInput {
+  query?: string;
+  bodyPart?: string;
+  target?: string;
+  equipment?: string;
+  limit?: number;
+}
+
+interface SearchExercisesOutput {
+  success: boolean;
+  exercises: ExerciseDBExercise[];
+  total: number;
+  message: string;
+}
+
+/**
+ * Search for exercises from the ExerciseDB database
+ * Can search by name, body part, target muscle, or equipment
+ */
+export async function searchExercises(
+  input: SearchExercisesInput
+): Promise<SearchExercisesOutput> {
+  try {
+    const params = new URLSearchParams({
+      source: "exercisedb",
+      limit: String(input.limit || 10),
+    });
+
+    if (input.query) {
+      params.set("action", "search");
+      params.set("query", input.query);
+    } else if (input.bodyPart) {
+      params.set("action", "bodyPart");
+      params.set("bodyPart", input.bodyPart);
+    } else if (input.target) {
+      params.set("action", "target");
+      params.set("target", input.target);
+    } else if (input.equipment) {
+      params.set("action", "equipment");
+      params.set("equipment", input.equipment);
+    } else {
+      params.set("action", "list");
+    }
+
+    const response = await fetch(`${API_BASE}/exercises?${params.toString()}`);
+
+    if (!response.ok) {
+      throw new Error("Failed to search exercises");
+    }
+
+    const data = await response.json();
+
+    return {
+      success: true,
+      exercises: data.exercises || [],
+      total: data.total || 0,
+      message: `Found ${data.total || 0} exercises`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      exercises: [],
+      total: 0,
+      message: "Failed to search exercises. Please try again.",
+    };
+  }
+}
+
+interface GetExerciseDetailsInput {
+  exerciseId: string;
+}
+
+interface GetExerciseDetailsOutput {
+  success: boolean;
+  exercise: ExerciseDBExercise | null;
+  message: string;
+}
+
+/**
+ * Get detailed information about a specific exercise
+ */
+export async function getExerciseDetails(
+  input: GetExerciseDetailsInput
+): Promise<GetExerciseDetailsOutput> {
+  try {
+    const params = new URLSearchParams({
+      source: "exercisedb",
+      action: "byId",
+      id: input.exerciseId,
+    });
+
+    const response = await fetch(`${API_BASE}/exercises?${params.toString()}`);
+
+    if (!response.ok) {
+      throw new Error("Failed to get exercise details");
+    }
+
+    const data = await response.json();
+
+    return {
+      success: true,
+      exercise: data.exercise || null,
+      message: data.exercise
+        ? `Found exercise: ${data.exercise.name}`
+        : "Exercise not found",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      exercise: null,
+      message: "Failed to get exercise details. Please try again.",
+    };
+  }
+}
+
+interface GetBodyPartsOutput {
+  success: boolean;
+  bodyParts: string[];
+  message: string;
+}
+
+/**
+ * Get list of all available body parts for filtering exercises
+ */
+export async function getBodyParts(): Promise<GetBodyPartsOutput> {
+  try {
+    const params = new URLSearchParams({
+      source: "exercisedb",
+      action: "bodyPartList",
+    });
+
+    const response = await fetch(`${API_BASE}/exercises?${params.toString()}`);
+
+    if (!response.ok) {
+      throw new Error("Failed to get body parts");
+    }
+
+    const data = await response.json();
+
+    return {
+      success: true,
+      bodyParts: data.bodyParts || [],
+      message: `Available body parts: ${(data.bodyParts || []).join(", ")}`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      bodyParts: [],
+      message: "Failed to get body parts. Please try again.",
+    };
+  }
+}
+
+interface GetTargetMusclesOutput {
+  success: boolean;
+  targets: string[];
+  message: string;
+}
+
+/**
+ * Get list of all available target muscles for filtering exercises
+ */
+export async function getTargetMuscles(): Promise<GetTargetMusclesOutput> {
+  try {
+    const params = new URLSearchParams({
+      source: "exercisedb",
+      action: "targetList",
+    });
+
+    const response = await fetch(`${API_BASE}/exercises?${params.toString()}`);
+
+    if (!response.ok) {
+      throw new Error("Failed to get target muscles");
+    }
+
+    const data = await response.json();
+
+    return {
+      success: true,
+      targets: data.targets || [],
+      message: `Available target muscles: ${(data.targets || []).join(", ")}`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      targets: [],
+      message: "Failed to get target muscles. Please try again.",
+    };
+  }
+}
+
+interface GetEquipmentListOutput {
+  success: boolean;
+  equipment: string[];
+  message: string;
+}
+
+/**
+ * Get list of all available equipment types for filtering exercises
+ */
+export async function getEquipmentList(): Promise<GetEquipmentListOutput> {
+  try {
+    const params = new URLSearchParams({
+      source: "exercisedb",
+      action: "equipmentList",
+    });
+
+    const response = await fetch(`${API_BASE}/exercises?${params.toString()}`);
+
+    if (!response.ok) {
+      throw new Error("Failed to get equipment list");
+    }
+
+    const data = await response.json();
+
+    return {
+      success: true,
+      equipment: data.equipment || [],
+      message: `Available equipment: ${(data.equipment || []).join(", ")}`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      equipment: [],
+      message: "Failed to get equipment list. Please try again.",
+    };
+  }
+}
