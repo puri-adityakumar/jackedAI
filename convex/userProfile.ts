@@ -39,6 +39,17 @@ export const update = mutation({
     height: v.optional(v.number()),
     weight: v.optional(v.number()),
     age: v.optional(v.number()),
+    gender: v.optional(
+      v.union(v.literal("male"), v.literal("female"), v.literal("other"))
+    ),
+    activityLevel: v.optional(
+      v.union(
+        v.literal("sedentary"),
+        v.literal("lightly_active"),
+        v.literal("active"),
+        v.literal("very_active")
+      )
+    ),
     fitnessGoal: v.optional(
       v.union(
         v.literal("lose_weight"),
@@ -47,6 +58,12 @@ export const update = mutation({
       )
     ),
     dailyCalorieTarget: v.optional(v.number()),
+    proteinTarget: v.optional(v.number()),
+    carbsTarget: v.optional(v.number()),
+    fatTarget: v.optional(v.number()),
+    theme: v.optional(
+      v.union(v.literal("light"), v.literal("dark"), v.literal("system"))
+    ),
   },
   handler: async (ctx, args) => {
     const profiles = await ctx.db.query("userProfile").collect();
@@ -60,9 +77,15 @@ export const update = mutation({
     if (args.height !== undefined) updates.height = args.height;
     if (args.weight !== undefined) updates.weight = args.weight;
     if (args.age !== undefined) updates.age = args.age;
+    if (args.gender !== undefined) updates.gender = args.gender;
+    if (args.activityLevel !== undefined) updates.activityLevel = args.activityLevel;
     if (args.fitnessGoal !== undefined) updates.fitnessGoal = args.fitnessGoal;
     if (args.dailyCalorieTarget !== undefined)
       updates.dailyCalorieTarget = args.dailyCalorieTarget;
+    if (args.proteinTarget !== undefined) updates.proteinTarget = args.proteinTarget;
+    if (args.carbsTarget !== undefined) updates.carbsTarget = args.carbsTarget;
+    if (args.fatTarget !== undefined) updates.fatTarget = args.fatTarget;
+    if (args.theme !== undefined) updates.theme = args.theme;
 
     await ctx.db.patch(profile._id, updates);
     return profile._id;

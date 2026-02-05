@@ -5,6 +5,7 @@ import { DashboardPanel } from "@/components/dashboard/DashboardPanel";
 import { DietPanel } from "@/components/diet/DietPanel";
 import { ExercisePanel } from "@/components/exercise/ExercisePanel";
 import { OnboardingWizard } from "@/components/onboarding/OnboardingWizard";
+import { SettingsPanel } from "@/components/settings/SettingsPanel";
 import { components, tools } from "@/lib/tambo";
 import { cn } from "@/lib/utils";
 import { TamboProvider } from "@tambo-ai/react";
@@ -13,7 +14,7 @@ import { Dumbbell, LayoutDashboard, Settings, Utensils } from "lucide-react";
 import { useState } from "react";
 import { api } from "../../convex/_generated/api";
 
-type Tab = "dashboard" | "exercise" | "diet";
+type Tab = "dashboard" | "exercise" | "diet" | "settings";
 
 const tabs = [
   { id: "dashboard" as const, label: "Dashboard", icon: LayoutDashboard },
@@ -83,7 +84,13 @@ export default function Home() {
 
               {/* Settings */}
               <button
-                className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                onClick={() => setActiveTab("settings")}
+                className={cn(
+                  "p-2 rounded-lg transition-colors",
+                  activeTab === "settings"
+                    ? "bg-green-100 text-green-700"
+                    : "text-gray-500 hover:bg-gray-100"
+                )}
                 title="Settings"
               >
                 <Settings className="w-5 h-5" />
@@ -102,6 +109,7 @@ export default function Home() {
                 {activeTab === "dashboard" && <DashboardPanel />}
                 {activeTab === "exercise" && <ExercisePanel />}
                 {activeTab === "diet" && <DietPanel />}
+                {activeTab === "settings" && <SettingsPanel />}
               </>
             )}
           </main>

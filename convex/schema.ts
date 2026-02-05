@@ -7,12 +7,29 @@ export default defineSchema({
     height: v.number(), // cm
     weight: v.number(), // kg
     age: v.optional(v.number()),
+    gender: v.optional(
+      v.union(v.literal("male"), v.literal("female"), v.literal("other"))
+    ),
+    activityLevel: v.optional(
+      v.union(
+        v.literal("sedentary"),
+        v.literal("lightly_active"),
+        v.literal("active"),
+        v.literal("very_active")
+      )
+    ),
     fitnessGoal: v.union(
       v.literal("lose_weight"),
       v.literal("build_muscle"),
       v.literal("maintain")
     ),
     dailyCalorieTarget: v.optional(v.number()),
+    proteinTarget: v.optional(v.number()), // grams/day
+    carbsTarget: v.optional(v.number()), // grams/day
+    fatTarget: v.optional(v.number()), // grams/day
+    theme: v.optional(
+      v.union(v.literal("light"), v.literal("dark"), v.literal("system"))
+    ),
     createdAt: v.number(),
     updatedAt: v.number(),
   }),
