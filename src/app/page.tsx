@@ -1,5 +1,6 @@
 "use client";
 
+import { PinLockScreen } from "@/components/auth/PinLockScreen";
 import { ChatSidebar } from "@/components/chat/ChatSidebar";
 import { DashboardPanel } from "@/components/dashboard/DashboardPanel";
 import { DietPanel } from "@/components/diet/DietPanel";
@@ -11,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { TamboProvider } from "@tambo-ai/react";
 import { useQuery } from "convex/react";
 import { Dumbbell, LayoutDashboard, Loader2, Settings, Utensils } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../../convex/_generated/api";
 
 type Tab = "dashboard" | "exercise" | "diet" | "settings";
@@ -25,14 +26,30 @@ const tabs = [
 export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
   const [showOnboarding, setShowOnboarding] = useState(true);
+  const [isPinVerified, setIsPinVerified] = useState(false);
 
   const profile = useQuery(api.userProfile.get);
+  const pinStatus = useQuery(api.pinProtection.getPinStatus);
 
-  // Show loading while checking profile
-  const isLoading = profile === undefined;
+  // Check if already verified in this session
+  useEffect(() => {
+    const verified = sessionStorage.getItem("pinVerified") === "true";
+    setIsPinVerified(verified);
+  }, []);
+
+  // Show loading while checking profile and PIN status
+  const isLoading = profile === undefined || pinStatus === undefined;
 
   // Show onboarding if no profile exists
   const needsOnboarding = profile === null && showOnboarding;
+
+  // Show PIN lock screen if PIN is enabled and not yet verified this session
+  const showPinLock = pinStatus?.enabled && !isPinVerified && !needsOnboarding;
+
+  // Handle PIN unlock
+  const handlePinUnlock = () => {
+    setIsPinVerified(true);
+  };
 
   return (
     <TamboProvider
@@ -50,6 +67,9 @@ export default function Home() {
       {needsOnboarding && (
         <OnboardingWizard onComplete={() => setShowOnboarding(false)} />
       )}
+
+      {/* PIN Lock Screen */}
+      {showPinLock && <PinLockScreen onUnlock={handlePinUnlock} />}
 
       <div className="flex h-screen bg-background">
         {/* Main Content */}

@@ -10,6 +10,7 @@
 
 import type * as exerciseLogs from "../exerciseLogs.js";
 import type * as mealLogs from "../mealLogs.js";
+import type * as pinProtection from "../pinProtection.js";
 import type * as userProfile from "../userProfile.js";
 import type * as workoutPlans from "../workoutPlans.js";
 
@@ -22,6 +23,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   exerciseLogs: typeof exerciseLogs;
   mealLogs: typeof mealLogs;
+  pinProtection: typeof pinProtection;
   userProfile: typeof userProfile;
   workoutPlans: typeof workoutPlans;
 }>;

@@ -12,6 +12,11 @@ import {
   Sun,
   User,
   Monitor,
+  Lock,
+  ShieldCheck,
+  ShieldOff,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { api } from "../../../convex/_generated/api";
@@ -282,6 +287,11 @@ export function SettingsPanel() {
   const profile = useQuery(api.userProfile.get);
   const updateProfile = useMutation(api.userProfile.update);
 
+  // PIN Protection
+  const pinStatus = useQuery(api.pinProtection.getPinStatus);
+  const setPin = useMutation(api.pinProtection.setPin);
+  const removePin = useMutation(api.pinProtection.removePin);
+
   const [formData, setFormData] = useState<FormData>({
     name: "",
     height: "",
@@ -301,6 +311,19 @@ export function SettingsPanel() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [hasChanges, setHasChanges] = useState(false);
+
+  // PIN setup state
+  const [showPinSetup, setShowPinSetup] = useState(false);
+  const [showPinRemove, setShowPinRemove] = useState(false);
+  const [newPin, setNewPin] = useState("");
+  const [confirmPin, setConfirmPin] = useState("");
+  const [currentPinInput, setCurrentPinInput] = useState("");
+  const [pinError, setPinError] = useState<string | null>(null);
+  const [pinSuccess, setPinSuccess] = useState<string | null>(null);
+  const [isPinLoading, setIsPinLoading] = useState(false);
+  const [showNewPin, setShowNewPin] = useState(false);
+  const [showConfirmPin, setShowConfirmPin] = useState(false);
+  const [showCurrentPin, setShowCurrentPin] = useState(false);
 
   useEffect(() => {
     if (profile) {
@@ -388,6 +411,69 @@ export function SettingsPanel() {
       );
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const resetPinForm = () => {
+    setNewPin("");
+    setConfirmPin("");
+    setCurrentPinInput("");
+    setPinError(null);
+    setPinSuccess(null);
+    setShowNewPin(false);
+    setShowConfirmPin(false);
+    setShowCurrentPin(false);
+  };
+
+  const handleSetPin = async () => {
+    setPinError(null);
+    setPinSuccess(null);
+
+    // Validation
+    if (!/^\d{6}$/.test(newPin)) {
+      setPinError("PIN must be exactly 6 digits");
+      return;
+    }
+    if (newPin !== confirmPin) {
+      setPinError("PINs do not match");
+      return;
+    }
+
+    setIsPinLoading(true);
+    try {
+      await setPin({
+        pin: newPin,
+        currentPin: pinStatus?.enabled ? currentPinInput : undefined,
+      });
+      setPinSuccess("PIN has been set successfully!");
+      setShowPinSetup(false);
+      resetPinForm();
+    } catch (err) {
+      setPinError(err instanceof Error ? err.message : "Failed to set PIN");
+    } finally {
+      setIsPinLoading(false);
+    }
+  };
+
+  const handleRemovePin = async () => {
+    setPinError(null);
+    setPinSuccess(null);
+
+    if (!currentPinInput) {
+      setPinError("Please enter your current PIN");
+      return;
+    }
+
+    setIsPinLoading(true);
+    try {
+      await removePin({ currentPin: currentPinInput });
+      setPinSuccess("PIN protection has been disabled");
+      setShowPinRemove(false);
+      resetPinForm();
+    } catch (err) {
+      setPinError(err instanceof Error ? err.message : "Failed to remove PIN");
+    } finally {
+      setIsPinLoading(false);
     }
   };
 
@@ -692,6 +778,345 @@ export function SettingsPanel() {
             </SelectionButton>
           </div>
         </fieldset>
+      </Section>
+
+      {/* Section 5: Security - PIN Protection */}
+      <Section
+        title="Security"
+        icon={<Lock className="w-5 h-5 text-primary" />}
+        defaultOpen={false}
+      >
+        <div className="space-y-4">
+          {/* Current Status */}
+          <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+            <div className="flex items-center gap-3">
+              {pinStatus?.enabled ? (
+                <ShieldCheck className="w-5 h-5 text-green-500" aria-hidden="true" />
+              ) : (
+                <ShieldOff className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
+              )}
+              <div>
+                <p className="font-medium text-foreground">
+                  PIN Lock {pinStatus?.enabled ? "Enabled" : "Disabled"}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {pinStatus?.enabled
+                    ? "App requires PIN on startup"
+                    : "Anyone can access this app"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Lockout Warning */}
+          {pinStatus?.isLocked && (
+            <div
+              role="alert"
+              className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 rounded-lg"
+            >
+              Account is locked due to too many failed attempts. Lockout will expire automatically,
+              or you can clear it from the Convex dashboard.
+            </div>
+          )}
+
+          {/* Success Message */}
+          {pinSuccess && (
+            <div
+              role="status"
+              className="bg-green-500/10 border border-green-500/30 text-green-600 dark:text-green-400 px-4 py-3 rounded-lg"
+            >
+              {pinSuccess}
+            </div>
+          )}
+
+          {/* Error Message */}
+          {pinError && (
+            <div
+              role="alert"
+              className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 rounded-lg"
+            >
+              {pinError}
+            </div>
+          )}
+
+          {/* Enable PIN Button */}
+          {!pinStatus?.enabled && !showPinSetup && (
+            <button
+              type="button"
+              onClick={() => {
+                setShowPinSetup(true);
+                resetPinForm();
+              }}
+              className={cn(
+                "w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all",
+                "bg-primary text-primary-foreground hover:bg-primary/90",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              )}
+            >
+              <Lock className="w-4 h-4" aria-hidden="true" />
+              Set Up PIN Lock
+            </button>
+          )}
+
+          {/* Setup PIN Form */}
+          {showPinSetup && (
+            <div className="space-y-4 p-4 border border-border rounded-lg bg-card">
+              <h3 className="font-semibold text-foreground">
+                {pinStatus?.enabled ? "Change PIN" : "Set Up PIN"}
+              </h3>
+
+              {/* Current PIN (if changing) */}
+              {pinStatus?.enabled && (
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">
+                    Current PIN
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showCurrentPin ? "text" : "password"}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      maxLength={6}
+                      value={currentPinInput}
+                      onChange={(e) => setCurrentPinInput(e.target.value.replace(/\D/g, ""))}
+                      placeholder="Enter current PIN"
+                      className={cn(
+                        "w-full px-3 py-2.5 rounded-lg border border-input bg-background text-foreground",
+                        "placeholder:text-muted-foreground pr-10",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      )}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowCurrentPin(!showCurrentPin)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      aria-label={showCurrentPin ? "Hide PIN" : "Show PIN"}
+                    >
+                      {showCurrentPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* New PIN */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">
+                  New PIN (6 digits)
+                </label>
+                <div className="relative">
+                  <input
+                    type={showNewPin ? "text" : "password"}
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    maxLength={6}
+                    value={newPin}
+                    onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ""))}
+                    placeholder="Enter 6-digit PIN"
+                    className={cn(
+                      "w-full px-3 py-2.5 rounded-lg border border-input bg-background text-foreground",
+                      "placeholder:text-muted-foreground pr-10",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    )}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPin(!showNewPin)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    aria-label={showNewPin ? "Hide PIN" : "Show PIN"}
+                  >
+                    {showNewPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirm PIN */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">
+                  Confirm PIN
+                </label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPin ? "text" : "password"}
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    maxLength={6}
+                    value={confirmPin}
+                    onChange={(e) => setConfirmPin(e.target.value.replace(/\D/g, ""))}
+                    placeholder="Re-enter PIN"
+                    className={cn(
+                      "w-full px-3 py-2.5 rounded-lg border border-input bg-background text-foreground",
+                      "placeholder:text-muted-foreground pr-10",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    )}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPin(!showConfirmPin)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    aria-label={showConfirmPin ? "Hide PIN" : "Show PIN"}
+                  >
+                    {showConfirmPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPinSetup(false);
+                    resetPinForm();
+                  }}
+                  className={cn(
+                    "flex-1 px-4 py-2.5 rounded-lg font-medium transition-all",
+                    "bg-muted text-muted-foreground hover:bg-muted/80",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  )}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSetPin}
+                  disabled={isPinLoading || newPin.length !== 6 || confirmPin.length !== 6}
+                  className={cn(
+                    "flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all",
+                    "bg-primary text-primary-foreground hover:bg-primary/90",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    "disabled:opacity-50 disabled:cursor-not-allowed"
+                  )}
+                >
+                  {isPinLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                      Saving...
+                    </>
+                  ) : (
+                    "Save PIN"
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Disable/Change PIN Options (when PIN is enabled) */}
+          {pinStatus?.enabled && !showPinSetup && !showPinRemove && (
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowPinSetup(true);
+                  resetPinForm();
+                }}
+                className={cn(
+                  "flex-1 px-4 py-2.5 rounded-lg font-medium transition-all",
+                  "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                )}
+              >
+                Change PIN
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowPinRemove(true);
+                  resetPinForm();
+                }}
+                className={cn(
+                  "flex-1 px-4 py-2.5 rounded-lg font-medium transition-all",
+                  "bg-destructive/10 text-destructive hover:bg-destructive/20",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                )}
+              >
+                Disable PIN
+              </button>
+            </div>
+          )}
+
+          {/* Remove PIN Confirmation */}
+          {showPinRemove && (
+            <div className="space-y-4 p-4 border border-destructive/30 rounded-lg bg-destructive/5">
+              <h3 className="font-semibold text-foreground">Disable PIN Protection</h3>
+              <p className="text-sm text-muted-foreground">
+                Enter your current PIN to disable protection. Anyone will be able to access the app.
+              </p>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1.5">
+                  Current PIN
+                </label>
+                <div className="relative">
+                  <input
+                    type={showCurrentPin ? "text" : "password"}
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    maxLength={6}
+                    value={currentPinInput}
+                    onChange={(e) => setCurrentPinInput(e.target.value.replace(/\D/g, ""))}
+                    placeholder="Enter current PIN"
+                    className={cn(
+                      "w-full px-3 py-2.5 rounded-lg border border-input bg-background text-foreground",
+                      "placeholder:text-muted-foreground pr-10",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    )}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPin(!showCurrentPin)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    aria-label={showCurrentPin ? "Hide PIN" : "Show PIN"}
+                  >
+                    {showCurrentPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPinRemove(false);
+                    resetPinForm();
+                  }}
+                  className={cn(
+                    "flex-1 px-4 py-2.5 rounded-lg font-medium transition-all",
+                    "bg-muted text-muted-foreground hover:bg-muted/80",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  )}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRemovePin}
+                  disabled={isPinLoading || currentPinInput.length !== 6}
+                  className={cn(
+                    "flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all",
+                    "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                    "disabled:opacity-50 disabled:cursor-not-allowed"
+                  )}
+                >
+                  {isPinLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                      Removing...
+                    </>
+                  ) : (
+                    "Disable PIN"
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Info Text */}
+          <p className="text-xs text-muted-foreground">
+            PIN protection requires a 6-digit code on app startup. After 5 incorrect attempts,
+            you will be locked out for 5 hours. Lockout can also be cleared from the database.
+          </p>
+        </div>
       </Section>
     </div>
   );

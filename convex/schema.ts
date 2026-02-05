@@ -30,6 +30,12 @@ export default defineSchema({
     theme: v.optional(
       v.union(v.literal("light"), v.literal("dark"), v.literal("system"))
     ),
+    // PIN Protection
+    pinHash: v.optional(v.string()), // Hashed PIN (never plaintext)
+    pinSalt: v.optional(v.string()), // Salt for hashing
+    pinEnabled: v.optional(v.boolean()), // Is PIN protection enabled?
+    pinFailedAttempts: v.optional(v.number()), // Failed attempt counter (0-5)
+    pinLockedUntil: v.optional(v.number()), // Lockout expiry timestamp (ms)
     createdAt: v.number(),
     updatedAt: v.number(),
   }),
