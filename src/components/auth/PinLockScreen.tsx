@@ -29,7 +29,7 @@ export function PinLockScreen({ onUnlock }: PinLockScreenProps) {
 
     const updateCountdown = () => {
       if (!pinStatus.lockoutRemainingMs) return;
-      
+
       const remaining = pinStatus.lockoutRemainingMs;
       const hours = Math.floor(remaining / 3600000);
       const minutes = Math.floor((remaining % 3600000) / 60000);

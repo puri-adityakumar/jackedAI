@@ -30,9 +30,8 @@ export function ChatSidebar({ defaultOpen = true }: ChatSidebarProps) {
 
   return (
     <aside
-      className={`${
-        isOpen ? "w-96" : "w-0"
-      } border-l border-border bg-card transition-all duration-300 flex flex-col relative`}
+      className={`${isOpen ? "w-96" : "w-0"
+        } border-l border-border bg-card transition-all duration-300 flex flex-col relative`}
       aria-label="AI Assistant"
     >
       {isOpen && (

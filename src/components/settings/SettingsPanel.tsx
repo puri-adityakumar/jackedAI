@@ -508,8 +508,8 @@ export function SettingsPanel() {
             hasChanges && !isSaving
               ? "bg-primary text-primary-foreground hover:bg-primary/90"
               : saveSuccess
-              ? "bg-primary/20 text-primary"
-              : "bg-muted text-muted-foreground cursor-not-allowed"
+                ? "bg-primary/20 text-primary"
+                : "bg-muted text-muted-foreground cursor-not-allowed"
           )}
         >
           {isSaving ? (
