@@ -10,8 +10,11 @@ import { format } from "date-fns";
 
 const API_BASE = "/api";
 
+type MuscleGroup = "chest" | "back" | "shoulders" | "arms" | "legs" | "core" | "cardio" | "full_body";
+
 interface LogExerciseInput {
   exerciseName: string;
+  muscleGroup?: MuscleGroup;
   sets: number;
   reps: number;
   weight?: number;
@@ -23,6 +26,7 @@ interface LogExerciseInput {
 interface LogExerciseOutput {
   success: boolean;
   exerciseName: string;
+  muscleGroup?: MuscleGroup;
   sets: number;
   reps: number;
   weight?: number;
@@ -43,6 +47,7 @@ export async function logExercise(
       body: JSON.stringify({
         date,
         exerciseName: input.exerciseName,
+        muscleGroup: input.muscleGroup,
         sets: input.sets,
         reps: input.reps,
         weight: input.weight,
@@ -58,6 +63,7 @@ export async function logExercise(
     return {
       success: true,
       exerciseName: input.exerciseName,
+      muscleGroup: input.muscleGroup,
       sets: input.sets,
       reps: input.reps,
       weight: input.weight,
@@ -69,6 +75,7 @@ export async function logExercise(
     return {
       success: false,
       exerciseName: input.exerciseName,
+      muscleGroup: input.muscleGroup,
       sets: input.sets,
       reps: input.reps,
       date,

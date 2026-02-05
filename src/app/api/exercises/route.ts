@@ -22,6 +22,7 @@ export async function POST(request: Request) {
     const id = await convex.mutation(api.exerciseLogs.create, {
       date: body.date,
       exerciseName: body.exerciseName,
+      muscleGroup: body.muscleGroup,
       sets: body.sets,
       reps: body.reps,
       weight: body.weight,

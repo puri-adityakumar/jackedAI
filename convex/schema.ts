@@ -19,6 +19,18 @@ export default defineSchema({
 
   exerciseLogs: defineTable({
     date: v.string(), // "2026-02-05"
+    muscleGroup: v.optional(
+      v.union(
+        v.literal("chest"),
+        v.literal("back"),
+        v.literal("shoulders"),
+        v.literal("arms"),
+        v.literal("legs"),
+        v.literal("core"),
+        v.literal("cardio"),
+        v.literal("full_body")
+      )
+    ),
     exerciseName: v.string(),
     sets: v.number(),
     reps: v.number(),
@@ -26,7 +38,10 @@ export default defineSchema({
     duration: v.optional(v.number()), // minutes (for cardio)
     notes: v.optional(v.string()),
     createdAt: v.number(),
-  }).index("by_date", ["date"]),
+    updatedAt: v.optional(v.number()),
+  })
+    .index("by_date", ["date"])
+    .index("by_muscle_group", ["muscleGroup"]),
 
   mealLogs: defineTable({
     date: v.string(), // "2026-02-05"
@@ -44,6 +59,7 @@ export default defineSchema({
     fat: v.number(), // grams
     fiber: v.optional(v.number()),
     createdAt: v.number(),
+    updatedAt: v.optional(v.number()),
   }).index("by_date", ["date"]),
 
   workoutPlans: defineTable({
