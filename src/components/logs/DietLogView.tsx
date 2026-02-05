@@ -64,17 +64,18 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div
-        className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto"
+        className="bg-card rounded-xl shadow-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto border border-border"
         role="dialog"
         aria-labelledby="modal-title"
       >
-        <div className="flex items-center justify-between p-4 border-b sticky top-0 bg-white">
-          <h2 id="modal-title" className="text-lg font-semibold">
+        <div className="flex items-center justify-between p-4 border-b border-border sticky top-0 bg-card">
+          <h2 id="modal-title" className="text-lg font-semibold text-foreground">
             {isNew ? "Add Meal" : "Edit Meal"}
           </h2>
           <button
+            type="button"
             onClick={onClose}
-            className="p-1 rounded hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+            className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" aria-hidden="true" />
@@ -85,7 +86,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
           <div>
             <label
               htmlFor="mealType"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-foreground mb-1"
             >
               Meal Type
             </label>
@@ -99,7 +100,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
                   mealType: e.target.value as MealType,
                 }))
               }
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none bg-white"
+              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               required
             >
               {MEAL_TYPES.map((mt) => (
@@ -113,7 +114,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
           <div>
             <label
               htmlFor="foodName"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-foreground mb-1"
             >
               Food Name
             </label>
@@ -125,7 +126,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, foodName: e.target.value }))
               }
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none"
+              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               placeholder="e.g., Chicken Rice…"
               required
               autoComplete="off"
@@ -135,7 +136,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
           <div>
             <label
               htmlFor="quantity"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-foreground mb-1"
             >
               Quantity
             </label>
@@ -147,7 +148,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, quantity: e.target.value }))
               }
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none"
+              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               placeholder="e.g., 1 bowl, 200g…"
               autoComplete="off"
             />
@@ -157,7 +158,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
             <div>
               <label
                 htmlFor="calories"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 Calories
               </label>
@@ -172,7 +173,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
                     calories: parseInt(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none tabular-nums"
+                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={0}
                 required
               />
@@ -180,7 +181,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
             <div>
               <label
                 htmlFor="protein"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 Protein (g)
               </label>
@@ -195,7 +196,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
                     protein: parseInt(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none tabular-nums"
+                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={0}
                 required
               />
@@ -206,7 +207,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
             <div>
               <label
                 htmlFor="carbs"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 Carbs (g)
               </label>
@@ -221,7 +222,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
                     carbs: parseInt(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none tabular-nums"
+                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={0}
                 required
               />
@@ -229,7 +230,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
             <div>
               <label
                 htmlFor="fat"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 Fat (g)
               </label>
@@ -244,7 +245,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
                     fat: parseInt(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none tabular-nums"
+                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={0}
                 required
               />
@@ -252,7 +253,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
             <div>
               <label
                 htmlFor="fiber"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 Fiber (g)
               </label>
@@ -267,7 +268,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
                     fiber: parseInt(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 focus:outline-none tabular-nums"
+                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={0}
               />
             </div>
@@ -277,13 +278,13 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:outline-none"
+              className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:outline-none"
+              className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               {isNew ? "Add Meal" : "Save Changes"}
             </button>
@@ -308,28 +309,30 @@ function DeleteConfirmModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div
-        className="bg-white rounded-lg shadow-xl w-full max-w-sm mx-4 p-6"
+        className="bg-card rounded-xl shadow-xl w-full max-w-sm mx-4 p-6 border border-border"
         role="alertdialog"
         aria-labelledby="delete-title"
         aria-describedby="delete-desc"
       >
-        <h2 id="delete-title" className="text-lg font-semibold mb-2">
+        <h2 id="delete-title" className="text-lg font-semibold text-foreground mb-2">
           Delete Meal?
         </h2>
-        <p id="delete-desc" className="text-gray-600 mb-4">
+        <p id="delete-desc" className="text-muted-foreground mb-4">
           Are you sure you want to delete &ldquo;{foodName}&rdquo;? This action
           cannot be undone.
         </p>
         <div className="flex gap-3">
           <button
+            type="button"
             onClick={onCancel}
-            className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:outline-none"
+            className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             Cancel
           </button>
           <button
+            type="button"
             onClick={onConfirm}
-            className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:outline-none"
+            className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             Delete
           </button>
@@ -431,12 +434,12 @@ export function DietLogView() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
-            <Utensils className="w-5 h-5 text-orange-600" aria-hidden="true" />
+          <div className="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-950/50 flex items-center justify-center">
+            <Utensils className="w-5 h-5 text-orange-600 dark:text-orange-400" aria-hidden="true" />
           </div>
-          <h2 className="text-xl font-semibold" style={{ textWrap: "balance" }}>
+          <h2 className="text-xl font-semibold text-foreground tracking-tight" style={{ textWrap: "balance" }}>
             Diet Log
           </h2>
         </div>
@@ -446,18 +449,18 @@ export function DietLogView() {
             longestStreak={streak.longestStreak}
           />
         )}
-      </div>
+      </header>
 
       {/* Stats */}
       {monthSummary && (
-        <div className="text-sm text-gray-600">
+        <p className="text-sm text-muted-foreground">
           <span className="tabular-nums">{monthSummary.totalDays}</span> days logged
           this month &middot; Avg{" "}
           <span className="tabular-nums">
             {new Intl.NumberFormat("en-US").format(monthSummary.avgCalories)}
           </span>{" "}
           cal/day
-        </div>
+        </p>
       )}
 
       {/* Calendar */}
@@ -468,12 +471,13 @@ export function DietLogView() {
       />
 
       {/* Day view */}
-      <div className="bg-white rounded-lg border">
-        <div className="flex items-center justify-between p-4 border-b">
-          <h3 className="font-medium">{formattedDate}</h3>
+      <section className="bg-card rounded-xl border border-border shadow-sm">
+        <div className="flex items-center justify-between p-4 border-b border-border">
+          <h3 className="font-medium text-foreground">{formattedDate}</h3>
           <button
+            type="button"
             onClick={() => setIsAddingNew(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-500 text-white text-sm rounded-lg hover:bg-orange-600 focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:outline-none"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground text-sm rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             aria-label="Add new meal"
           >
             <Plus className="w-4 h-4" aria-hidden="true" />
@@ -485,45 +489,47 @@ export function DietLogView() {
         {dayLogs && dayLogs.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-left">
+              <thead className="bg-muted/50 text-left">
                 <tr>
-                  <th className="px-4 py-3 font-medium text-gray-600">Meal</th>
-                  <th className="px-4 py-3 font-medium text-gray-600">Food</th>
-                  <th className="px-4 py-3 font-medium text-gray-600">Qty</th>
-                  <th className="px-4 py-3 font-medium text-gray-600 tabular-nums">Cal</th>
-                  <th className="px-4 py-3 font-medium text-gray-600 tabular-nums">P</th>
-                  <th className="px-4 py-3 font-medium text-gray-600 tabular-nums">C</th>
-                  <th className="px-4 py-3 font-medium text-gray-600 tabular-nums">F</th>
-                  <th className="px-4 py-3 font-medium text-gray-600">Actions</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground">Meal</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground">Food</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground">Qty</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground tabular-nums">Cal</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground tabular-nums">P</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground tabular-nums">C</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground tabular-nums">F</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y">
+              <tbody className="divide-y divide-border">
                 {dayLogs.map((log) => (
-                  <tr key={log._id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 capitalize">{log.mealType}</td>
-                    <td className="px-4 py-3 font-medium truncate max-w-[150px]">
+                  <tr key={log._id} className="hover:bg-accent/50 transition-colors">
+                    <td className="px-4 py-3 capitalize text-foreground">{log.mealType}</td>
+                    <td className="px-4 py-3 font-medium text-foreground truncate max-w-[150px]">
                       {log.foodName}
                     </td>
-                    <td className="px-4 py-3 text-gray-500">{log.quantity || "—"}</td>
-                    <td className="px-4 py-3 tabular-nums">{log.calories}</td>
-                    <td className="px-4 py-3 tabular-nums text-blue-600">{log.protein}g</td>
-                    <td className="px-4 py-3 tabular-nums text-orange-600">{log.carbs}g</td>
-                    <td className="px-4 py-3 tabular-nums text-purple-600">{log.fat}g</td>
+                    <td className="px-4 py-3 text-muted-foreground">{log.quantity || "—"}</td>
+                    <td className="px-4 py-3 tabular-nums text-foreground">{log.calories}</td>
+                    <td className="px-4 py-3 tabular-nums text-blue-600 dark:text-blue-400">{log.protein}g</td>
+                    <td className="px-4 py-3 tabular-nums text-orange-600 dark:text-orange-400">{log.carbs}g</td>
+                    <td className="px-4 py-3 tabular-nums text-purple-600 dark:text-purple-400">{log.fat}g</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
                         <button
+                          type="button"
                           onClick={() => setEditingMeal(log)}
-                          className="p-1.5 rounded hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:outline-none"
+                          className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                           aria-label={`Edit ${log.foodName}`}
                         >
-                          <Pencil className="w-4 h-4 text-gray-500" aria-hidden="true" />
+                          <Pencil className="w-4 h-4" aria-hidden="true" />
                         </button>
                         <button
+                          type="button"
                           onClick={() => setDeletingMeal(log)}
-                          className="p-1.5 rounded hover:bg-red-50 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:outline-none"
+                          className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                           aria-label={`Delete ${log.foodName}`}
                         >
-                          <Trash2 className="w-4 h-4 text-red-500" aria-hidden="true" />
+                          <Trash2 className="w-4 h-4" aria-hidden="true" />
                         </button>
                       </div>
                     </td>
@@ -533,12 +539,13 @@ export function DietLogView() {
             </table>
           </div>
         ) : (
-          <div className="p-8 text-center text-gray-500">
-            <Utensils className="w-8 h-8 mx-auto mb-2 text-gray-300" aria-hidden="true" />
+          <div className="p-8 text-center text-muted-foreground">
+            <Utensils className="w-8 h-8 mx-auto mb-2 text-muted-foreground/50" aria-hidden="true" />
             <p>No meals logged for this day</p>
             <button
+              type="button"
               onClick={() => setIsAddingNew(true)}
-              className="mt-2 text-orange-600 hover:text-orange-700 font-medium focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:outline-none rounded"
+              className="mt-2 text-primary hover:text-primary/80 font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none rounded"
             >
               Add your first meal
             </button>
@@ -547,28 +554,28 @@ export function DietLogView() {
 
         {/* Daily Summary */}
         {dailySummary && dailySummary.mealCount > 0 && (
-          <div className="px-4 py-3 bg-gray-50 border-t">
+          <div className="px-4 py-3 bg-muted/50 border-t border-border">
             <div className="flex flex-wrap items-center gap-4 text-sm">
-              <div className="font-medium text-gray-700">Daily Total:</div>
-              <div className="tabular-nums">
+              <div className="font-medium text-foreground">Daily Total:</div>
+              <div className="tabular-nums text-foreground">
                 <span className="font-semibold">
                   {new Intl.NumberFormat("en-US").format(dailySummary.totalCalories)}
                 </span>{" "}
                 cal
               </div>
-              <div className="tabular-nums text-blue-600">
+              <div className="tabular-nums text-blue-600 dark:text-blue-400">
                 <span className="font-semibold">{dailySummary.totalProtein}g</span> protein
               </div>
-              <div className="tabular-nums text-orange-600">
+              <div className="tabular-nums text-orange-600 dark:text-orange-400">
                 <span className="font-semibold">{dailySummary.totalCarbs}g</span> carbs
               </div>
-              <div className="tabular-nums text-purple-600">
+              <div className="tabular-nums text-purple-600 dark:text-purple-400">
                 <span className="font-semibold">{dailySummary.totalFat}g</span> fat
               </div>
             </div>
           </div>
         )}
-      </div>
+      </section>
 
       {/* Modals */}
       {(editingMeal || isAddingNew) && (

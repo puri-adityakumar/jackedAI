@@ -1,25 +1,33 @@
 "use client";
 
 import { useQuery } from "convex/react";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { api } from "../../convex/_generated/api";
 
 type Theme = "light" | "dark" | "system";
 
+// Use layoutEffect on client, effect on server to avoid hydration mismatch
+const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
-  
-  if (theme === "dark") {
+  const isDark =
+    theme === "dark" ||
+    (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  if (isDark) {
     root.classList.add("dark");
-  } else if (theme === "light") {
+  } else {
     root.classList.remove("dark");
-  } else if (theme === "system") {
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    if (prefersDark) {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
+  }
+
+  // Update meta theme-color for mobile browsers
+  const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+  if (metaThemeColor) {
+    metaThemeColor.setAttribute(
+      "content",
+      isDark ? "hsl(20, 14%, 11%)" : "hsl(30, 20%, 97%)"
+    );
   }
 }
 
@@ -27,7 +35,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const profile = useQuery(api.userProfile.get);
 
   // Apply theme when profile loads or theme changes
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const theme: Theme = profile?.theme ?? "system";
     applyTheme(theme);
   }, [profile?.theme]);
@@ -35,16 +43,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Listen for system theme changes when using "system" preference
   useEffect(() => {
     const theme: Theme = profile?.theme ?? "system";
-    
+
     if (theme === "system") {
       const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      
-      const handleChange = (e: MediaQueryListEvent) => {
-        if (e.matches) {
-          document.documentElement.classList.add("dark");
-        } else {
-          document.documentElement.classList.remove("dark");
-        }
+
+      const handleChange = () => {
+        applyTheme("system");
       };
 
       mediaQuery.addEventListener("change", handleChange);

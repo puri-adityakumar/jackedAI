@@ -25,31 +25,32 @@ export function ChatSidebar({ defaultOpen = true }: ChatSidebarProps) {
 
   const placeholder =
     mode === "butler"
-      ? "Log exercise or meal... (e.g., 'I did 3 sets of bench press at 60kg')"
-      : "Ask for fitness advice... (e.g., 'How do I improve my squat form?')";
+      ? "Log exercise or meal… (e.g., 'I did 3 sets of bench press at 60kg')"
+      : "Ask for fitness advice… (e.g., 'How do I improve my squat form?')";
 
   return (
-    <div
+    <aside
       className={`${
         isOpen ? "w-96" : "w-0"
-      } border-l border-gray-200 bg-white transition-all duration-300 flex flex-col relative`}
+      } border-l border-border bg-card transition-all duration-300 flex flex-col relative`}
+      aria-label="AI Assistant"
     >
       {isOpen && (
         <>
           {/* Header with mode toggle */}
-          <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+          <header className="p-4 border-b border-border flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <MessageSquare className="w-5 h-5 text-gray-600" />
-              <h2 className="text-lg font-semibold text-gray-900">
+              <MessageSquare className="w-5 h-5 text-primary" aria-hidden="true" />
+              <h2 className="text-lg font-semibold text-foreground">
                 {mode === "butler" ? "Butler" : "Trainer"}
               </h2>
             </div>
             <ModeToggle mode={mode} onModeChange={setMode} />
-          </div>
+          </header>
 
           {/* Mode description */}
-          <div className="px-4 py-2 bg-gray-50 border-b border-gray-100">
-            <p className="text-xs text-gray-500">
+          <div className="px-4 py-2 bg-muted/50 border-b border-border">
+            <p className="text-xs text-muted-foreground">
               {mode === "butler"
                 ? "Quick logging for exercises and meals"
                 : "Expert advice, workout plans, and form tips"}
@@ -64,7 +65,7 @@ export function ChatSidebar({ defaultOpen = true }: ChatSidebarProps) {
           </ScrollableMessageContainer>
 
           {/* Input */}
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-4 border-t border-border">
             <MessageInput variant="bordered">
               <MessageInputTextarea placeholder={placeholder} />
               <MessageInputToolbar>
@@ -77,16 +78,18 @@ export function ChatSidebar({ defaultOpen = true }: ChatSidebarProps) {
 
       {/* Toggle Button */}
       <button
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="absolute -left-10 top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-l-lg p-2 hover:bg-gray-50 shadow-sm"
-        title={isOpen ? "Collapse chat" : "Expand chat"}
+        className="absolute -left-10 top-1/2 -translate-y-1/2 bg-card border border-border rounded-l-lg p-2 hover:bg-accent shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        aria-label={isOpen ? "Collapse chat panel" : "Expand chat panel"}
+        aria-expanded={isOpen}
       >
         {isOpen ? (
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
         ) : (
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
         )}
       </button>
-    </div>
+    </aside>
   );
 }

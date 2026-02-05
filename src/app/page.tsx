@@ -10,7 +10,7 @@ import { components, tools } from "@/lib/tambo";
 import { cn } from "@/lib/utils";
 import { TamboProvider } from "@tambo-ai/react";
 import { useQuery } from "convex/react";
-import { Dumbbell, LayoutDashboard, Settings, Utensils } from "lucide-react";
+import { Dumbbell, LayoutDashboard, Loader2, Settings, Utensils } from "lucide-react";
 import { useState } from "react";
 import { api } from "../../convex/_generated/api";
 
@@ -41,40 +41,49 @@ export default function Home() {
       tools={tools}
       tamboUrl={process.env.NEXT_PUBLIC_TAMBO_URL}
     >
+      {/* Skip Link for Accessibility */}
+      <a href="#main-content" className="skip-link">
+        Skip to main content
+      </a>
+
       {/* Onboarding Wizard */}
       {needsOnboarding && (
         <OnboardingWizard onComplete={() => setShowOnboarding(false)} />
       )}
 
-      <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="flex h-screen bg-background">
         {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Header */}
-          <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+          <header className="bg-card border-b border-border px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-8">
                 {/* Logo */}
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                  <Dumbbell className="w-6 h-6 text-green-600" />
+                <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
+                  <Dumbbell className="w-6 h-6 text-primary" aria-hidden="true" />
                   JackedAI
                 </h1>
 
                 {/* Tabs */}
-                <nav className="flex items-center gap-1">
+                <nav className="flex items-center gap-1" role="tablist" aria-label="Main navigation">
                   {tabs.map((tab) => {
                     const Icon = tab.icon;
                     return (
                       <button
                         key={tab.id}
+                        role="tab"
+                        aria-selected={activeTab === tab.id}
+                        aria-controls={`${tab.id}-panel`}
                         onClick={() => setActiveTab(tab.id)}
                         className={cn(
                           "flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors",
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                           activeTab === tab.id
-                            ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
-                            : "text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            ? "bg-primary/10 text-primary"
+                            : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                         )}
                       >
-                        <Icon className="w-4 h-4" />
+                        <Icon className="w-4 h-4" aria-hidden="true" />
                         {tab.label}
                       </button>
                     );
@@ -84,25 +93,30 @@ export default function Home() {
 
               {/* Settings */}
               <button
+                role="tab"
+                aria-selected={activeTab === "settings"}
+                aria-controls="settings-panel"
+                aria-label="Settings"
                 onClick={() => setActiveTab("settings")}
                 className={cn(
                   "p-2 rounded-lg transition-colors",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                   activeTab === "settings"
-                    ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
-                    : "text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                 )}
-                title="Settings"
               >
-                <Settings className="w-5 h-5" />
+                <Settings className="w-5 h-5" aria-hidden="true" />
               </button>
             </div>
           </header>
 
           {/* Tab Content */}
-          <main className="flex-1 overflow-auto p-6">
+          <main id="main-content" className="flex-1 overflow-auto p-6" role="tabpanel">
             {isLoading ? (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-gray-500 dark:text-gray-400">Loading...</div>
+              <div className="flex items-center justify-center h-full gap-2">
+                <Loader2 className="w-5 h-5 animate-spin text-primary" aria-hidden="true" />
+                <span className="text-muted-foreground">Loading…</span>
               </div>
             ) : (
               <>

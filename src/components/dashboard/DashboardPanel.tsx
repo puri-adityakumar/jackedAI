@@ -42,58 +42,60 @@ export function DashboardPanel() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
-        <p className="text-gray-500 mt-1">
+      <header>
+        <h2 className="text-2xl font-bold text-foreground tracking-tight text-pretty">Dashboard</h2>
+        <p className="text-muted-foreground mt-1">
           {profile?.name ? `Welcome back, ${profile.name}!` : "Your daily overview"}
         </p>
-      </div>
+      </header>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatsCard
-          title="Calories"
-          value={`${caloriesConsumed}`}
-          subtitle={`of ${calorieTarget} target`}
-          progress={calorieProgress}
-          color="orange"
-        />
-        <StatsCard
-          title="Protein"
-          value={`${proteinConsumed}g`}
-          subtitle="consumed today"
-          color="blue"
-        />
-        <StatsCard
-          title="Exercises"
-          value={`${exerciseCount}`}
-          subtitle="completed today"
-          color="green"
-        />
-        <StatsCard
-          title="Goal"
-          value={
-            profile?.fitnessGoal === "lose_weight"
-              ? "Lose Weight"
-              : profile?.fitnessGoal === "build_muscle"
-                ? "Build Muscle"
-                : "Maintain"
-          }
-          subtitle={profile ? "Keep it up!" : "Set your goal"}
-          color="purple"
-        />
-      </div>
+      <section aria-label="Today's statistics">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatsCard
+            title="Calories"
+            value={`${caloriesConsumed.toLocaleString()}`}
+            subtitle={`of ${calorieTarget.toLocaleString()} target`}
+            progress={calorieProgress}
+            color="orange"
+          />
+          <StatsCard
+            title="Protein"
+            value={`${proteinConsumed}g`}
+            subtitle="consumed today"
+            color="blue"
+          />
+          <StatsCard
+            title="Exercises"
+            value={`${exerciseCount}`}
+            subtitle="completed today"
+            color="green"
+          />
+          <StatsCard
+            title="Goal"
+            value={
+              profile?.fitnessGoal === "lose_weight"
+                ? "Lose Weight"
+                : profile?.fitnessGoal === "build_muscle"
+                  ? "Build Muscle"
+                  : "Maintain"
+            }
+            subtitle={profile ? "Keep it up!" : "Set your goal"}
+            color="purple"
+          />
+        </div>
+      </section>
 
       {/* Weekly Chart */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <section className="bg-card rounded-xl border border-border p-6 shadow-sm">
+        <h3 className="text-lg font-semibold text-foreground mb-4 text-pretty">
           Weekly Progress
         </h3>
         <WeeklyChart
           exerciseData={weekExercises ?? {}}
           mealData={weekMeals ?? {}}
         />
-      </div>
+      </section>
     </div>
   );
 }

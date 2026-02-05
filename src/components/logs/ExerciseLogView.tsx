@@ -93,17 +93,18 @@ function EditExerciseModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div
-        className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4"
+        className="bg-card rounded-xl shadow-xl w-full max-w-md mx-4 border border-border"
         role="dialog"
         aria-labelledby="modal-title"
       >
-        <div className="flex items-center justify-between p-4 border-b">
-          <h2 id="modal-title" className="text-lg font-semibold">
+        <div className="flex items-center justify-between p-4 border-b border-border">
+          <h2 id="modal-title" className="text-lg font-semibold text-foreground">
             {isNew ? "Add Exercise" : "Edit Exercise"}
           </h2>
           <button
+            type="button"
             onClick={onClose}
-            className="p-1 rounded hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+            className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" aria-hidden="true" />
@@ -114,7 +115,7 @@ function EditExerciseModal({
           <div>
             <label
               htmlFor="exerciseName"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-foreground mb-1"
             >
               Exercise Name
             </label>
@@ -126,7 +127,7 @@ function EditExerciseModal({
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, exerciseName: e.target.value }))
               }
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               placeholder="e.g., Bench Press…"
               required
               autoComplete="off"
@@ -136,7 +137,7 @@ function EditExerciseModal({
           <div>
             <label
               htmlFor="muscleGroup"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-foreground mb-1"
             >
               Muscle Group
             </label>
@@ -150,7 +151,7 @@ function EditExerciseModal({
                   muscleGroup: e.target.value as MuscleGroup,
                 }))
               }
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none bg-white"
+              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
             >
               <option value="">Select muscle group…</option>
               {MUSCLE_GROUPS.map((mg) => (
@@ -165,7 +166,7 @@ function EditExerciseModal({
             <div>
               <label
                 htmlFor="sets"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 Sets
               </label>
@@ -180,7 +181,7 @@ function EditExerciseModal({
                     sets: parseInt(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none tabular-nums"
+                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={1}
                 required
               />
@@ -188,7 +189,7 @@ function EditExerciseModal({
             <div>
               <label
                 htmlFor="reps"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 Reps
               </label>
@@ -203,7 +204,7 @@ function EditExerciseModal({
                     reps: parseInt(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none tabular-nums"
+                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={1}
                 required
               />
@@ -211,7 +212,7 @@ function EditExerciseModal({
             <div>
               <label
                 htmlFor="weight"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-foreground mb-1"
               >
                 Weight (kg)
               </label>
@@ -226,7 +227,7 @@ function EditExerciseModal({
                     weight: parseFloat(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none tabular-nums"
+                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={0}
                 step={0.5}
               />
@@ -236,7 +237,7 @@ function EditExerciseModal({
           <div>
             <label
               htmlFor="notes"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-foreground mb-1"
             >
               Notes
             </label>
@@ -248,7 +249,7 @@ function EditExerciseModal({
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, notes: e.target.value }))
               }
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               placeholder="Optional notes…"
               autoComplete="off"
             />
@@ -258,13 +259,13 @@ function EditExerciseModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+              className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+              className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               {isNew ? "Add Exercise" : "Save Changes"}
             </button>
@@ -289,28 +290,30 @@ function DeleteConfirmModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div
-        className="bg-white rounded-lg shadow-xl w-full max-w-sm mx-4 p-6"
+        className="bg-card rounded-xl shadow-xl w-full max-w-sm mx-4 p-6 border border-border"
         role="alertdialog"
         aria-labelledby="delete-title"
         aria-describedby="delete-desc"
       >
-        <h2 id="delete-title" className="text-lg font-semibold mb-2">
+        <h2 id="delete-title" className="text-lg font-semibold text-foreground mb-2">
           Delete Exercise?
         </h2>
-        <p id="delete-desc" className="text-gray-600 mb-4">
+        <p id="delete-desc" className="text-muted-foreground mb-4">
           Are you sure you want to delete &ldquo;{exerciseName}&rdquo;? This
           action cannot be undone.
         </p>
         <div className="flex gap-3">
           <button
+            type="button"
             onClick={onCancel}
-            className="flex-1 px-4 py-2 border rounded-lg hover:bg-gray-50 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+            className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             Cancel
           </button>
           <button
+            type="button"
             onClick={onConfirm}
-            className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:outline-none"
+            className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             Delete
           </button>
@@ -405,26 +408,26 @@ export function ExerciseLogView() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
-            <Dumbbell className="w-5 h-5 text-green-600" aria-hidden="true" />
+          <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-950/50 flex items-center justify-center">
+            <Dumbbell className="w-5 h-5 text-green-600 dark:text-green-400" aria-hidden="true" />
           </div>
-          <h2 className="text-xl font-semibold" style={{ textWrap: "balance" }}>
+          <h2 className="text-xl font-semibold text-foreground tracking-tight" style={{ textWrap: "balance" }}>
             Exercise Log
           </h2>
         </div>
         {streak && <StreakBadge currentStreak={streak.currentStreak} longestStreak={streak.longestStreak} />}
-      </div>
+      </header>
 
       {/* Stats */}
       {monthSummary && (
-        <div className="text-sm text-gray-600">
+        <p className="text-sm text-muted-foreground">
           <span className="tabular-nums">{monthSummary.totalWorkouts}</span> workouts
           this month &middot;{" "}
           <span className="tabular-nums">{monthSummary.totalExercises}</span> total
           exercises
-        </div>
+        </p>
       )}
 
       {/* Calendar */}
@@ -435,17 +438,18 @@ export function ExerciseLogView() {
       />
 
       {/* Day view */}
-      <div className="bg-white rounded-lg border">
-        <div className="flex items-center justify-between p-4 border-b">
+      <section className="bg-card rounded-xl border border-border shadow-sm">
+        <div className="flex items-center justify-between p-4 border-b border-border">
           <div>
-            <h3 className="font-medium">{formattedDate}</h3>
+            <h3 className="font-medium text-foreground">{formattedDate}</h3>
             {dayLabel && (
-              <p className="text-sm text-green-600 font-medium">{dayLabel}</p>
+              <p className="text-sm text-green-600 dark:text-green-400 font-medium">{dayLabel}</p>
             )}
           </div>
           <button
+            type="button"
             onClick={() => setIsAddingNew(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground text-sm rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             aria-label="Add new exercise"
           >
             <Plus className="w-4 h-4" aria-hidden="true" />
@@ -457,45 +461,47 @@ export function ExerciseLogView() {
         {dayLogs && dayLogs.length > 0 ? (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 text-left">
+              <thead className="bg-muted/50 text-left">
                 <tr>
-                  <th className="px-4 py-3 font-medium text-gray-600">#</th>
-                  <th className="px-4 py-3 font-medium text-gray-600">Exercise</th>
-                  <th className="px-4 py-3 font-medium text-gray-600 tabular-nums">Sets</th>
-                  <th className="px-4 py-3 font-medium text-gray-600 tabular-nums">Reps</th>
-                  <th className="px-4 py-3 font-medium text-gray-600 tabular-nums">Weight</th>
-                  <th className="px-4 py-3 font-medium text-gray-600">Notes</th>
-                  <th className="px-4 py-3 font-medium text-gray-600">Actions</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground">#</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground">Exercise</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground tabular-nums">Sets</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground tabular-nums">Reps</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground tabular-nums">Weight</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground">Notes</th>
+                  <th className="px-4 py-3 font-medium text-muted-foreground">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y">
+              <tbody className="divide-y divide-border">
                 {dayLogs.map((log, idx) => (
-                  <tr key={log._id} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 text-gray-500 tabular-nums">{idx + 1}</td>
-                    <td className="px-4 py-3 font-medium">{log.exerciseName}</td>
-                    <td className="px-4 py-3 tabular-nums">{log.sets}</td>
-                    <td className="px-4 py-3 tabular-nums">{log.reps}</td>
-                    <td className="px-4 py-3 tabular-nums">
+                  <tr key={log._id} className="hover:bg-accent/50 transition-colors">
+                    <td className="px-4 py-3 text-muted-foreground tabular-nums">{idx + 1}</td>
+                    <td className="px-4 py-3 font-medium text-foreground">{log.exerciseName}</td>
+                    <td className="px-4 py-3 tabular-nums text-foreground">{log.sets}</td>
+                    <td className="px-4 py-3 tabular-nums text-foreground">{log.reps}</td>
+                    <td className="px-4 py-3 tabular-nums text-foreground">
                       {log.weight ? `${log.weight}kg` : "BW"}
                     </td>
-                    <td className="px-4 py-3 text-gray-500 truncate max-w-[150px]">
+                    <td className="px-4 py-3 text-muted-foreground truncate max-w-[150px]">
                       {log.notes || "—"}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
                         <button
+                          type="button"
                           onClick={() => setEditingExercise(log)}
-                          className="p-1.5 rounded hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+                          className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                           aria-label={`Edit ${log.exerciseName}`}
                         >
-                          <Pencil className="w-4 h-4 text-gray-500" aria-hidden="true" />
+                          <Pencil className="w-4 h-4" aria-hidden="true" />
                         </button>
                         <button
+                          type="button"
                           onClick={() => setDeletingExercise(log)}
-                          className="p-1.5 rounded hover:bg-red-50 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:outline-none"
+                          className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                           aria-label={`Delete ${log.exerciseName}`}
                         >
-                          <Trash2 className="w-4 h-4 text-red-500" aria-hidden="true" />
+                          <Trash2 className="w-4 h-4" aria-hidden="true" />
                         </button>
                       </div>
                     </td>
@@ -505,12 +511,13 @@ export function ExerciseLogView() {
             </table>
           </div>
         ) : (
-          <div className="p-8 text-center text-gray-500">
-            <Dumbbell className="w-8 h-8 mx-auto mb-2 text-gray-300" aria-hidden="true" />
+          <div className="p-8 text-center text-muted-foreground">
+            <Dumbbell className="w-8 h-8 mx-auto mb-2 text-muted-foreground/50" aria-hidden="true" />
             <p>No exercises logged for this day</p>
             <button
+              type="button"
               onClick={() => setIsAddingNew(true)}
-              className="mt-2 text-green-600 hover:text-green-700 font-medium focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none rounded"
+              className="mt-2 text-primary hover:text-primary/80 font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none rounded"
             >
               Add your first exercise
             </button>
@@ -519,12 +526,12 @@ export function ExerciseLogView() {
 
         {/* Summary */}
         {dayLogs && dayLogs.length > 0 && (
-          <div className="px-4 py-3 bg-gray-50 border-t text-sm text-gray-600">
+          <div className="px-4 py-3 bg-muted/50 border-t border-border text-sm text-muted-foreground">
             <span className="tabular-nums">{dayLogs.length}</span> exercises &middot;{" "}
             <span className="tabular-nums">{totalSets}</span> total sets
           </div>
         )}
-      </div>
+      </section>
 
       {/* Modals */}
       {(editingExercise || isAddingNew) && (

@@ -13,7 +13,7 @@ import {
   User,
   Monitor,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { api } from "../../../convex/_generated/api";
 
 // Types
@@ -52,9 +52,9 @@ const GENDERS = [
 
 const ACTIVITY_LEVELS = [
   { id: "sedentary" as const, label: "Sedentary", desc: "Little to no exercise" },
-  { id: "lightly_active" as const, label: "Lightly Active", desc: "1-3 days/week" },
-  { id: "active" as const, label: "Active", desc: "3-5 days/week" },
-  { id: "very_active" as const, label: "Very Active", desc: "6-7 days/week" },
+  { id: "lightly_active" as const, label: "Lightly Active", desc: "1–3 days/week" },
+  { id: "active" as const, label: "Active", desc: "3–5 days/week" },
+  { id: "very_active" as const, label: "Very Active", desc: "6–7 days/week" },
 ] as const;
 
 const ACTIVITY_MULTIPLIERS: Record<ActivityLevel, number> = {
@@ -71,14 +71,10 @@ function calculateBMR(
   age: number,
   gender: Gender | ""
 ): number {
-  // Base calculation (male)
   let bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-  
-  // Adjust for gender
   if (gender === "female") {
     bmr = 10 * weight + 6.25 * height - 5 * age - 161;
   }
-  
   return bmr;
 }
 
@@ -109,7 +105,6 @@ function calculateMacros(
   calories: number,
   goal: FitnessGoal
 ): { protein: number; carbs: number; fat: number } {
-  // Macro ratios based on goal
   let proteinPercent: number;
   let carbsPercent: number;
   let fatPercent: number;
@@ -132,7 +127,6 @@ function calculateMacros(
       fatPercent = 0.30;
   }
 
-  // Convert to grams (protein/carbs = 4 cal/g, fat = 9 cal/g)
   return {
     protein: Math.round((calories * proteinPercent) / 4),
     carbs: Math.round((calories * carbsPercent) / 4),
@@ -153,25 +147,134 @@ function Section({
   defaultOpen?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
+  const contentId = useId();
 
   return (
-    <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-800">
+    <div className="border border-border rounded-xl overflow-hidden bg-card shadow-sm">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setIsOpen(!isOpen);
+          }
+        }}
+        aria-expanded={isOpen}
+        aria-controls={contentId}
+        className="w-full flex items-center justify-between p-4 bg-muted/50 hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
       >
         <div className="flex items-center gap-3">
-          {icon}
-          <span className="font-semibold text-gray-900 dark:text-white">{title}</span>
+          <span aria-hidden="true">{icon}</span>
+          <span className="font-semibold text-foreground">{title}</span>
         </div>
         {isOpen ? (
-          <ChevronUp className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+          <ChevronUp className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+          <ChevronDown className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
         )}
       </button>
-      {isOpen && <div className="p-4 space-y-4">{children}</div>}
+      <div
+        id={contentId}
+        role="region"
+        hidden={!isOpen}
+        className={cn("p-4 space-y-4", !isOpen && "hidden")}
+      >
+        {children}
+      </div>
     </div>
+  );
+}
+
+// Form Input Component with proper accessibility
+function FormInput({
+  label,
+  type = "text",
+  value,
+  onChange,
+  placeholder,
+  min,
+  max,
+  step,
+  suffix,
+  autoComplete,
+}: {
+  label: string;
+  type?: "text" | "number" | "email";
+  value: string | number;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  min?: number;
+  max?: number;
+  step?: number;
+  suffix?: string;
+  autoComplete?: string;
+}) {
+  const inputId = useId();
+
+  return (
+    <div>
+      <label htmlFor={inputId} className="block text-sm font-medium text-foreground mb-1.5">
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          id={inputId}
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder ? `${placeholder}…` : undefined}
+          min={min}
+          max={max}
+          step={step}
+          autoComplete={autoComplete}
+          spellCheck={type === "email" ? false : undefined}
+          className={cn(
+            "w-full px-3 py-2.5 rounded-lg border border-input bg-background text-foreground",
+            "placeholder:text-muted-foreground",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-transparent",
+            "transition-colors",
+            suffix && "pr-16"
+          )}
+        />
+        {suffix && (
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm pointer-events-none">
+            {suffix}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Selection Button Component
+function SelectionButton({
+  selected,
+  onClick,
+  children,
+  className,
+}: {
+  selected: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="radio"
+      aria-checked={selected}
+      onClick={onClick}
+      className={cn(
+        "rounded-lg border-2 font-medium transition-all",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        selected
+          ? "border-primary bg-primary/10 text-primary"
+          : "border-border hover:border-primary/50 text-foreground hover:bg-accent",
+        className
+      )}
+    >
+      {children}
+    </button>
   );
 }
 
@@ -199,7 +302,6 @@ export function SettingsPanel() {
   const [saveError, setSaveError] = useState<string | null>(null);
   const [hasChanges, setHasChanges] = useState(false);
 
-  // Load profile data when it arrives
   useEffect(() => {
     if (profile) {
       setFormData({
@@ -291,50 +393,52 @@ export function SettingsPanel() {
 
   if (profile === undefined) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="w-6 h-6 animate-spin text-green-600" />
-        <span className="ml-2 text-gray-600 dark:text-gray-400">Loading settings...</span>
+      <div className="flex items-center justify-center p-8 gap-2">
+        <Loader2 className="w-5 h-5 animate-spin text-primary" aria-hidden="true" />
+        <span className="text-muted-foreground">Loading settings…</span>
       </div>
     );
   }
 
   if (profile === null) {
     return (
-      <div className="p-6 text-center text-gray-500 dark:text-gray-400">
+      <div className="p-6 text-center text-muted-foreground">
         No profile found. Please complete onboarding first.
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="max-w-2xl mx-auto space-y-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Settings</h1>
+        <h1 className="text-2xl font-bold text-foreground tracking-tight">Settings</h1>
         <button
           onClick={handleSave}
           disabled={!hasChanges || isSaving}
           className={cn(
             "flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             hasChanges && !isSaving
-              ? "bg-green-600 text-white hover:bg-green-700"
+              ? "bg-primary text-primary-foreground hover:bg-primary/90"
               : saveSuccess
-              ? "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
-              : "bg-gray-200 text-gray-400 dark:bg-gray-700 dark:text-gray-500 cursor-not-allowed"
+              ? "bg-primary/20 text-primary"
+              : "bg-muted text-muted-foreground cursor-not-allowed"
           )}
         >
           {isSaving ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Saving...
+              <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+              Saving…
             </>
           ) : saveSuccess ? (
             <>
-              <Save className="w-4 h-4" />
+              <Save className="w-4 h-4" aria-hidden="true" />
               Saved!
             </>
           ) : (
             <>
-              <Save className="w-4 h-4" />
+              <Save className="w-4 h-4" aria-hidden="true" />
               Save Changes
             </>
           )}
@@ -343,7 +447,11 @@ export function SettingsPanel() {
 
       {/* Error Message */}
       {saveError && (
-        <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg">
+        <div
+          role="alert"
+          aria-live="polite"
+          className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 rounded-lg"
+        >
           {saveError}
         </div>
       )}
@@ -351,67 +459,50 @@ export function SettingsPanel() {
       {/* Section 1: Profile */}
       <Section
         title="Profile"
-        icon={<User className="w-5 h-5 text-green-600" />}
+        icon={<User className="w-5 h-5 text-primary" />}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Name
-            </label>
-            <input
-              type="text"
+            <FormInput
+              label="Name"
               value={formData.name}
-              onChange={(e) => updateField("name", e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              onChange={(v) => updateField("name", v)}
+              placeholder="Your name"
+              autoComplete="name"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Height (cm)
-            </label>
-            <input
-              type="number"
-              min="50"
-              max="300"
-              step="0.1"
-              value={formData.height}
-              onChange={(e) =>
-                updateField("height", e.target.value ? Number(e.target.value) : "")
-              }
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Weight (kg)
-            </label>
-            <input
-              type="number"
-              min="20"
-              max="500"
-              step="0.1"
-              value={formData.weight}
-              onChange={(e) =>
-                updateField("weight", e.target.value ? Number(e.target.value) : "")
-              }
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Age
-            </label>
-            <input
-              type="number"
-              min="10"
-              max="120"
-              value={formData.age}
-              onChange={(e) =>
-                updateField("age", e.target.value ? Number(e.target.value) : "")
-              }
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-            />
-          </div>
+          <FormInput
+            label="Height (cm)"
+            type="number"
+            value={formData.height}
+            onChange={(v) => updateField("height", v ? Number(v) : "")}
+            placeholder="175"
+            min={50}
+            max={300}
+            step={0.1}
+            autoComplete="off"
+          />
+          <FormInput
+            label="Weight (kg)"
+            type="number"
+            value={formData.weight}
+            onChange={(v) => updateField("weight", v ? Number(v) : "")}
+            placeholder="70"
+            min={20}
+            max={500}
+            step={0.1}
+            autoComplete="off"
+          />
+          <FormInput
+            label="Age"
+            type="number"
+            value={formData.age}
+            onChange={(v) => updateField("age", v ? Number(v) : "")}
+            placeholder="25"
+            min={10}
+            max={120}
+            autoComplete="off"
+          />
         </div>
       </Section>
 
@@ -420,77 +511,59 @@ export function SettingsPanel() {
         title="Body & Goals"
         icon={<span className="text-xl">🎯</span>}
       >
-        <div className="space-y-4">
+        <div className="space-y-5">
           {/* Gender */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Gender
-            </label>
-            <div className="flex gap-3">
+          <fieldset>
+            <legend className="block text-sm font-medium text-foreground mb-2">Gender</legend>
+            <div className="flex gap-3" role="radiogroup" aria-label="Gender selection">
               {GENDERS.map((g) => (
-                <button
+                <SelectionButton
                   key={g.id}
+                  selected={formData.gender === g.id}
                   onClick={() => updateField("gender", g.id)}
-                  className={cn(
-                    "flex-1 px-4 py-2 rounded-lg border-2 font-medium transition-all",
-                    formData.gender === g.id
-                      ? "border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400"
-                      : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 text-gray-700 dark:text-gray-300"
-                  )}
+                  className="flex-1 px-4 py-2.5"
                 >
                   {g.label}
-                </button>
+                </SelectionButton>
               ))}
             </div>
-          </div>
+          </fieldset>
 
           {/* Activity Level */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Activity Level
-            </label>
-            <div className="grid grid-cols-2 gap-2">
+          <fieldset>
+            <legend className="block text-sm font-medium text-foreground mb-2">Activity Level</legend>
+            <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Activity level selection">
               {ACTIVITY_LEVELS.map((level) => (
-                <button
+                <SelectionButton
                   key={level.id}
+                  selected={formData.activityLevel === level.id}
                   onClick={() => updateField("activityLevel", level.id)}
-                  className={cn(
-                    "p-3 rounded-lg border-2 text-left transition-all",
-                    formData.activityLevel === level.id
-                      ? "border-green-500 bg-green-50 dark:bg-green-900/30"
-                      : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500"
-                  )}
+                  className="p-3 text-left"
                 >
-                  <p className="font-medium text-gray-900 dark:text-white">{level.label}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{level.desc}</p>
-                </button>
+                  <p className="font-medium">{level.label}</p>
+                  <p className="text-xs text-muted-foreground">{level.desc}</p>
+                </SelectionButton>
               ))}
             </div>
-          </div>
+          </fieldset>
 
           {/* Fitness Goal */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Fitness Goal
-            </label>
-            <div className="flex gap-3">
+          <fieldset>
+            <legend className="block text-sm font-medium text-foreground mb-2">Fitness Goal</legend>
+            <div className="flex gap-3" role="radiogroup" aria-label="Fitness goal selection">
               {FITNESS_GOALS.map((goal) => (
-                <button
+                <SelectionButton
                   key={goal.id}
+                  selected={formData.fitnessGoal === goal.id}
                   onClick={() => updateField("fitnessGoal", goal.id)}
-                  className={cn(
-                    "flex-1 px-4 py-3 rounded-lg border-2 font-medium transition-all",
-                    formData.fitnessGoal === goal.id
-                      ? "border-green-500 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400"
-                      : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 text-gray-700 dark:text-gray-300"
-                  )}
+                  className="flex-1 px-4 py-3"
                 >
-                  <span className="text-lg mr-2">{goal.icon}</span>
+                  <span className="text-lg mr-2" aria-hidden="true">{goal.icon}</span>
                   {goal.label}
-                </button>
+                </SelectionButton>
               ))}
             </div>
-          </div>
+          </fieldset>
         </div>
       </Section>
 
@@ -502,127 +575,83 @@ export function SettingsPanel() {
         <div className="space-y-4">
           {/* Auto-calculate button */}
           <button
+            type="button"
             onClick={handleAutoCalculate}
             disabled={!formData.weight || !formData.height || !formData.fitnessGoal}
             className={cn(
-              "w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium transition-all",
+              "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               formData.weight && formData.height && formData.fitnessGoal
-                ? "bg-blue-600 text-white hover:bg-blue-700"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                ? "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                : "bg-muted text-muted-foreground cursor-not-allowed"
             )}
           >
-            <Calculator className="w-4 h-4" />
-            Auto-calculate based on my stats
+            <Calculator className="w-4 h-4" aria-hidden="true" />
+            Auto-calculate Based on My Stats
           </button>
 
           {/* Calorie Target */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Daily Calorie Target
-            </label>
-            <div className="relative">
-              <input
-                type="number"
-                min="500"
-                max="10000"
-                step="50"
-                value={formData.dailyCalorieTarget}
-                onChange={(e) =>
-                  updateField(
-                    "dailyCalorieTarget",
-                    e.target.value ? Number(e.target.value) : ""
-                  )
-                }
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-              />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-sm">
-                kcal/day
-              </span>
-            </div>
-          </div>
+          <FormInput
+            label="Daily Calorie Target"
+            type="number"
+            value={formData.dailyCalorieTarget}
+            onChange={(v) => updateField("dailyCalorieTarget", v ? Number(v) : "")}
+            placeholder="2000"
+            min={500}
+            max={10000}
+            step={50}
+            suffix="kcal/day"
+            autoComplete="off"
+          />
 
           {/* Macro Targets */}
           <div className="grid grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Protein
-              </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  min="0"
-                  max="500"
-                  step="1"
-                  value={formData.proteinTarget}
-                  onChange={(e) =>
-                    updateField(
-                      "proteinTarget",
-                      e.target.value ? Number(e.target.value) : ""
-                    )
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-8"
-                />
-                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-xs">
-                  g
-                </span>
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Carbs
-              </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  min="0"
-                  max="1000"
-                  step="1"
-                  value={formData.carbsTarget}
-                  onChange={(e) =>
-                    updateField(
-                      "carbsTarget",
-                      e.target.value ? Number(e.target.value) : ""
-                    )
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-8"
-                />
-                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-xs">
-                  g
-                </span>
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Fat
-              </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  min="0"
-                  max="500"
-                  step="1"
-                  value={formData.fatTarget}
-                  onChange={(e) =>
-                    updateField(
-                      "fatTarget",
-                      e.target.value ? Number(e.target.value) : ""
-                    )
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none bg-white dark:bg-gray-700 text-gray-900 dark:text-white pr-8"
-                />
-                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-xs">
-                  g
-                </span>
-              </div>
-            </div>
+            <FormInput
+              label="Protein"
+              type="number"
+              value={formData.proteinTarget}
+              onChange={(v) => updateField("proteinTarget", v ? Number(v) : "")}
+              placeholder="150"
+              min={0}
+              max={500}
+              step={1}
+              suffix="g"
+              autoComplete="off"
+            />
+            <FormInput
+              label="Carbs"
+              type="number"
+              value={formData.carbsTarget}
+              onChange={(v) => updateField("carbsTarget", v ? Number(v) : "")}
+              placeholder="200"
+              min={0}
+              max={1000}
+              step={1}
+              suffix="g"
+              autoComplete="off"
+            />
+            <FormInput
+              label="Fat"
+              type="number"
+              value={formData.fatTarget}
+              onChange={(v) => updateField("fatTarget", v ? Number(v) : "")}
+              placeholder="65"
+              min={0}
+              max={500}
+              step={1}
+              suffix="g"
+              autoComplete="off"
+            />
           </div>
 
           {formData.dailyCalorieTarget && formData.proteinTarget && formData.carbsTarget && formData.fatTarget && (
-            <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
+            <p className="text-sm text-muted-foreground text-center font-variant-numeric: tabular-nums">
               Total from macros:{" "}
-              {(formData.proteinTarget as number) * 4 +
-                (formData.carbsTarget as number) * 4 +
-                (formData.fatTarget as number) * 9}{" "}
+              <span className="font-medium text-foreground">
+                {(formData.proteinTarget as number) * 4 +
+                  (formData.carbsTarget as number) * 4 +
+                  (formData.fatTarget as number) * 9}
+              </span>{" "}
               kcal
             </p>
           )}
@@ -632,51 +661,37 @@ export function SettingsPanel() {
       {/* Section 4: App Preferences */}
       <Section
         title="App Preferences"
-        icon={<Sun className="w-5 h-5 text-green-600" />}
+        icon={<Sun className="w-5 h-5 text-primary" />}
       >
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Theme
-          </label>
-          <div className="flex gap-3">
-            <button
+        <fieldset>
+          <legend className="block text-sm font-medium text-foreground mb-2">Theme</legend>
+          <div className="flex gap-3" role="radiogroup" aria-label="Theme selection">
+            <SelectionButton
+              selected={formData.theme === "light"}
               onClick={() => updateField("theme", "light")}
-              className={cn(
-                "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 font-medium transition-all",
-                formData.theme === "light"
-                  ? "border-green-500 bg-green-50 text-green-700"
-                  : "border-gray-200 hover:border-gray-300 text-gray-700"
-              )}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3"
             >
-              <Sun className="w-4 h-4" />
+              <Sun className="w-4 h-4" aria-hidden="true" />
               Light
-            </button>
-            <button
+            </SelectionButton>
+            <SelectionButton
+              selected={formData.theme === "dark"}
               onClick={() => updateField("theme", "dark")}
-              className={cn(
-                "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 font-medium transition-all",
-                formData.theme === "dark"
-                  ? "border-green-500 bg-green-50 text-green-700"
-                  : "border-gray-200 hover:border-gray-300 text-gray-700"
-              )}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3"
             >
-              <Moon className="w-4 h-4" />
+              <Moon className="w-4 h-4" aria-hidden="true" />
               Dark
-            </button>
-            <button
+            </SelectionButton>
+            <SelectionButton
+              selected={formData.theme === "system"}
               onClick={() => updateField("theme", "system")}
-              className={cn(
-                "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 font-medium transition-all",
-                formData.theme === "system"
-                  ? "border-green-500 bg-green-50 text-green-700"
-                  : "border-gray-200 hover:border-gray-300 text-gray-700"
-              )}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-3"
             >
-              <Monitor className="w-4 h-4" />
+              <Monitor className="w-4 h-4" aria-hidden="true" />
               System
-            </button>
+            </SelectionButton>
           </div>
-        </div>
+        </fieldset>
       </Section>
     </div>
   );

@@ -74,22 +74,24 @@ export function LogCalendar({
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <div className={cn("bg-white rounded-lg border p-4", className)}>
+    <div className={cn("bg-card rounded-xl border border-border p-4 shadow-sm", className)}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <button
+          type="button"
           onClick={goToPrevMonth}
-          className="p-1 rounded hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+          className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           aria-label="Previous month"
         >
           <ChevronLeft className="w-5 h-5" aria-hidden="true" />
         </button>
-        <h3 className="font-semibold text-gray-900" style={{ textWrap: "balance" }}>
+        <h3 className="font-semibold text-foreground" style={{ textWrap: "balance" }}>
           {monthName} {viewDate.year}
         </h3>
         <button
+          type="button"
           onClick={goToNextMonth}
-          className="p-1 rounded hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
+          className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           aria-label="Next month"
         >
           <ChevronRight className="w-5 h-5" aria-hidden="true" />
@@ -101,7 +103,7 @@ export function LogCalendar({
         {DAYS.map((day) => (
           <div
             key={day}
-            className="text-center text-xs font-medium text-gray-500 py-1"
+            className="text-center text-xs font-medium text-muted-foreground py-1"
           >
             {day}
           </div>
@@ -109,10 +111,10 @@ export function LogCalendar({
       </div>
 
       {/* Calendar grid */}
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-1" role="grid" aria-label="Calendar days">
         {calendarDays.map((day, idx) => {
           if (day === null) {
-            return <div key={`empty-${idx}`} className="aspect-square" />;
+            return <div key={`empty-${idx}`} className="aspect-square" role="gridcell" />;
           }
 
           const dateKey = formatDateKey(day);
@@ -122,14 +124,16 @@ export function LogCalendar({
 
           return (
             <button
+              type="button"
               key={dateKey}
               onClick={() => onDateSelect(dateKey)}
+              role="gridcell"
               className={cn(
                 "aspect-square flex flex-col items-center justify-center rounded-lg text-sm transition-colors",
-                "hover:bg-gray-100 focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none",
-                isSelected && "bg-blue-500 text-white hover:bg-blue-600",
-                isToday && !isSelected && "ring-1 ring-blue-300",
-                !isSelected && "text-gray-700"
+                "hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+                isSelected && "bg-primary text-primary-foreground hover:bg-primary/90",
+                isToday && !isSelected && "ring-1 ring-primary/50",
+                !isSelected && "text-foreground"
               )}
               aria-label={`${dateKey}${hasLog ? `, ${hasLog.count} entries` : ""}`}
               aria-pressed={isSelected}
@@ -139,7 +143,7 @@ export function LogCalendar({
                 <span
                   className={cn(
                     "w-1.5 h-1.5 rounded-full mt-0.5",
-                    isSelected ? "bg-white" : hasLog.color || "bg-green-500"
+                    isSelected ? "bg-primary-foreground" : hasLog.color || "bg-primary"
                   )}
                   aria-hidden="true"
                 />
