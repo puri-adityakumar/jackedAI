@@ -6,22 +6,24 @@ import { DashboardPanel } from "@/components/dashboard/DashboardPanel";
 import { DietPanel } from "@/components/diet/DietPanel";
 import { ExercisePanel } from "@/components/exercise/ExercisePanel";
 import { OnboardingWizard } from "@/components/onboarding/OnboardingWizard";
+import { PlansPanel } from "@/components/plans/PlansPanel";
 import { ReminderPanel } from "@/components/reminder/ReminderPanel";
 import { SettingsPanel } from "@/components/settings/SettingsPanel";
 import { components, tools } from "@/lib/tambo";
 import { cn } from "@/lib/utils";
 import { TamboProvider } from "@tambo-ai/react";
 import { useQuery } from "convex/react";
-import { Bell, Dumbbell, LayoutDashboard, Loader2, Settings, Utensils } from "lucide-react";
+import { Bell, ClipboardList, Dumbbell, LayoutDashboard, Loader2, Settings, Utensils } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api } from "../../convex/_generated/api";
 
-type Tab = "dashboard" | "exercise" | "diet" | "reminders" | "settings";
+type Tab = "dashboard" | "exercise" | "diet" | "plans" | "reminders" | "settings";
 
 const tabs = [
   { id: "dashboard" as const, label: "Dashboard", icon: LayoutDashboard },
   { id: "exercise" as const, label: "Exercise", icon: Dumbbell },
   { id: "diet" as const, label: "Diet", icon: Utensils },
+  { id: "plans" as const, label: "Plans", icon: ClipboardList },
   { id: "reminders" as const, label: "Reminders", icon: Bell },
 ];
 
@@ -145,6 +147,7 @@ export default function Home() {
                 {activeTab === "dashboard" && <DashboardPanel />}
                 {activeTab === "exercise" && <ExercisePanel />}
                 {activeTab === "diet" && <DietPanel />}
+                {activeTab === "plans" && <PlansPanel />}
                 {activeTab === "reminders" && <ReminderPanel />}
                 {activeTab === "settings" && <SettingsPanel />}
               </>

@@ -17,15 +17,19 @@ npm run lint         # ESLint
 npm run lint:fix     # ESLint with auto-fix
 ```
 
+No test framework is configured. There are no test commands.
+
 ## Architecture
 
 ### Tech Stack
 - **Next.js 15** (App Router) + **React 19** + **TypeScript**
 - **Convex** for real-time database and backend functions
 - **Tambo AI** for generative UI and natural language processing
-- **Tailwind CSS v4**
+- **Tailwind CSS v4** + **tailwindcss-animate**
 
 ### Data Flow
+
+Tambo tools (client-side) call Next.js API routes, which use `ConvexHttpClient` to mutate/query the Convex database. Tambo then renders registered components with the tool output as props.
 
 ```
 User Input → Tambo AI → Tool Selection → API Route → ConvexHttpClient → Convex DB
@@ -33,18 +37,30 @@ User Input → Tambo AI → Tool Selection → API Route → ConvexHttpClient �
                           Component Render ← Tool Output ← Convex Response ←
 ```
 
+### Provider Hierarchy
+
+`layout.tsx` wraps the app in `ConvexClientProvider` (which includes `ConvexProvider` + `ThemeProvider`). Each page that uses Tambo wraps its content in `TamboProvider` with the shared `components` and `tools` arrays from `src/lib/tambo.ts`. The main app (`page.tsx`), `/chat`, and `/interactables` each set up their own `TamboProvider`.
+
 ### Key Files
 
-- **`src/lib/tambo.ts`** - Central hub: register all AI components and tools here
-- **`convex/schema.ts`** - Database schema (userProfile, exerciseLogs, mealLogs, workoutPlans)
-- **`src/services/fitness-tools.ts`** - Tool implementations with nutrition estimation
-- **`src/app/api/`** - API routes that bridge tools to Convex
+- **`src/lib/tambo.ts`** - Central hub: all AI components and tools registered here. Both arrays are imported by every page that uses Tambo.
+- **`src/services/fitness-tools.ts`** - Tool implementations. Tools call `/api/*` routes via `fetch()`. Includes a hardcoded `estimateNutrition()` lookup table for meal calorie estimation.
+- **`src/services/exercisedb.ts`** - ExerciseDB API client (RapidAPI). Used server-side only via the exercises API route.
+- **`src/app/api/`** - API routes that bridge Tambo tools to Convex. Each route creates its own `ConvexHttpClient` instance.
+- **`convex/schema.ts`** - Database schema with validators for all tables.
+- **`convex/*.ts`** - Query/mutation files (one per table: `exerciseLogs.ts`, `mealLogs.ts`, `userProfile.ts`, `workoutPlans.ts`, `reminders.ts`, `pinProtection.ts`).
 
 ### Two-Mode Pattern
 
-Single AI model with different system prompts controlled by `ModeToggle` component:
+Single AI model with different system prompts controlled by `ModeToggle` component in `ChatSidebar`:
 - **Butler Mode**: Quick logging ("Log 3 sets of bench press at 60kg")
 - **Trainer Mode**: Expert advice ("How do I improve my deadlift form?")
+
+### Page Structure
+
+- **`/` (page.tsx)** - Main app: tabbed layout (Dashboard, Exercise, Diet, Reminders, Settings) with `ChatSidebar` as a right-side panel. Includes onboarding wizard and PIN lock.
+- **`/chat`** - Full-screen Tambo chat with MCP support.
+- **`/interactables`** - Chat sidebar + settings panel demo.
 
 ### Registered Tools (src/lib/tambo.ts)
 
@@ -54,6 +70,10 @@ Single AI model with different system prompts controlled by `ModeToggle` compone
 | `logMeal` | Estimate nutrition & save to mealLogs |
 | `getDailyProgress` | Fetch daily summary |
 | `getUserProfile` | Get user stats for personalization |
+| `searchExercises` | Search ExerciseDB by name/body part/target/equipment |
+| `getExerciseDetails` | Get exercise details with GIF demo |
+| `getBodyParts` / `getTargetMuscles` / `getEquipmentList` | Metadata lists for filtering |
+| `createReminder` / `completeReminder` / `getTodayReminders` / `updateReminderInventory` | Universal reminder system |
 
 ### Registered Components
 
@@ -63,6 +83,7 @@ Single AI model with different system prompts controlled by `ModeToggle` compone
 | `MealLogCard` | Shows meal with macro breakdown |
 | `DailyProgressCard` | Daily stats summary |
 | `Graph` | Recharts visualization |
+| `ReminderCard` | Reminder creation/completion confirmation |
 
 ## Adding New Features
 
@@ -84,10 +105,12 @@ Single AI model with different system prompts controlled by `ModeToggle` compone
 
 ## Convex Database Tables
 
-- **userProfile**: name, height, weight, age, fitnessGoal, dailyCalorieTarget
-- **exerciseLogs**: date, exerciseName, sets, reps, weight, duration (indexed by date)
-- **mealLogs**: date, mealType, foodName, calories, protein, carbs, fat (indexed by date)
-- **workoutPlans**: name, exercises array
+- **userProfile**: name, height, weight, age, gender, activityLevel, fitnessGoal, daily targets (calories/protein/carbs/fat), theme, PIN protection fields
+- **exerciseLogs**: date, muscleGroup, exerciseName, sets, reps, weight, duration (indexed by date, muscleGroup)
+- **mealLogs**: date, mealType, foodName, quantity, calories, protein, carbs, fat, fiber (indexed by date)
+- **workoutPlans**: name, description, exercises array
+- **reminders**: title, category, frequency, time, schedule fields, inventory tracking, active/paused state (indexed by category, isActive, time)
+- **reminderLogs**: reminderId, date, scheduledTime, status, notes (indexed by date, reminderId, status)
 
 ## Environment Variables
 
@@ -95,6 +118,7 @@ Single AI model with different system prompts controlled by `ModeToggle` compone
 NEXT_PUBLIC_TAMBO_API_KEY=     # Tambo API key (get from tambo.co/dashboard)
 NEXT_PUBLIC_CONVEX_URL=        # Convex deployment URL
 CONVEX_DEPLOYMENT=             # Convex project reference
+EXERCISEDB_API_KEY=            # RapidAPI key for ExerciseDB (server-side only)
 ```
 
 ## Tambo AI Reference

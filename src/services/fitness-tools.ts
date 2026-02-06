@@ -920,3 +920,485 @@ export async function updateReminderInventory(
     };
   }
 }
+
+// ========== Body Stats Tools ==========
+
+interface LogBodyStatsInput {
+  weight: number;
+  bodyFat?: number;
+  waist?: number;
+  chest?: number;
+  notes?: string;
+  date?: string;
+}
+
+interface LogBodyStatsOutput {
+  success: boolean;
+  weight: number;
+  bodyFat?: number;
+  weightChange?: number;
+  bodyFatChange?: number;
+  date: string;
+  message: string;
+}
+
+export async function logBodyStats(
+  input: LogBodyStatsInput
+): Promise<LogBodyStatsOutput> {
+  const date = input.date ?? format(new Date(), "yyyy-MM-dd");
+
+  try {
+    const response = await fetch(`${API_BASE}/body-stats`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        date,
+        weight: input.weight,
+        bodyFat: input.bodyFat,
+        waist: input.waist,
+        chest: input.chest,
+        notes: input.notes,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to log body stats");
+    }
+
+    const data = await response.json();
+
+    let message = `Logged weight: ${input.weight}kg`;
+    if (data.weightChange !== null && data.weightChange !== undefined) {
+      const direction = data.weightChange > 0 ? "up" : "down";
+      message += ` (${direction} ${Math.abs(data.weightChange).toFixed(1)}kg)`;
+    }
+    if (input.bodyFat) {
+      message += `, body fat: ${input.bodyFat}%`;
+    }
+
+    return {
+      success: true,
+      weight: input.weight,
+      bodyFat: input.bodyFat,
+      weightChange: data.weightChange,
+      bodyFatChange: data.bodyFatChange,
+      date,
+      message,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      weight: input.weight,
+      bodyFat: input.bodyFat,
+      date,
+      message: "Failed to log body stats. Please try again.",
+    };
+  }
+}
+
+// ========== Personal Records Tools ==========
+
+interface GetPersonalRecordsInput {
+  exerciseName?: string;
+  limit?: number;
+}
+
+interface PRRecord {
+  exerciseName: string;
+  maxWeight?: { value: number; reps?: number; date: string };
+  maxVolume?: { value: number; date: string };
+  estimated1RM?: { value: number; date: string };
+}
+
+interface GetPersonalRecordsOutput {
+  success: boolean;
+  records: PRRecord[];
+  totalCount: number;
+  message: string;
+}
+
+export async function getPersonalRecords(
+  input: GetPersonalRecordsInput
+): Promise<GetPersonalRecordsOutput> {
+  try {
+    let url = `${API_BASE}/personal-records?action=all`;
+    if (input.exerciseName) {
+      url = `${API_BASE}/personal-records?action=exercise&exerciseName=${encodeURIComponent(input.exerciseName)}`;
+    }
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("Failed to get personal records");
+    }
+
+    const data = await response.json();
+    const records: PRRecord[] = input.exerciseName
+      ? [{ exerciseName: input.exerciseName, ...data.prs }]
+      : data.prs || [];
+
+    const count = records.length;
+    const message =
+      count === 0
+        ? "No personal records yet. Keep lifting!"
+        : input.exerciseName
+        ? `Found PRs for ${input.exerciseName}`
+        : `You have ${count} exercise${count === 1 ? "" : "s"} with personal records`;
+
+    return {
+      success: true,
+      records: input.limit ? records.slice(0, input.limit) : records,
+      totalCount: count,
+      message,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      records: [],
+      totalCount: 0,
+      message: "Failed to get personal records. Please try again.",
+    };
+  }
+}
+
+// ========== Weekly Report Tools ==========
+
+interface GetWeeklyReportInput {
+  weekStart?: string;
+}
+
+interface WeeklyReportOutput {
+  success: boolean;
+  weekStart: string;
+  weekEnd: string;
+  workout: {
+    totalDays: number;
+    targetDays: number;
+    totalExercises: number;
+    grade: string;
+  };
+  nutrition: {
+    totalDaysLogged: number;
+    averageCalories: number;
+    averageProtein: number;
+    grade: string;
+  };
+  reminders: {
+    completed: number;
+    totalScheduled: number;
+    adherenceRate: number;
+    grade: string;
+  };
+  overallGrade: string;
+  overallScore: number;
+  insights: string[];
+  message: string;
+}
+
+export async function getWeeklyReport(
+  input: GetWeeklyReportInput
+): Promise<WeeklyReportOutput> {
+  try {
+    const url = input.weekStart
+      ? `${API_BASE}/weekly-report?weekStart=${input.weekStart}`
+      : `${API_BASE}/weekly-report`;
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error("Failed to get weekly report");
+    }
+
+    const data = await response.json();
+
+    return {
+      success: true,
+      weekStart: data.weekStart,
+      weekEnd: data.weekEnd,
+      workout: {
+        totalDays: data.workout.totalDays,
+        targetDays: data.workout.targetDays,
+        totalExercises: data.workout.totalExercises,
+        grade: data.workout.grade,
+      },
+      nutrition: {
+        totalDaysLogged: data.nutrition.totalDaysLogged,
+        averageCalories: data.nutrition.averageCalories,
+        averageProtein: data.nutrition.averageProtein,
+        grade: data.nutrition.grade,
+      },
+      reminders: {
+        completed: data.reminders.completed,
+        totalScheduled: data.reminders.totalScheduled,
+        adherenceRate: data.reminders.adherenceRate,
+        grade: data.reminders.grade,
+      },
+      overallGrade: data.overallGrade,
+      overallScore: data.overallScore,
+      insights: data.insights,
+      message: `Weekly Report: Overall grade ${data.overallGrade} (${data.overallScore}/100)`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      weekStart: "",
+      weekEnd: "",
+      workout: { totalDays: 0, targetDays: 5, totalExercises: 0, grade: "F" },
+      nutrition: { totalDaysLogged: 0, averageCalories: 0, averageProtein: 0, grade: "F" },
+      reminders: { completed: 0, totalScheduled: 0, adherenceRate: 0, grade: "F" },
+      overallGrade: "F",
+      overallScore: 0,
+      insights: [],
+      message: "Failed to get weekly report. Please try again.",
+    };
+  }
+}
+
+// ========== Badge Tools ==========
+
+interface BadgeChainProgress {
+  id: string;
+  name: string;
+  icon: string;
+  unit: string;
+  milestones: number[];
+  currentValue: number;
+  earnedMilestones: number[];
+  nextMilestone: number | null;
+  progressPercent: number;
+  isComplete: boolean;
+}
+
+interface GetBadgesOutput {
+  success: boolean;
+  badges: BadgeChainProgress[];
+  message: string;
+}
+
+export async function getAchievements(): Promise<GetBadgesOutput> {
+  try {
+    const response = await fetch(`${API_BASE}/achievements`);
+
+    if (!response.ok) {
+      throw new Error("Failed to get badges");
+    }
+
+    const data = await response.json();
+    const badges: BadgeChainProgress[] = data.badges || [];
+
+    const completedChains = badges.filter((b) => b.isComplete).length;
+    const message =
+      completedChains === badges.length
+        ? "All badge chains completed!"
+        : `${completedChains} of ${badges.length} badge chains completed`;
+
+    return {
+      success: true,
+      badges,
+      message,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      badges: [],
+      message: "Failed to get badges. Please try again.",
+    };
+  }
+}
+
+// ========== Workout Plans Tools ==========
+
+interface CreateWorkoutPlanInput {
+  name: string;
+  description?: string;
+  exercises: Array<{
+    name: string;
+    sets: number;
+    reps: string;
+    notes?: string;
+  }>;
+}
+
+interface CreateWorkoutPlanOutput {
+  success: boolean;
+  name: string;
+  exerciseCount: number;
+  exercises: Array<{ name: string; sets: number; reps: string }>;
+  message: string;
+}
+
+export async function createWorkoutPlan(
+  input: CreateWorkoutPlanInput
+): Promise<CreateWorkoutPlanOutput> {
+  try {
+    const response = await fetch(`${API_BASE}/workout-plans`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "create",
+        name: input.name,
+        description: input.description,
+        exercises: input.exercises,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create workout plan");
+    }
+
+    return {
+      success: true,
+      name: input.name,
+      exerciseCount: input.exercises.length,
+      exercises: input.exercises.map((e) => ({
+        name: e.name,
+        sets: e.sets,
+        reps: e.reps,
+      })),
+      message: `Created "${input.name}" with ${input.exercises.length} exercises`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      name: input.name,
+      exerciseCount: 0,
+      exercises: [],
+      message: "Failed to create workout plan. Please try again.",
+    };
+  }
+}
+
+interface GetWorkoutPlansInput {
+  limit?: number;
+}
+
+interface WorkoutPlan {
+  id: string;
+  name: string;
+  description?: string;
+  exerciseCount: number;
+  usageCount: number;
+}
+
+interface GetWorkoutPlansOutput {
+  success: boolean;
+  plans: WorkoutPlan[];
+  totalCount: number;
+  message: string;
+}
+
+export async function getWorkoutPlans(
+  input: GetWorkoutPlansInput
+): Promise<GetWorkoutPlansOutput> {
+  try {
+    const response = await fetch(`${API_BASE}/workout-plans`);
+
+    if (!response.ok) {
+      throw new Error("Failed to get workout plans");
+    }
+
+    const data = await response.json();
+    const plans: WorkoutPlan[] = (data.plans || []).map((p: any) => ({
+      id: p._id,
+      name: p.name,
+      description: p.description,
+      exerciseCount: p.exercises?.length || 0,
+      usageCount: p.usageCount || 0,
+    }));
+
+    const limited = input.limit ? plans.slice(0, input.limit) : plans;
+
+    return {
+      success: true,
+      plans: limited,
+      totalCount: plans.length,
+      message:
+        plans.length === 0
+          ? "No workout plans yet. Create one to get started!"
+          : `Found ${plans.length} workout plan${plans.length === 1 ? "" : "s"}`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      plans: [],
+      totalCount: 0,
+      message: "Failed to get workout plans. Please try again.",
+    };
+  }
+}
+
+interface StartWorkoutPlanInput {
+  planName: string;
+}
+
+interface StartWorkoutPlanOutput {
+  success: boolean;
+  planName: string;
+  exerciseCount: number;
+  exercises: Array<{ name: string; sets: number; reps: string }>;
+  message: string;
+}
+
+export async function startWorkoutPlan(
+  input: StartWorkoutPlanInput
+): Promise<StartWorkoutPlanOutput> {
+  try {
+    // First, find the plan by name
+    const plansResponse = await fetch(`${API_BASE}/workout-plans`);
+    if (!plansResponse.ok) {
+      throw new Error("Failed to get workout plans");
+    }
+
+    const plansData = await plansResponse.json();
+    const plan = plansData.plans?.find(
+      (p: any) => p.name.toLowerCase().includes(input.planName.toLowerCase())
+    );
+
+    if (!plan) {
+      return {
+        success: false,
+        planName: input.planName,
+        exerciseCount: 0,
+        exercises: [],
+        message: `Could not find a workout plan matching "${input.planName}"`,
+      };
+    }
+
+    // Start the workout
+    const startResponse = await fetch(`${API_BASE}/workout-plans`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "start",
+        planId: plan._id,
+      }),
+    });
+
+    if (!startResponse.ok) {
+      const errorData = await startResponse.json();
+      throw new Error(errorData.error || "Failed to start workout");
+    }
+
+    return {
+      success: true,
+      planName: plan.name,
+      exerciseCount: plan.exercises?.length || 0,
+      exercises: (plan.exercises || []).map((e: any) => ({
+        name: e.name,
+        sets: e.sets,
+        reps: e.reps,
+      })),
+      message: `Started "${plan.name}"! ${plan.exercises?.length || 0} exercises to complete.`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      planName: input.planName,
+      exerciseCount: 0,
+      exercises: [],
+      message: String(error).includes("already have an active")
+        ? "You already have an active workout. Complete or abandon it first."
+        : "Failed to start workout. Please try again.",
+    };
+  }
+}

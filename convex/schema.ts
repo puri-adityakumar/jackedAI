@@ -27,6 +27,32 @@ const reminderStatusValidator = v.union(
   v.literal("snoozed")
 );
 
+// Muscle group validator (shared)
+const muscleGroupValidator = v.union(
+  v.literal("chest"),
+  v.literal("back"),
+  v.literal("shoulders"),
+  v.literal("arms"),
+  v.literal("legs"),
+  v.literal("core"),
+  v.literal("cardio"),
+  v.literal("full_body")
+);
+
+// Active workout status validator
+const workoutStatusValidator = v.union(
+  v.literal("in_progress"),
+  v.literal("completed"),
+  v.literal("abandoned")
+);
+
+// PR type validator
+const prTypeValidator = v.union(
+  v.literal("max_weight"),
+  v.literal("max_volume"),
+  v.literal("estimated_1rm")
+);
+
 export default defineSchema({
   userProfile: defineTable({
     name: v.string(),
@@ -68,18 +94,7 @@ export default defineSchema({
 
   exerciseLogs: defineTable({
     date: v.string(), // "2026-02-05"
-    muscleGroup: v.optional(
-      v.union(
-        v.literal("chest"),
-        v.literal("back"),
-        v.literal("shoulders"),
-        v.literal("arms"),
-        v.literal("legs"),
-        v.literal("core"),
-        v.literal("cardio"),
-        v.literal("full_body")
-      )
-    ),
+    muscleGroup: v.optional(muscleGroupValidator),
     exerciseName: v.string(),
     sets: v.number(),
     reps: v.number(),
@@ -171,4 +186,78 @@ export default defineSchema({
     .index("by_date", ["date"])
     .index("by_reminder", ["reminderId"])
     .index("by_status", ["status"]),
+
+  // ========== NEW TABLES FOR FEATURE EXPANSION ==========
+
+  // Active workout sessions (when following a workout plan)
+  activeWorkouts: defineTable({
+    planId: v.id("workoutPlans"),
+    date: v.string(), // "YYYY-MM-DD"
+    startedAt: v.number(), // timestamp
+    completedAt: v.optional(v.number()),
+    exerciseProgress: v.array(
+      v.object({
+        exerciseIndex: v.number(), // index in plan.exercises array
+        completedSets: v.number(),
+        loggedWeight: v.optional(v.number()),
+        loggedReps: v.optional(v.number()),
+        exerciseLogId: v.optional(v.id("exerciseLogs")), // link to logged exercise
+      })
+    ),
+    status: workoutStatusValidator,
+  })
+    .index("by_date", ["date"])
+    .index("by_plan", ["planId"])
+    .index("by_status", ["status"]),
+
+  // Body measurements over time (weight, body fat, measurements)
+  bodyStats: defineTable({
+    date: v.string(), // "YYYY-MM-DD"
+    weight: v.number(), // kg
+    bodyFat: v.optional(v.number()), // percentage (e.g., 15.5)
+    // Optional body measurements (in cm)
+    waist: v.optional(v.number()),
+    chest: v.optional(v.number()),
+    hips: v.optional(v.number()),
+    bicepsLeft: v.optional(v.number()),
+    bicepsRight: v.optional(v.number()),
+    thighLeft: v.optional(v.number()),
+    thighRight: v.optional(v.number()),
+    neck: v.optional(v.number()),
+    notes: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.optional(v.number()),
+  }).index("by_date", ["date"]),
+
+  // Personal records cache (for fast PR lookups)
+  personalRecords: defineTable({
+    exerciseName: v.string(), // normalized lowercase
+    prType: prTypeValidator,
+    value: v.number(), // weight in kg, or volume (sets*reps*weight)
+    reps: v.optional(v.number()), // reps at this weight (for max_weight)
+    exerciseLogId: v.id("exerciseLogs"), // reference to the log that set this PR
+    achievedDate: v.string(), // "YYYY-MM-DD"
+    previousValue: v.optional(v.number()), // what it beat
+    createdAt: v.number(),
+    updatedAt: v.optional(v.number()),
+  })
+    .index("by_exercise", ["exerciseName"])
+    .index("by_exercise_type", ["exerciseName", "prType"])
+    .index("by_date", ["achievedDate"]),
+
+  // Unlocked achievements / badges
+  achievements: defineTable({
+    achievementId: v.string(), // references achievement definitions
+    unlockedAt: v.number(), // timestamp
+    notified: v.boolean(), // has user seen the unlock notification?
+    // Optional metadata for context
+    metadata: v.optional(
+      v.object({
+        exerciseName: v.optional(v.string()), // for PR achievements
+        weight: v.optional(v.number()),
+        streakDays: v.optional(v.number()),
+        count: v.optional(v.number()),
+      })
+    ),
+  }).index("by_achievement", ["achievementId"]),
 });

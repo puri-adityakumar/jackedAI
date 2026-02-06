@@ -7,7 +7,7 @@ interface StatsCardProps {
   value: string;
   subtitle: string;
   progress?: number;
-  color?: "orange" | "blue" | "green" | "purple";
+  color?: "orange" | "blue" | "green" | "purple" | "cyan" | "amber";
 }
 
 const colorClasses = {
@@ -30,6 +30,16 @@ const colorClasses = {
     bg: "bg-purple-50 dark:bg-purple-950/30",
     text: "text-purple-600 dark:text-purple-400",
     progress: "bg-purple-500 dark:bg-purple-400",
+  },
+  cyan: {
+    bg: "bg-cyan-50 dark:bg-cyan-950/30",
+    text: "text-cyan-600 dark:text-cyan-400",
+    progress: "bg-cyan-500 dark:bg-cyan-400",
+  },
+  amber: {
+    bg: "bg-amber-50 dark:bg-amber-950/30",
+    text: "text-amber-600 dark:text-amber-400",
+    progress: "bg-amber-500 dark:bg-amber-400",
   },
 };
 

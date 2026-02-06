@@ -23,6 +23,23 @@ import {
   reminderCardSchema,
 } from "@/components/tambo/ReminderCard";
 import {
+  WorkoutPlanCard,
+  workoutPlanCardSchema,
+} from "@/components/tambo/WorkoutPlanCard";
+import {
+  BodyStatsCard,
+  bodyStatsCardSchema,
+} from "@/components/tambo/BodyStatsCard";
+import { PRCard, prCardSchema } from "@/components/tambo/PRCard";
+import {
+  WeeklyReportCard,
+  weeklyReportCardSchema,
+} from "@/components/tambo/WeeklyReportCard";
+import {
+  AchievementCard,
+  achievementCardSchema,
+} from "@/components/tambo/AchievementCard";
+import {
   getDailyProgress,
   getUserProfile,
   logExercise,
@@ -36,6 +53,13 @@ import {
   completeReminder,
   getTodayReminders,
   updateReminderInventory,
+  logBodyStats,
+  getPersonalRecords,
+  getWeeklyReport,
+  getAchievements,
+  createWorkoutPlan,
+  getWorkoutPlans,
+  startWorkoutPlan,
 } from "@/services/fitness-tools";
 import type { TamboComponent } from "@tambo-ai/react";
 import { TamboTool } from "@tambo-ai/react";
@@ -45,10 +69,11 @@ import { z } from "zod";
  * Tambo Tools for JackedAI
  *
  * These tools allow the AI to:
- * - Log exercises to the database
- * - Log meals with estimated nutrition
- * - Get daily progress summary
- * - Get user profile information
+ * - Log exercises, meals, body stats
+ * - Get daily progress and weekly reports
+ * - Manage workout plans and reminders
+ * - Track personal records and achievements
+ * - Search ExerciseDB
  */
 export const tools: TamboTool[] = [
   {
@@ -317,16 +342,203 @@ export const tools: TamboTool[] = [
       message: z.string(),
     }),
   },
+  // Body Stats Tools
+  {
+    name: "logBodyStats",
+    description:
+      "Log body measurements like weight, body fat percentage, and other measurements. Use this when the user wants to record their weight or body measurements.",
+    tool: logBodyStats,
+    inputSchema: z.object({
+      weight: z.number().describe("Body weight in kg"),
+      bodyFat: z.number().optional().describe("Body fat percentage"),
+      waist: z.number().optional().describe("Waist measurement in cm"),
+      chest: z.number().optional().describe("Chest measurement in cm"),
+      notes: z.string().optional().describe("Optional notes"),
+      date: z.string().optional().describe("Date in YYYY-MM-DD format (defaults to today)"),
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      weight: z.number(),
+      bodyFat: z.number().optional(),
+      weightChange: z.number().optional(),
+      bodyFatChange: z.number().optional(),
+      date: z.string(),
+      message: z.string(),
+    }),
+  },
+  // Personal Records Tools
+  {
+    name: "getPersonalRecords",
+    description:
+      "Get the user's personal records (PRs) for exercises. Shows best weight, volume, and estimated 1RM. Use when the user asks about their PRs, bests, or strongest lifts.",
+    tool: getPersonalRecords,
+    inputSchema: z.object({
+      exerciseName: z.string().optional().describe("Filter PRs for a specific exercise"),
+      limit: z.number().optional().describe("Maximum number of exercises to return"),
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      records: z.array(z.object({
+        exerciseName: z.string(),
+        maxWeight: z.object({
+          value: z.number(),
+          reps: z.number().optional(),
+          date: z.string(),
+        }).optional(),
+        maxVolume: z.object({
+          value: z.number(),
+          date: z.string(),
+        }).optional(),
+        estimated1RM: z.object({
+          value: z.number(),
+          date: z.string(),
+        }).optional(),
+      })),
+      totalCount: z.number(),
+      message: z.string(),
+    }),
+  },
+  // Weekly Report Tools
+  {
+    name: "getWeeklyReport",
+    description:
+      "Get a weekly report card showing workout, nutrition, and reminder performance with grades. Use when the user asks for their weekly summary, report, or how they did this week.",
+    tool: getWeeklyReport,
+    inputSchema: z.object({
+      weekStart: z.string().optional().describe("Start date of the week in YYYY-MM-DD format (defaults to current week)"),
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      weekStart: z.string(),
+      weekEnd: z.string(),
+      workout: z.object({
+        totalDays: z.number(),
+        targetDays: z.number(),
+        totalExercises: z.number(),
+        grade: z.string(),
+      }),
+      nutrition: z.object({
+        totalDaysLogged: z.number(),
+        averageCalories: z.number(),
+        averageProtein: z.number(),
+        grade: z.string(),
+      }),
+      reminders: z.object({
+        completed: z.number(),
+        totalScheduled: z.number(),
+        adherenceRate: z.number(),
+        grade: z.string(),
+      }),
+      overallGrade: z.string(),
+      overallScore: z.number(),
+      insights: z.array(z.string()),
+      message: z.string(),
+    }),
+  },
+  // Badge Tools
+  {
+    name: "getAchievements",
+    description:
+      "Get the user's badge progress across 4 chains: Workout Streak, Exercises, PRs, and Variety. Shows current value, milestones earned, and progress to next milestone. Use when the user asks about their badges, achievements, or progress.",
+    tool: getAchievements,
+    inputSchema: z.object({}),
+    outputSchema: z.object({
+      success: z.boolean(),
+      badges: z.array(z.object({
+        id: z.string(),
+        name: z.string(),
+        icon: z.string(),
+        unit: z.string(),
+        milestones: z.array(z.number()),
+        currentValue: z.number(),
+        earnedMilestones: z.array(z.number()),
+        nextMilestone: z.number().nullable(),
+        progressPercent: z.number(),
+        isComplete: z.boolean(),
+      })),
+      message: z.string(),
+    }),
+  },
+  // Workout Plan Tools
+  {
+    name: "createWorkoutPlan",
+    description:
+      "Create a new workout plan with a list of exercises. Use when the user wants to create, build, or save a workout plan or routine.",
+    tool: createWorkoutPlan,
+    inputSchema: z.object({
+      name: z.string().describe("Name of the workout plan (e.g., 'Push Day', 'Full Body')"),
+      description: z.string().optional().describe("Optional description of the plan"),
+      exercises: z.array(z.object({
+        name: z.string().describe("Exercise name"),
+        sets: z.number().describe("Number of sets"),
+        reps: z.string().describe("Rep scheme (e.g., '8-12', '5', '10')"),
+        notes: z.string().optional().describe("Optional exercise notes"),
+      })).describe("List of exercises in the plan"),
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      name: z.string(),
+      exerciseCount: z.number(),
+      exercises: z.array(z.object({
+        name: z.string(),
+        sets: z.number(),
+        reps: z.string(),
+      })),
+      message: z.string(),
+    }),
+  },
+  {
+    name: "getWorkoutPlans",
+    description:
+      "Get the user's saved workout plans. Use when the user asks to see their plans, routines, or workout templates.",
+    tool: getWorkoutPlans,
+    inputSchema: z.object({
+      limit: z.number().optional().describe("Maximum number of plans to return"),
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      plans: z.array(z.object({
+        id: z.string(),
+        name: z.string(),
+        description: z.string().optional(),
+        exerciseCount: z.number(),
+        usageCount: z.number(),
+      })),
+      totalCount: z.number(),
+      message: z.string(),
+    }),
+  },
+  {
+    name: "startWorkoutPlan",
+    description:
+      "Start an active workout session from a saved plan. Use when the user wants to begin or start a specific workout plan.",
+    tool: startWorkoutPlan,
+    inputSchema: z.object({
+      planName: z.string().describe("Name or partial name of the plan to start"),
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      planName: z.string(),
+      exerciseCount: z.number(),
+      exercises: z.array(z.object({
+        name: z.string(),
+        sets: z.number(),
+        reps: z.string(),
+      })),
+      message: z.string(),
+    }),
+  },
 ];
 
 /**
  * Tambo Components for JackedAI
  *
  * These components are rendered by the AI in the chat:
- * - ExerciseLogCard: Shows confirmation when an exercise is logged
- * - MealLogCard: Shows meal with estimated nutrition
- * - DailyProgressCard: Shows daily summary with stats
+ * - ExerciseLogCard, MealLogCard: Log confirmations
+ * - DailyProgressCard, WeeklyReportCard: Progress summaries
+ * - WorkoutPlanCard, BodyStatsCard, PRCard, AchievementCard: Feature cards
  * - Graph: For visualizing progress data
+ * - ReminderCard: Reminder confirmations
  */
 export const components: TamboComponent[] = [
   {
@@ -363,5 +575,40 @@ export const components: TamboComponent[] = [
       "Display a confirmation card when a reminder has been created, completed, or updated. Shows reminder title, category, time, frequency, and optional inventory information. Use this after creating or completing a reminder.",
     component: ReminderCard,
     propsSchema: reminderCardSchema,
+  },
+  {
+    name: "WorkoutPlanCard",
+    description:
+      "Display a workout plan with its exercises, sets, and reps. Use this after creating a workout plan or when showing plan details.",
+    component: WorkoutPlanCard,
+    propsSchema: workoutPlanCardSchema,
+  },
+  {
+    name: "BodyStatsCard",
+    description:
+      "Display logged body measurements with weight, body fat, and change indicators. Use this after logging body stats.",
+    component: BodyStatsCard,
+    propsSchema: bodyStatsCardSchema,
+  },
+  {
+    name: "PRCard",
+    description:
+      "Display personal records showing best weight, volume, and estimated 1RM for exercises. Use this when showing the user's PRs.",
+    component: PRCard,
+    propsSchema: prCardSchema,
+  },
+  {
+    name: "WeeklyReportCard",
+    description:
+      "Display a weekly report card with grades for workout, nutrition, and reminders, plus insights. Use this when showing the weekly summary.",
+    component: WeeklyReportCard,
+    propsSchema: weeklyReportCardSchema,
+  },
+  {
+    name: "AchievementCard",
+    description:
+      "Display achievement badges in a grid with unlock status, progress, and points. Use this when showing the user's achievements.",
+    component: AchievementCard,
+    propsSchema: achievementCardSchema,
   },
 ];
