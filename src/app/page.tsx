@@ -5,32 +5,26 @@ import { ChatSidebar } from "@/components/chat/ChatSidebar";
 import { DashboardPanel } from "@/components/dashboard/DashboardPanel";
 import { DietPanel } from "@/components/diet/DietPanel";
 import { ExercisePanel } from "@/components/exercise/ExercisePanel";
+import { Logo } from "@/components/Logo";
+import { AppSidebar } from "@/components/navigation/AppSidebar";
 import { OnboardingWizard } from "@/components/onboarding/OnboardingWizard";
 import { PlansPanel } from "@/components/plans/PlansPanel";
 import { ReminderPanel } from "@/components/reminder/ReminderPanel";
 import { SettingsPanel } from "@/components/settings/SettingsPanel";
 import { components, tools } from "@/lib/tambo";
-import { cn } from "@/lib/utils";
 import { TamboProvider } from "@tambo-ai/react";
 import { useQuery } from "convex/react";
-import { Bell, ClipboardList, Dumbbell, LayoutDashboard, Loader2, Settings, Utensils } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api } from "../../convex/_generated/api";
 
 type Tab = "dashboard" | "exercise" | "diet" | "plans" | "reminders" | "settings";
 
-const tabs = [
-  { id: "dashboard" as const, label: "Dashboard", icon: LayoutDashboard },
-  { id: "exercise" as const, label: "Exercise", icon: Dumbbell },
-  { id: "diet" as const, label: "Diet", icon: Utensils },
-  { id: "plans" as const, label: "Plans", icon: ClipboardList },
-  { id: "reminders" as const, label: "Reminders", icon: Bell },
-];
-
 export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>("dashboard");
   const [showOnboarding, setShowOnboarding] = useState(true);
   const [isPinVerified, setIsPinVerified] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
   const profile = useQuery(api.userProfile.get);
   const pinStatus = useQuery(api.pinProtection.getPinStatus);
@@ -76,62 +70,29 @@ export default function Home() {
       {showPinLock && <PinLockScreen onUnlock={handlePinUnlock} />}
 
       <div className="flex h-screen bg-background">
+        {/* Left Sidebar Navigation */}
+        <AppSidebar
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          isExpanded={sidebarExpanded}
+          onToggle={() => setSidebarExpanded(!sidebarExpanded)}
+        />
+
         {/* Main Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Header */}
-          <header className="bg-card border-b border-border px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-8">
-                {/* Logo */}
-                <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
-                  <Dumbbell className="w-6 h-6 text-primary" aria-hidden="true" />
-                  JackedAI
-                </h1>
-
-                {/* Tabs */}
-                <nav className="flex items-center gap-1" role="tablist" aria-label="Main navigation">
-                  {tabs.map((tab) => {
-                    const Icon = tab.icon;
-                    return (
-                      <button
-                        key={tab.id}
-                        role="tab"
-                        aria-selected={activeTab === tab.id}
-                        aria-controls={`${tab.id}-panel`}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={cn(
-                          "flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors",
-                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                          activeTab === tab.id
-                            ? "bg-primary/10 text-primary"
-                            : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                        )}
-                      >
-                        <Icon className="w-4 h-4" aria-hidden="true" />
-                        {tab.label}
-                      </button>
-                    );
-                  })}
-                </nav>
-              </div>
-
-              {/* Settings */}
-              <button
-                role="tab"
-                aria-selected={activeTab === "settings"}
-                aria-controls="settings-panel"
-                aria-label="Settings"
-                onClick={() => setActiveTab("settings")}
-                className={cn(
-                  "p-2 rounded-lg transition-colors",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                  activeTab === "settings"
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-                )}
-              >
-                <Settings className="w-5 h-5" aria-hidden="true" />
-              </button>
+          {/* Top Bar */}
+          <header className="bg-card border-b border-border px-6 h-14 flex items-center shrink-0">
+            <div className="flex items-center gap-2">
+              <Logo className="w-6 h-6 text-foreground" />
+              <span className="text-lg font-bold text-foreground tracking-wide">
+                JackedAI
+              </span>
+              <span className="text-muted-foreground text-sm font-medium">x</span>
+              <img
+                src="/Tambo-Lockup.svg"
+                alt="Tambo"
+                className="h-5 dark:invert"
+              />
             </div>
           </header>
 
@@ -140,7 +101,7 @@ export default function Home() {
             {isLoading ? (
               <div className="flex items-center justify-center h-full gap-2">
                 <Loader2 className="w-5 h-5 animate-spin text-primary" aria-hidden="true" />
-                <span className="text-muted-foreground">Loading…</span>
+                <span className="text-muted-foreground">Loading...</span>
               </div>
             ) : (
               <>

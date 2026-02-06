@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60" fill="currentColor">
+  <!-- Left outer plate -->
+  <rect x="8" y="16" width="6" height="28" rx="1.5"/>
+  <!-- Left inner plate -->
+  <rect x="18" y="10" width="8" height="40" rx="2"/>
+  <!-- Bar left section -->
+  <rect x="26" y="26" width="14" height="8" rx="1"/>
+  <!-- Center grip -->
+  <rect x="40" y="24" width="40" height="12" rx="2"/>
+  <!-- Bar right section -->
+  <rect x="80" y="26" width="14" height="8" rx="1"/>
+  <!-- Right inner plate -->
+  <rect x="94" y="10" width="8" height="40" rx="2"/>
+  <!-- Right outer plate -->
+  <rect x="106" y="16" width="6" height="28" rx="1.5"/>
+</svg>

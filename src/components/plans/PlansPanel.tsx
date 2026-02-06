@@ -112,7 +112,7 @@ function DeleteConfirmModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div
-        className="bg-card rounded-xl shadow-xl w-full max-w-sm mx-4 p-6 border border-border"
+        className="bg-card w-full max-w-sm mx-4 p-6 border-2 border-border"
         role="alertdialog"
         aria-labelledby="delete-plan-title"
         aria-describedby="delete-plan-desc"
@@ -131,14 +131,14 @@ function DeleteConfirmModal({
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="flex-1 px-4 py-2 border border-border bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             Delete
           </button>
@@ -222,16 +222,16 @@ function PlanFormModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div
-        className="bg-card rounded-xl shadow-xl w-full max-w-lg mx-4 border border-border max-h-[90vh] overflow-y-auto"
+        className="bg-card w-full max-w-lg mx-4 border-2 border-border max-h-[90vh] overflow-y-auto"
         role="dialog"
         aria-labelledby="plan-modal-title"
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border sticky top-0 bg-card z-10">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
+            <div className="w-8 h-8 bg-primary/10 flex items-center justify-center">
               <ClipboardList
-                className="w-4 h-4 text-indigo-600 dark:text-indigo-400"
+                className="w-4 h-4 text-primary"
                 aria-hidden="true"
               />
             </div>
@@ -245,7 +245,7 @@ function PlanFormModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="p-1.5 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" aria-hidden="true" />
@@ -269,7 +269,7 @@ function PlanFormModal({
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, name: e.target.value }))
               }
-              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+              className="w-full px-3 py-2 border border-input bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               placeholder="e.g., Push Day, Upper Body, PPL Day A..."
               required
               autoComplete="off"
@@ -293,7 +293,7 @@ function PlanFormModal({
                   description: e.target.value,
                 }))
               }
-              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none resize-none"
+              className="w-full px-3 py-2 border border-input bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none resize-none"
               placeholder="Describe this workout plan..."
               rows={2}
               autoComplete="off"
@@ -316,7 +316,7 @@ function PlanFormModal({
               {formData.exercises.map((exercise, index) => (
                 <div
                   key={index}
-                  className="p-3 bg-muted/50 rounded-lg border border-border space-y-2"
+                  className="p-3 bg-muted/50 border border-border space-y-2"
                 >
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-medium text-muted-foreground tabular-nums w-5 text-center">
@@ -328,7 +328,7 @@ function PlanFormModal({
                       onChange={(e) =>
                         updateExercise(index, "name", e.target.value)
                       }
-                      className="flex-1 px-3 py-1.5 border border-input rounded-lg bg-background text-foreground text-sm placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                      className="flex-1 px-3 py-1.5 border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                       placeholder="Exercise name"
                       autoComplete="off"
                       aria-label={`Exercise ${index + 1} name`}
@@ -337,7 +337,7 @@ function PlanFormModal({
                       <button
                         type="button"
                         onClick={() => removeExercise(index)}
-                        className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                        className="p-1.5 hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                         aria-label={`Remove exercise ${index + 1}`}
                       >
                         <Minus className="w-4 h-4" aria-hidden="true" />
@@ -365,7 +365,7 @@ function PlanFormModal({
                               parseInt(e.target.value) || 1
                             )
                           }
-                          className="w-full px-3 py-1.5 border border-input rounded-lg bg-background text-foreground text-sm tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                          className="w-full px-3 py-1.5 border border-input bg-background text-foreground text-sm tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                           min={1}
                           max={20}
                           aria-label={`Exercise ${index + 1} sets`}
@@ -391,7 +391,7 @@ function PlanFormModal({
                           onChange={(e) =>
                             updateExercise(index, "reps", e.target.value)
                           }
-                          className="w-full px-3 py-1.5 border border-input rounded-lg bg-background text-foreground text-sm tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                          className="w-full px-3 py-1.5 border border-input bg-background text-foreground text-sm tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                           placeholder="8-12"
                           aria-label={`Exercise ${index + 1} reps`}
                         />
@@ -410,7 +410,7 @@ function PlanFormModal({
                       onChange={(e) =>
                         updateExercise(index, "notes", e.target.value)
                       }
-                      className="w-full px-3 py-1.5 border border-input rounded-lg bg-background text-foreground text-xs placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                      className="w-full px-3 py-1.5 border border-input bg-background text-foreground text-xs placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                       placeholder="Notes (optional)"
                       autoComplete="off"
                       aria-label={`Exercise ${index + 1} notes`}
@@ -423,7 +423,7 @@ function PlanFormModal({
             <button
               type="button"
               onClick={addExercise}
-              className="mt-3 w-full flex items-center justify-center gap-1.5 px-3 py-2 border border-dashed border-border rounded-lg text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:bg-accent/50 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              className="mt-3 w-full flex items-center justify-center gap-1.5 px-3 py-2 border border-dashed border-border text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 hover:bg-accent/50 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               <Plus className="w-4 h-4" aria-hidden="true" />
               Add Exercise
@@ -435,7 +435,7 @@ function PlanFormModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              className="flex-1 px-4 py-2 border border-border bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               Cancel
             </button>
@@ -443,9 +443,9 @@ function PlanFormModal({
               type="submit"
               disabled={validExerciseCount === 0}
               className={cn(
-                "flex-1 px-4 py-2 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+                "flex-1 px-4 py-2 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
                 validExerciseCount > 0
-                  ? "bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
                   : "bg-muted text-muted-foreground cursor-not-allowed"
               )}
             >
@@ -481,12 +481,12 @@ function PlanCard({
   const exerciseCount = plan.exercises.length;
 
   return (
-    <div className="bg-card rounded-xl border border-border p-4 shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-card border-2 border-border p-4 hover:transition-shadow">
       {/* Card header */}
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center flex-shrink-0">
+        <div className="w-10 h-10 bg-primary/10 flex items-center justify-center flex-shrink-0">
           <ClipboardList
-            className="w-5 h-5 text-indigo-600 dark:text-indigo-400"
+            className="w-5 h-5 text-primary"
             aria-hidden="true"
           />
         </div>
@@ -499,7 +499,7 @@ function PlanCard({
               {plan.description}
             </p>
           )}
-          <p className="text-xs text-indigo-600 dark:text-indigo-400 mt-1 tabular-nums">
+          <p className="text-xs text-primary mt-1 tabular-nums">
             {exerciseCount} exercise{exerciseCount !== 1 ? "s" : ""}
           </p>
         </div>
@@ -509,7 +509,7 @@ function PlanCard({
       <button
         type="button"
         onClick={() => setExpanded((prev) => !prev)}
-        className="mt-3 w-full flex items-center justify-between text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none rounded-lg px-2 py-1 -mx-2"
+        className="mt-3 w-full flex items-center justify-between text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none px-2 py-1 -mx-2"
         aria-expanded={expanded}
         aria-label={expanded ? "Hide exercises" : "Show exercises"}
       >
@@ -532,7 +532,7 @@ function PlanCard({
               className="flex items-center gap-2 text-sm text-foreground"
             >
               <Dumbbell
-                className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 flex-shrink-0"
+                className="w-3.5 h-3.5 text-primary flex-shrink-0"
                 aria-hidden="true"
               />
               <span className="font-medium truncate">{exercise.name}</span>
@@ -551,10 +551,10 @@ function PlanCard({
           onClick={onStart}
           disabled={isStarting}
           className={cn(
-            "flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+            "flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
             isStarting
-              ? "bg-indigo-400 dark:bg-indigo-700 text-white cursor-not-allowed"
-              : "bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
+              ? "bg-primary/60 text-primary-foreground cursor-not-allowed"
+              : "bg-primary text-primary-foreground hover:bg-primary/90"
           )}
           aria-label={`Start workout from ${plan.name}`}
         >
@@ -571,7 +571,7 @@ function PlanCard({
         <button
           type="button"
           onClick={onEdit}
-          className="p-2 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="p-2 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           aria-label={`Edit ${plan.name}`}
         >
           <Pencil className="w-4 h-4" aria-hidden="true" />
@@ -579,7 +579,7 @@ function PlanCard({
         <button
           type="button"
           onClick={onDuplicate}
-          className="p-2 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="p-2 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           aria-label={`Duplicate ${plan.name}`}
         >
           <Copy className="w-4 h-4" aria-hidden="true" />
@@ -587,7 +587,7 @@ function PlanCard({
         <button
           type="button"
           onClick={onDelete}
-          className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="p-2 hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           aria-label={`Delete ${plan.name}`}
         >
           <Trash2 className="w-4 h-4" aria-hidden="true" />
@@ -630,29 +630,29 @@ function ActiveExerciseRow({
   return (
     <div
       className={cn(
-        "p-4 rounded-xl border transition-all",
+        "p-4 border transition-all",
         isDone
-          ? "bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800"
+          ? "bg-primary/5 border-primary/20"
           : "bg-card border-border"
       )}
     >
       <div className="flex items-start gap-3">
         <div
           className={cn(
-            "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5",
+            "w-8 h-8 flex items-center justify-center flex-shrink-0 mt-0.5",
             isDone
-              ? "bg-green-100 dark:bg-green-900/50"
-              : "bg-indigo-100 dark:bg-indigo-900/50"
+              ? "bg-primary/10"
+              : "bg-primary/10"
           )}
         >
           {isDone ? (
             <Check
-              className="w-4 h-4 text-green-600 dark:text-green-400"
+              className="w-4 h-4 text-primary"
               aria-hidden="true"
             />
           ) : (
             <Dumbbell
-              className="w-4 h-4 text-indigo-600 dark:text-indigo-400"
+              className="w-4 h-4 text-primary"
               aria-hidden="true"
             />
           )}
@@ -664,14 +664,14 @@ function ActiveExerciseRow({
               className={cn(
                 "font-semibold truncate",
                 isDone
-                  ? "text-green-700 dark:text-green-400"
+                  ? "text-primary"
                   : "text-foreground"
               )}
             >
               {exercise.name}
             </h4>
             {isDone && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400 font-medium">
+              <span className="text-xs px-2 py-0.5 bg-primary/10 text-primary font-medium">
                 Done
               </span>
             )}
@@ -695,7 +695,7 @@ function ActiveExerciseRow({
                 className={cn(
                   "h-2 flex-1 rounded-full transition-colors",
                   i < progress.completedSets
-                    ? "bg-green-500 dark:bg-green-400"
+                    ? "bg-primary"
                     : "bg-muted"
                 )}
                 aria-hidden="true"
@@ -721,7 +721,7 @@ function ActiveExerciseRow({
                   id={`weight-${exercise.name}`}
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
-                  className="w-full px-2.5 py-1.5 border border-input rounded-lg bg-background text-foreground text-sm tabular-nums placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                  className="w-full px-2.5 py-1.5 border border-input bg-background text-foreground text-sm tabular-nums placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                   placeholder="kg"
                   min={0}
                   step={0.5}
@@ -737,7 +737,7 @@ function ActiveExerciseRow({
                   id={`reps-${exercise.name}`}
                   value={reps}
                   onChange={(e) => setReps(e.target.value)}
-                  className="w-full px-2.5 py-1.5 border border-input rounded-lg bg-background text-foreground text-sm tabular-nums placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                  className="w-full px-2.5 py-1.5 border border-input bg-background text-foreground text-sm tabular-nums placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                   placeholder="reps"
                   min={1}
                   aria-label={`Reps for ${exercise.name}`}
@@ -748,10 +748,10 @@ function ActiveExerciseRow({
                 onClick={handleLogSet}
                 disabled={isLogging}
                 className={cn(
-                  "inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+                  "inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
                   isLogging
-                    ? "bg-indigo-400 dark:bg-indigo-700 text-white cursor-not-allowed"
-                    : "bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
+                    ? "bg-primary/60 text-primary-foreground cursor-not-allowed"
+                    : "bg-primary text-primary-foreground hover:bg-primary/90"
                 )}
                 aria-label={`Log set for ${exercise.name}`}
               >
@@ -828,9 +828,9 @@ function ActiveWorkoutView({
       {/* Active workout header */}
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center">
+          <div className="w-10 h-10 bg-primary/10 flex items-center justify-center">
             <Play
-              className="w-5 h-5 text-green-600 dark:text-green-400"
+              className="w-5 h-5 text-primary"
               aria-hidden="true"
             />
           </div>
@@ -847,7 +847,7 @@ function ActiveWorkoutView({
       </header>
 
       {/* Progress bar */}
-      <div className="bg-card rounded-xl border border-border p-4">
+      <div className="bg-card border-2 border-border p-4">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-foreground">Progress</span>
           <span className="text-sm text-muted-foreground tabular-nums">
@@ -856,7 +856,7 @@ function ActiveWorkoutView({
         </div>
         <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
           <div
-            className="h-full bg-green-500 dark:bg-green-400 rounded-full transition-all duration-500"
+            className="h-full bg-primary rounded-full transition-all duration-500"
             style={{ width: `${overallProgress}%` }}
             role="progressbar"
             aria-valuenow={overallProgress}
@@ -894,7 +894,7 @@ function ActiveWorkoutView({
         <button
           type="button"
           onClick={onComplete}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 bg-green-600 text-white rounded-xl hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 transition-colors font-medium focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-3 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-medium focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           aria-label="Complete workout"
         >
           <CheckCircle2 className="w-5 h-5" aria-hidden="true" />
@@ -903,7 +903,7 @@ function ActiveWorkoutView({
         <button
           type="button"
           onClick={() => setShowAbandonConfirm(true)}
-          className="px-4 py-3 border border-border rounded-xl bg-card text-muted-foreground hover:text-destructive hover:border-destructive/50 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="px-4 py-3 border border-border bg-card text-muted-foreground hover:text-destructive hover:border-destructive/50 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           aria-label="Abandon workout"
         >
           <XCircle className="w-5 h-5" aria-hidden="true" />
@@ -914,7 +914,7 @@ function ActiveWorkoutView({
       {showAbandonConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div
-            className="bg-card rounded-xl shadow-xl w-full max-w-sm mx-4 p-6 border border-border"
+            className="bg-card w-full max-w-sm mx-4 p-6 border-2 border-border"
             role="alertdialog"
             aria-labelledby="abandon-title"
             aria-describedby="abandon-desc"
@@ -933,7 +933,7 @@ function ActiveWorkoutView({
               <button
                 type="button"
                 onClick={() => setShowAbandonConfirm(false)}
-                className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                className="flex-1 px-4 py-2 border border-border bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               >
                 Keep Going
               </button>
@@ -943,7 +943,7 @@ function ActiveWorkoutView({
                   setShowAbandonConfirm(false);
                   onAbandon();
                 }}
-                className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               >
                 Abandon
               </button>
@@ -1073,9 +1073,9 @@ export function PlansPanel() {
       {/* Header */}
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
+          <div className="w-10 h-10 bg-primary/10 flex items-center justify-center">
             <ClipboardList
-              className="w-5 h-5 text-indigo-600 dark:text-indigo-400"
+              className="w-5 h-5 text-primary"
               aria-hidden="true"
             />
           </div>
@@ -1093,7 +1093,7 @@ export function PlansPanel() {
         <button
           type="button"
           onClick={() => setIsAddingNew(true)}
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           <Plus className="w-4 h-4" aria-hidden="true" />
           New Plan
@@ -1113,10 +1113,10 @@ export function PlansPanel() {
 
       {/* Empty state */}
       {!isLoading && planCount === 0 && (
-        <div className="p-12 text-center bg-card rounded-xl border border-border">
-          <div className="w-16 h-16 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center mx-auto mb-4">
+        <div className="p-12 text-center bg-card border-2 border-border">
+          <div className="w-16 h-16 bg-primary/10 flex items-center justify-center mx-auto mb-4">
             <ClipboardList
-              className="w-8 h-8 text-indigo-600 dark:text-indigo-400"
+              className="w-8 h-8 text-primary"
               aria-hidden="true"
             />
           </div>
@@ -1130,7 +1130,7 @@ export function PlansPanel() {
           <button
             type="button"
             onClick={() => setIsAddingNew(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             <Plus className="w-4 h-4" aria-hidden="true" />
             Create Your First Plan

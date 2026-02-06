@@ -155,7 +155,7 @@ function Section({
   const contentId = useId();
 
   return (
-    <div className="border border-border rounded-xl overflow-hidden bg-card shadow-sm">
+    <div className="border-2 border-border overflow-hidden bg-card ">
       <button
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={(e) => {
@@ -234,7 +234,7 @@ function FormInput({
           autoComplete={autoComplete}
           spellCheck={type === "email" ? false : undefined}
           className={cn(
-            "w-full px-3 py-2.5 rounded-lg border border-input bg-background text-foreground",
+            "w-full px-3 py-2.5 border border-input bg-background text-foreground",
             "placeholder:text-muted-foreground",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-transparent",
             "transition-colors",
@@ -270,7 +270,7 @@ function SelectionButton({
       aria-checked={selected}
       onClick={onClick}
       className={cn(
-        "rounded-lg border-2 font-medium transition-all",
+        "border-2 font-medium transition-all",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         selected
           ? "border-primary bg-primary/10 text-primary"
@@ -503,7 +503,7 @@ export function SettingsPanel() {
           onClick={handleSave}
           disabled={!hasChanges || isSaving}
           className={cn(
-            "flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all",
+            "flex items-center gap-2 px-4 py-2 font-medium transition-all",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             hasChanges && !isSaving
               ? "bg-primary text-primary-foreground hover:bg-primary/90"
@@ -536,7 +536,7 @@ export function SettingsPanel() {
         <div
           role="alert"
           aria-live="polite"
-          className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 rounded-lg"
+          className="bg-destructive/10 border-2 border-destructive/30 text-destructive px-4 py-3"
         >
           {saveError}
         </div>
@@ -665,7 +665,7 @@ export function SettingsPanel() {
             onClick={handleAutoCalculate}
             disabled={!formData.weight || !formData.height || !formData.fitnessGoal}
             className={cn(
-              "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all",
+              "w-full flex items-center justify-center gap-2 px-4 py-2.5 font-medium transition-all",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               formData.weight && formData.height && formData.fitnessGoal
                 ? "bg-secondary text-secondary-foreground hover:bg-secondary/80"
@@ -788,10 +788,10 @@ export function SettingsPanel() {
       >
         <div className="space-y-4">
           {/* Current Status */}
-          <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+          <div className="flex items-center justify-between p-3 bg-muted/50">
             <div className="flex items-center gap-3">
               {pinStatus?.enabled ? (
-                <ShieldCheck className="w-5 h-5 text-green-500" aria-hidden="true" />
+                <ShieldCheck className="w-5 h-5 text-primary" aria-hidden="true" />
               ) : (
                 <ShieldOff className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
               )}
@@ -812,7 +812,7 @@ export function SettingsPanel() {
           {pinStatus?.isLocked && (
             <div
               role="alert"
-              className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 rounded-lg"
+              className="bg-destructive/10 border-2 border-destructive/30 text-destructive px-4 py-3"
             >
               Account is locked due to too many failed attempts. Lockout will expire automatically,
               or you can clear it from the Convex dashboard.
@@ -823,7 +823,7 @@ export function SettingsPanel() {
           {pinSuccess && (
             <div
               role="status"
-              className="bg-green-500/10 border border-green-500/30 text-green-600 dark:text-green-400 px-4 py-3 rounded-lg"
+              className="bg-primary/10 border-2 border-primary/30 text-primary px-4 py-3"
             >
               {pinSuccess}
             </div>
@@ -833,7 +833,7 @@ export function SettingsPanel() {
           {pinError && (
             <div
               role="alert"
-              className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 rounded-lg"
+              className="bg-destructive/10 border-2 border-destructive/30 text-destructive px-4 py-3"
             >
               {pinError}
             </div>
@@ -848,7 +848,7 @@ export function SettingsPanel() {
                 resetPinForm();
               }}
               className={cn(
-                "w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all",
+                "w-full flex items-center justify-center gap-2 px-4 py-3 font-medium transition-all",
                 "bg-primary text-primary-foreground hover:bg-primary/90",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               )}
@@ -860,7 +860,7 @@ export function SettingsPanel() {
 
           {/* Setup PIN Form */}
           {showPinSetup && (
-            <div className="space-y-4 p-4 border border-border rounded-lg bg-card">
+            <div className="space-y-4 p-4 border-2 border-border bg-card">
               <h3 className="font-semibold text-foreground">
                 {pinStatus?.enabled ? "Change PIN" : "Set Up PIN"}
               </h3>
@@ -881,7 +881,7 @@ export function SettingsPanel() {
                       onChange={(e) => setCurrentPinInput(e.target.value.replace(/\D/g, ""))}
                       placeholder="Enter current PIN"
                       className={cn(
-                        "w-full px-3 py-2.5 rounded-lg border border-input bg-background text-foreground",
+                        "w-full px-3 py-2.5 border border-input bg-background text-foreground",
                         "placeholder:text-muted-foreground pr-10",
                         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       )}
@@ -913,7 +913,7 @@ export function SettingsPanel() {
                     onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ""))}
                     placeholder="Enter 6-digit PIN"
                     className={cn(
-                      "w-full px-3 py-2.5 rounded-lg border border-input bg-background text-foreground",
+                      "w-full px-3 py-2.5 border border-input bg-background text-foreground",
                       "placeholder:text-muted-foreground pr-10",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     )}
@@ -944,7 +944,7 @@ export function SettingsPanel() {
                     onChange={(e) => setConfirmPin(e.target.value.replace(/\D/g, ""))}
                     placeholder="Re-enter PIN"
                     className={cn(
-                      "w-full px-3 py-2.5 rounded-lg border border-input bg-background text-foreground",
+                      "w-full px-3 py-2.5 border border-input bg-background text-foreground",
                       "placeholder:text-muted-foreground pr-10",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     )}
@@ -969,7 +969,7 @@ export function SettingsPanel() {
                     resetPinForm();
                   }}
                   className={cn(
-                    "flex-1 px-4 py-2.5 rounded-lg font-medium transition-all",
+                    "flex-1 px-4 py-2.5 font-medium transition-all",
                     "bg-muted text-muted-foreground hover:bg-muted/80",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   )}
@@ -981,7 +981,7 @@ export function SettingsPanel() {
                   onClick={handleSetPin}
                   disabled={isPinLoading || newPin.length !== 6 || confirmPin.length !== 6}
                   className={cn(
-                    "flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all",
+                    "flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-medium transition-all",
                     "bg-primary text-primary-foreground hover:bg-primary/90",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                     "disabled:opacity-50 disabled:cursor-not-allowed"
@@ -1010,7 +1010,7 @@ export function SettingsPanel() {
                   resetPinForm();
                 }}
                 className={cn(
-                  "flex-1 px-4 py-2.5 rounded-lg font-medium transition-all",
+                  "flex-1 px-4 py-2.5 font-medium transition-all",
                   "bg-secondary text-secondary-foreground hover:bg-secondary/80",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 )}
@@ -1024,7 +1024,7 @@ export function SettingsPanel() {
                   resetPinForm();
                 }}
                 className={cn(
-                  "flex-1 px-4 py-2.5 rounded-lg font-medium transition-all",
+                  "flex-1 px-4 py-2.5 font-medium transition-all",
                   "bg-destructive/10 text-destructive hover:bg-destructive/20",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 )}
@@ -1036,7 +1036,7 @@ export function SettingsPanel() {
 
           {/* Remove PIN Confirmation */}
           {showPinRemove && (
-            <div className="space-y-4 p-4 border border-destructive/30 rounded-lg bg-destructive/5">
+            <div className="space-y-4 p-4 border-2 border-destructive/30 bg-destructive/5">
               <h3 className="font-semibold text-foreground">Disable PIN Protection</h3>
               <p className="text-sm text-muted-foreground">
                 Enter your current PIN to disable protection. Anyone will be able to access the app.
@@ -1056,7 +1056,7 @@ export function SettingsPanel() {
                     onChange={(e) => setCurrentPinInput(e.target.value.replace(/\D/g, ""))}
                     placeholder="Enter current PIN"
                     className={cn(
-                      "w-full px-3 py-2.5 rounded-lg border border-input bg-background text-foreground",
+                      "w-full px-3 py-2.5 border border-input bg-background text-foreground",
                       "placeholder:text-muted-foreground pr-10",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     )}
@@ -1080,7 +1080,7 @@ export function SettingsPanel() {
                     resetPinForm();
                   }}
                   className={cn(
-                    "flex-1 px-4 py-2.5 rounded-lg font-medium transition-all",
+                    "flex-1 px-4 py-2.5 font-medium transition-all",
                     "bg-muted text-muted-foreground hover:bg-muted/80",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   )}
@@ -1092,7 +1092,7 @@ export function SettingsPanel() {
                   onClick={handleRemovePin}
                   disabled={isPinLoading || currentPinInput.length !== 6}
                   className={cn(
-                    "flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all",
+                    "flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-medium transition-all",
                     "bg-destructive text-destructive-foreground hover:bg-destructive/90",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                     "disabled:opacity-50 disabled:cursor-not-allowed"

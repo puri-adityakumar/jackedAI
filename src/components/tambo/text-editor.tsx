@@ -218,7 +218,7 @@ function SuggestionPopover<T extends SuggestionItem>({
         side="bottom"
         align="start"
         sideOffset={sideOffset}
-        className="z-50 w-96 rounded-md border bg-popover p-0 shadow-md animate-in fade-in-0 zoom-in-95"
+        className="z-50 w-96 border bg-popover p-0 animate-in fade-in-0 zoom-in-95"
         onOpenAutoFocus={(e) => e.preventDefault()}
         onCloseAutoFocus={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => {
@@ -237,7 +237,7 @@ function SuggestionPopover<T extends SuggestionItem>({
                 key={item.id}
                 type="button"
                 className={cn(
-                  "flex items-start gap-2 px-2 py-2 text-sm rounded-md text-left",
+                  "flex items-start gap-2 px-2 py-2 text-sm text-left",
                   "hover:bg-accent hover:text-accent-foreground transition-colors",
                   index === state.selectedIndex &&
                     "bg-accent text-accent-foreground",
@@ -675,7 +675,7 @@ export const TextEditor = React.forwardRef<TamboEditor, TextEditorProps>(
         Mention.configure({
           HTMLAttributes: {
             class:
-              "mention resource inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground",
+              "mention resource inline-flex items-center bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground",
           },
           suggestion: createResourceMentionConfig(
             stableSearchResources,
@@ -706,7 +706,7 @@ export const TextEditor = React.forwardRef<TamboEditor, TextEditorProps>(
           class: cn(
             "tiptap",
             "prose prose-sm max-w-none focus:outline-none",
-            "p-3 rounded-t-lg bg-transparent text-sm leading-relaxed",
+            "p-3 bg-transparent text-sm leading-relaxed",
             "min-h-[82px] max-h-[40vh] overflow-y-auto",
             "break-words whitespace-pre-wrap",
             className,

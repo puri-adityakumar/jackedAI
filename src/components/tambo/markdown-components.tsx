@@ -54,7 +54,7 @@ const looksLikeCode = (text: string): boolean => {
 function ResourceMention({ name, uri }: { name: string; uri: string }) {
   return (
     <span
-      className="mention resource inline-flex items-center rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground cursor-default"
+      className="mention resource inline-flex items-center bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground cursor-default"
       data-resource-uri={uri}
       title={uri}
     >
@@ -99,20 +99,20 @@ const CodeHeader = ({
 
   const Icon = React.useMemo(() => {
     if (error) {
-      return <X className="size-4 text-red-500" />;
+      return <X className="size-4 text-destructive" />;
     }
     if (copied) {
-      return <Check className="size-4 text-green-500" />;
+      return <Check className="size-4 text-primary" />;
     }
     return <Copy className="size-4" />;
   }, [copied, error]);
 
   return (
-    <div className="flex items-center justify-between gap-4 rounded-t-md bg-container px-4 py-2 text-sm font-semibold text-foreground">
+    <div className="flex items-center justify-between gap-4 bg-container px-4 py-2 text-sm font-semibold text-foreground">
       <span className="lowercase text-muted-foreground">{language}</span>
       <button
         onClick={copyToClipboard}
-        className="p-1 rounded-md hover:bg-backdrop transition-colors cursor-pointer"
+        className="p-1 hover:bg-backdrop transition-colors cursor-pointer"
         title={error ? "Failed to copy" : "Copy code"}
       >
         {Icon}
@@ -146,13 +146,13 @@ export const createMarkdownComponents = (): Record<
 
     if (match && looksLikeCode(content)) {
       return (
-        <div className="relative border border-border rounded-md bg-muted max-w-[80ch] text-sm my-4">
+        <div className="relative border border-border bg-muted max-w-[80ch] text-sm my-4">
           <CodeHeader language={match[1]} code={content} />
           <div
             className={cn(
-              "overflow-x-auto rounded-b-md bg-background",
+              "overflow-x-auto bg-background",
               "[&::-webkit-scrollbar]:w-[6px]",
-              "[&::-webkit-scrollbar-thumb]:bg-muted-foreground/30 [&::-webkit-scrollbar-thumb]:rounded-md",
+              "[&::-webkit-scrollbar-thumb]:bg-muted-foreground/30",
               "[&::-webkit-scrollbar:horizontal]:h-[4px]",
             )}
           >

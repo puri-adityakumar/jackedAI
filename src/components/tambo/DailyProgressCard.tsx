@@ -27,72 +27,72 @@ export function DailyProgressCard({
   const remaining = calorieTarget - caloriesConsumed;
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-4 my-2">
+    <div className="bg-primary/5 border-2 border-primary/20 dark:border-primary/30 p-4 my-2">
       <div className="flex items-center gap-2 mb-4">
-        <Activity className="w-5 h-5 text-blue-600" />
-        <h4 className="font-semibold text-gray-900">Today&apos;s Progress</h4>
+        <Activity className="w-5 h-5 text-primary" />
+        <h4 className="font-semibold text-foreground">Today&apos;s Progress</h4>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-4 mb-4">
         {/* Calories */}
-        <div className="bg-white rounded-lg p-3 shadow-sm">
+        <div className="bg-card border border-border p-3">
           <div className="flex items-center gap-2 mb-2">
-            <Flame className="w-4 h-4 text-orange-500" />
-            <span className="text-xs text-gray-500">Calories</span>
+            <Flame className="w-4 h-4 text-primary" />
+            <span className="text-xs text-muted-foreground">Calories</span>
           </div>
-          <p className="text-xl font-bold text-gray-900">
+          <p className="text-xl font-bold text-foreground">
             {caloriesConsumed}
-            <span className="text-sm font-normal text-gray-400">
+            <span className="text-sm font-normal text-muted-foreground">
               /{calorieTarget}
             </span>
           </p>
-          <div className="h-1.5 bg-gray-200 rounded-full mt-2 overflow-hidden">
+          <div className="h-1.5 bg-muted mt-2 overflow-hidden">
             <div
-              className="h-full bg-orange-500 rounded-full transition-all"
+              className="h-full bg-primary transition-all"
               style={{ width: `${calorieProgress}%` }}
             />
           </div>
         </div>
 
         {/* Protein */}
-        <div className="bg-white rounded-lg p-3 shadow-sm">
+        <div className="bg-card border border-border p-3">
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="w-4 h-4 text-blue-500" />
-            <span className="text-xs text-gray-500">Protein</span>
+            <TrendingUp className="w-4 h-4 text-primary" />
+            <span className="text-xs text-muted-foreground">Protein</span>
           </div>
-          <p className="text-xl font-bold text-gray-900">
+          <p className="text-xl font-bold text-foreground">
             {proteinConsumed}
-            <span className="text-sm font-normal text-gray-400">g</span>
+            <span className="text-sm font-normal text-muted-foreground">g</span>
           </p>
         </div>
 
         {/* Exercises */}
-        <div className="bg-white rounded-lg p-3 shadow-sm">
+        <div className="bg-card border border-border p-3">
           <div className="flex items-center gap-2 mb-2">
-            <Activity className="w-4 h-4 text-green-500" />
-            <span className="text-xs text-gray-500">Exercises</span>
+            <Activity className="w-4 h-4 text-primary" />
+            <span className="text-xs text-muted-foreground">Exercises</span>
           </div>
-          <p className="text-xl font-bold text-gray-900">{exerciseCount}</p>
+          <p className="text-xl font-bold text-foreground">{exerciseCount}</p>
         </div>
 
         {/* Remaining */}
-        <div className="bg-white rounded-lg p-3 shadow-sm">
+        <div className="bg-card border border-border p-3">
           <div className="flex items-center gap-2 mb-2">
-            <Target className="w-4 h-4 text-purple-500" />
-            <span className="text-xs text-gray-500">Remaining</span>
+            <Target className="w-4 h-4 text-primary" />
+            <span className="text-xs text-muted-foreground">Remaining</span>
           </div>
           <p
-            className={`text-xl font-bold ${remaining >= 0 ? "text-green-600" : "text-red-600"}`}
+            className={`text-xl font-bold ${remaining >= 0 ? "text-primary" : "text-destructive"}`}
           >
             {remaining >= 0 ? remaining : `+${Math.abs(remaining)}`}
-            <span className="text-sm font-normal text-gray-400"> cal</span>
+            <span className="text-sm font-normal text-muted-foreground"> cal</span>
           </p>
         </div>
       </div>
 
       {message && (
-        <p className="text-sm text-gray-600 bg-white rounded-lg p-3 shadow-sm">
+        <p className="text-sm text-muted-foreground bg-card border border-border p-3">
           {message}
         </p>
       )}

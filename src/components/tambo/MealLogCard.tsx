@@ -34,19 +34,19 @@ export function MealLogCard({
   message,
 }: MealLogCardProps) {
   return (
-    <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 my-2">
+    <div className="bg-primary/5 border-2 border-primary/20 dark:border-primary/30 p-4 my-2">
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
-          <Utensils className="w-5 h-5 text-orange-600" />
+        <div className="w-10 h-10 bg-primary/10 dark:bg-primary/20 flex items-center justify-center flex-shrink-0">
+          <Utensils className="w-5 h-5 text-primary" />
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h4 className="font-semibold text-orange-900">{foodName}</h4>
-            <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center">
-              <Check className="w-3 h-3 text-white" />
+            <h4 className="font-semibold text-foreground">{foodName}</h4>
+            <div className="w-5 h-5 bg-primary flex items-center justify-center">
+              <Check className="w-3 h-3 text-primary-foreground" />
             </div>
           </div>
-          <p className="text-xs text-orange-600 mt-0.5">
+          <p className="text-xs text-primary mt-0.5">
             {mealTypeLabels[mealType]}
             {quantity && ` • ${quantity}`}
           </p>
@@ -54,26 +54,26 @@ export function MealLogCard({
           {/* Macro breakdown */}
           <div className="flex items-center gap-4 mt-3 text-sm">
             <div className="text-center">
-              <p className="font-bold text-orange-900">{calories}</p>
-              <p className="text-xs text-orange-600">cal</p>
+              <p className="font-bold text-foreground">{calories}</p>
+              <p className="text-xs text-muted-foreground">cal</p>
             </div>
-            <div className="h-8 w-px bg-orange-200" />
+            <div className="h-8 w-px bg-border" />
             <div className="text-center">
-              <p className="font-bold text-blue-700">{protein}g</p>
-              <p className="text-xs text-gray-500">protein</p>
-            </div>
-            <div className="text-center">
-              <p className="font-bold text-orange-700">{carbs}g</p>
-              <p className="text-xs text-gray-500">carbs</p>
+              <p className="font-bold text-primary">{protein}g</p>
+              <p className="text-xs text-muted-foreground">protein</p>
             </div>
             <div className="text-center">
-              <p className="font-bold text-purple-700">{fat}g</p>
-              <p className="text-xs text-gray-500">fat</p>
+              <p className="font-bold text-foreground">{carbs}g</p>
+              <p className="text-xs text-muted-foreground">carbs</p>
+            </div>
+            <div className="text-center">
+              <p className="font-bold text-foreground">{fat}g</p>
+              <p className="text-xs text-muted-foreground">fat</p>
             </div>
           </div>
 
           {message && (
-            <p className="text-xs text-orange-600 mt-2">{message}</p>
+            <p className="text-xs text-muted-foreground mt-2">{message}</p>
           )}
         </div>
       </div>

@@ -161,18 +161,18 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 overflow-hidden">
+      <div className="bg-card w-full max-w-md mx-4 overflow-hidden border border-border">
         {/* Progress indicator */}
-        <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+        <div className="bg-muted/50 px-6 py-4 border-b border-border">
           <div className="flex items-center justify-between">
             {STEPS.map((s, i) => (
               <div key={s.id} className="flex items-center">
                 <div
                   className={cn(
-                    "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
+                    "w-10 h-10 flex items-center justify-center transition-colors",
                     step >= s.id
-                      ? "bg-green-600 text-white"
-                      : "bg-gray-200 text-gray-500"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground"
                   )}
                 >
                   {step > s.id ? (
@@ -185,7 +185,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                   <div
                     className={cn(
                       "w-8 h-1 mx-1",
-                      step > s.id ? "bg-green-600" : "bg-gray-200"
+                      step > s.id ? "bg-primary" : "bg-muted"
                     )}
                   />
                 )}
@@ -200,18 +200,18 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           {step === 1 && (
             <div className="space-y-6">
               <div className="text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Dumbbell className="w-8 h-8 text-green-600" />
+                <div className="w-16 h-16 bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                  <Dumbbell className="w-8 h-8 text-primary" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-2xl font-bold text-foreground">
                   Welcome to JackedAI
                 </h2>
-                <p className="text-gray-500 mt-2">
+                <p className="text-muted-foreground mt-2">
                   Your AI-powered fitness companion. Let&apos;s set up your profile.
                 </p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-foreground mb-2">
                   What&apos;s your name?
                 </label>
                 <input
@@ -219,7 +219,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                   value={formData.name}
                   onChange={(e) => updateField("name", e.target.value)}
                   placeholder="Enter your name"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                  className="w-full px-4 py-3 border border-input bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring outline-none"
                   autoFocus
                 />
               </div>
@@ -230,14 +230,14 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           {step === 2 && (
             <div className="space-y-6">
               <div className="text-center">
-                <h2 className="text-2xl font-bold text-gray-900">Body Stats</h2>
-                <p className="text-gray-500 mt-2">
+                <h2 className="text-2xl font-bold text-foreground">Body Stats</h2>
+                <p className="text-muted-foreground mt-2">
                   Help us personalize your experience
                 </p>
               </div>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     Height (cm)
                   </label>
                   <input
@@ -247,11 +247,11 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                       updateField("height", e.target.value ? Number(e.target.value) : "")
                     }
                     placeholder="175"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-input bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     Weight (kg)
                   </label>
                   <input
@@ -261,11 +261,11 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                       updateField("weight", e.target.value ? Number(e.target.value) : "")
                     }
                     placeholder="70"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-input bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-foreground mb-2">
                     Age (optional)
                   </label>
                   <input
@@ -275,7 +275,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                       updateField("age", e.target.value ? Number(e.target.value) : "")
                     }
                     placeholder="25"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 border border-input bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring outline-none"
                   />
                 </div>
               </div>
@@ -286,10 +286,10 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           {step === 3 && (
             <div className="space-y-6">
               <div className="text-center">
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-2xl font-bold text-foreground">
                   What&apos;s Your Goal?
                 </h2>
-                <p className="text-gray-500 mt-2">
+                <p className="text-muted-foreground mt-2">
                   We&apos;ll customize your calorie targets
                 </p>
               </div>
@@ -301,19 +301,19 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                       updateField("fitnessGoal", goal.id as FitnessGoal)
                     }
                     className={cn(
-                      "w-full p-4 rounded-lg border-2 text-left transition-all",
+                      "w-full p-4 border-2 text-left transition-all",
                       formData.fitnessGoal === goal.id
-                        ? "border-green-500 bg-green-50"
-                        : "border-gray-200 hover:border-gray-300"
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/30"
                     )}
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">{goal.icon}</span>
                       <div>
-                        <p className="font-semibold text-gray-900">
+                        <p className="font-semibold text-foreground">
                           {goal.label}
                         </p>
-                        <p className="text-sm text-gray-500">{goal.desc}</p>
+                        <p className="text-sm text-muted-foreground">{goal.desc}</p>
                       </div>
                     </div>
                   </button>
@@ -326,15 +326,15 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           {step === 4 && (
             <div className="space-y-6">
               <div className="text-center">
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-2xl font-bold text-foreground">
                   Daily Calorie Target
                 </h2>
-                <p className="text-gray-500 mt-2">
+                <p className="text-muted-foreground mt-2">
                   We&apos;ve calculated a recommendation based on your stats
                 </p>
               </div>
-              <div className="bg-green-50 rounded-lg p-6 text-center">
-                <p className="text-sm text-green-600 font-medium">
+              <div className="bg-primary/5 p-6 text-center border border-primary/20">
+                <p className="text-sm text-primary font-medium">
                   Recommended
                 </p>
                 <input
@@ -346,11 +346,11 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                       e.target.value ? Number(e.target.value) : ""
                     )
                   }
-                  className="text-4xl font-bold text-green-700 bg-transparent text-center w-full outline-none"
+                  className="text-4xl font-bold text-primary bg-transparent text-center w-full outline-none"
                 />
-                <p className="text-green-600">calories/day</p>
+                <p className="text-primary">calories/day</p>
               </div>
-              <p className="text-sm text-gray-500 text-center">
+              <p className="text-sm text-muted-foreground text-center">
                 You can adjust this anytime in settings
               </p>
             </div>
@@ -358,11 +358,11 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex items-center justify-between">
+        <div className="px-6 py-4 bg-muted/50 border-t border-border flex items-center justify-between">
           {step > 1 ? (
             <button
               onClick={handleBack}
-              className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back
@@ -376,10 +376,10 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               onClick={handleNext}
               disabled={!canProceed()}
               className={cn(
-                "flex items-center gap-2 px-6 py-2 rounded-lg font-medium transition-colors",
+                "flex items-center gap-2 px-6 py-2 font-medium transition-colors",
                 canProceed()
-                  ? "bg-green-600 text-white hover:bg-green-700"
-                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                  : "bg-muted text-muted-foreground cursor-not-allowed"
               )}
             >
               Next
@@ -390,10 +390,10 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               onClick={handleSubmit}
               disabled={!canProceed() || isSubmitting}
               className={cn(
-                "flex items-center gap-2 px-6 py-2 rounded-lg font-medium transition-colors",
+                "flex items-center gap-2 px-6 py-2 font-medium transition-colors",
                 canProceed() && !isSubmitting
-                  ? "bg-green-600 text-white hover:bg-green-700"
-                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                  : "bg-muted text-muted-foreground cursor-not-allowed"
               )}
             >
               {isSubmitting ? "Creating..." : "Get Started"}

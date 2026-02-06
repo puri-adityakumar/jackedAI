@@ -64,12 +64,12 @@ const DAYS_OF_WEEK = [
 ];
 
 const CATEGORY_COLORS: Record<ReminderCategory, { bg: string; text: string; border: string }> = {
-  medicine: { bg: "bg-rose-100 dark:bg-rose-950/50", text: "text-rose-600 dark:text-rose-400", border: "border-rose-200 dark:border-rose-800" },
-  supplement: { bg: "bg-purple-100 dark:bg-purple-950/50", text: "text-purple-600 dark:text-purple-400", border: "border-purple-200 dark:border-purple-800" },
-  workout: { bg: "bg-green-100 dark:bg-green-950/50", text: "text-green-600 dark:text-green-400", border: "border-green-200 dark:border-green-800" },
-  meal: { bg: "bg-orange-100 dark:bg-orange-950/50", text: "text-orange-600 dark:text-orange-400", border: "border-orange-200 dark:border-orange-800" },
-  water: { bg: "bg-blue-100 dark:bg-blue-950/50", text: "text-blue-600 dark:text-blue-400", border: "border-blue-200 dark:border-blue-800" },
-  custom: { bg: "bg-gray-100 dark:bg-gray-800", text: "text-gray-600 dark:text-gray-400", border: "border-gray-200 dark:border-gray-700" },
+  medicine: { bg: "bg-primary/10", text: "text-primary", border: "border-primary/20" },
+  supplement: { bg: "bg-primary/10", text: "text-primary", border: "border-primary/20" },
+  workout: { bg: "bg-primary/10", text: "text-primary", border: "border-primary/20" },
+  meal: { bg: "bg-primary/10", text: "text-primary", border: "border-primary/20" },
+  water: { bg: "bg-primary/10", text: "text-primary", border: "border-primary/20" },
+  custom: { bg: "bg-primary/5", text: "text-primary", border: "border-primary/10" },
 };
 
 interface Reminder {
@@ -154,13 +154,13 @@ function ReminderFormModal({ reminder, isNew, onClose, onSave }: EditModalProps)
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div
-        className="bg-card rounded-xl shadow-xl w-full max-w-lg mx-4 border border-border max-h-[90vh] overflow-y-auto"
+        className="bg-card w-full max-w-lg mx-4 border-2 border-border max-h-[90vh] overflow-y-auto"
         role="dialog"
         aria-labelledby="modal-title"
       >
         <div className="flex items-center justify-between p-4 border-b border-border sticky top-0 bg-card">
           <div className="flex items-center gap-3">
-            <div className={cn("w-8 h-8 rounded-full flex items-center justify-center", CATEGORY_COLORS[formData.category].bg)}>
+            <div className={cn("w-8 h-8 flex items-center justify-center", CATEGORY_COLORS[formData.category].bg)}>
               <CategoryIcon className={cn("w-4 h-4", CATEGORY_COLORS[formData.category].text)} aria-hidden="true" />
             </div>
             <h2 id="modal-title" className="text-lg font-semibold text-foreground">
@@ -170,7 +170,7 @@ function ReminderFormModal({ reminder, isNew, onClose, onSave }: EditModalProps)
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="p-1.5 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" aria-hidden="true" />
@@ -189,7 +189,7 @@ function ReminderFormModal({ reminder, isNew, onClose, onSave }: EditModalProps)
               name="title"
               value={formData.title}
               onChange={(e) => setFormData((prev) => ({ ...prev, title: e.target.value }))}
-              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+              className="w-full px-3 py-2 border border-input bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               placeholder="e.g., Take Vitamin D…"
               required
               autoComplete="off"
@@ -207,7 +207,7 @@ function ReminderFormModal({ reminder, isNew, onClose, onSave }: EditModalProps)
               name="description"
               value={formData.description}
               onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
-              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+              className="w-full px-3 py-2 border border-input bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               placeholder="Optional details…"
               autoComplete="off"
             />
@@ -226,7 +226,7 @@ function ReminderFormModal({ reminder, isNew, onClose, onSave }: EditModalProps)
                     type="button"
                     onClick={() => setFormData((prev) => ({ ...prev, category: cat.value }))}
                     className={cn(
-                      "flex flex-col items-center gap-1 p-3 rounded-lg border transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+                      "flex flex-col items-center gap-1 p-3 border transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
                       isSelected
                         ? cn(CATEGORY_COLORS[cat.value].bg, CATEGORY_COLORS[cat.value].border)
                         : "border-border hover:bg-accent"
@@ -254,7 +254,7 @@ function ReminderFormModal({ reminder, isNew, onClose, onSave }: EditModalProps)
                 name="customCategoryName"
                 value={formData.customCategoryName}
                 onChange={(e) => setFormData((prev) => ({ ...prev, customCategoryName: e.target.value }))}
-                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                className="w-full px-3 py-2 border border-input bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 placeholder="e.g., Self Care, Pet Care, Study…"
                 autoComplete="off"
               />
@@ -274,7 +274,7 @@ function ReminderFormModal({ reminder, isNew, onClose, onSave }: EditModalProps)
                 name="time"
                 value={formData.time}
                 onChange={(e) => setFormData((prev) => ({ ...prev, time: e.target.value }))}
-                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 required
               />
             </div>
@@ -287,7 +287,7 @@ function ReminderFormModal({ reminder, isNew, onClose, onSave }: EditModalProps)
                 name="frequency"
                 value={formData.frequency}
                 onChange={(e) => setFormData((prev) => ({ ...prev, frequency: e.target.value as ReminderFrequency }))}
-                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                className="w-full px-3 py-2 border border-input bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               >
                 {FREQUENCIES.map((freq) => (
                   <option key={freq.value} value={freq.value}>
@@ -309,7 +309,7 @@ function ReminderFormModal({ reminder, isNew, onClose, onSave }: EditModalProps)
                     type="button"
                     onClick={() => toggleDay(day.value)}
                     className={cn(
-                      "flex-1 py-2 rounded-lg text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+                      "flex-1 py-2 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
                       formData.repeatDays.includes(day.value)
                         ? "bg-primary text-primary-foreground"
                         : "bg-muted text-muted-foreground hover:bg-accent"
@@ -334,7 +334,7 @@ function ReminderFormModal({ reminder, isNew, onClose, onSave }: EditModalProps)
                 name="dayOfMonth"
                 value={formData.dayOfMonth}
                 onChange={(e) => setFormData((prev) => ({ ...prev, dayOfMonth: parseInt(e.target.value) || 1 }))}
-                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={1}
                 max={31}
               />
@@ -353,7 +353,7 @@ function ReminderFormModal({ reminder, isNew, onClose, onSave }: EditModalProps)
                 name="startDate"
                 value={formData.startDate}
                 onChange={(e) => setFormData((prev) => ({ ...prev, startDate: e.target.value }))}
-                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 required
               />
             </div>
@@ -367,14 +367,14 @@ function ReminderFormModal({ reminder, isNew, onClose, onSave }: EditModalProps)
                 name="endDate"
                 value={formData.endDate}
                 onChange={(e) => setFormData((prev) => ({ ...prev, endDate: e.target.value }))}
-                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               />
             </div>
           </div>
 
           {/* Inventory tracking (for medicine/supplement) */}
           {(formData.category === "medicine" || formData.category === "supplement") && (
-            <div className="space-y-3 p-3 bg-muted/50 rounded-lg">
+            <div className="space-y-3 p-3 bg-muted/50">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
@@ -397,7 +397,7 @@ function ReminderFormModal({ reminder, isNew, onClose, onSave }: EditModalProps)
                       name="quantityRemaining"
                       value={formData.quantityRemaining}
                       onChange={(e) => setFormData((prev) => ({ ...prev, quantityRemaining: parseInt(e.target.value) || 0 }))}
-                      className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                      className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                       min={0}
                       inputMode="numeric"
                     />
@@ -412,7 +412,7 @@ function ReminderFormModal({ reminder, isNew, onClose, onSave }: EditModalProps)
                       name="refillThreshold"
                       value={formData.refillThreshold}
                       onChange={(e) => setFormData((prev) => ({ ...prev, refillThreshold: parseInt(e.target.value) || 0 }))}
-                      className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                      className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                       min={0}
                       inputMode="numeric"
                     />
@@ -427,13 +427,13 @@ function ReminderFormModal({ reminder, isNew, onClose, onSave }: EditModalProps)
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              className="flex-1 px-4 py-2 border border-border bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              className="flex-1 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               {isNew ? "Create Reminder" : "Save Changes"}
             </button>
@@ -454,7 +454,7 @@ function DeleteConfirmModal({ title, onConfirm, onCancel }: DeleteConfirmModalPr
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div
-        className="bg-card rounded-xl shadow-xl w-full max-w-sm mx-4 p-6 border border-border"
+        className="bg-card w-full max-w-sm mx-4 p-6 border-2 border-border"
         role="alertdialog"
         aria-labelledby="delete-title"
         aria-describedby="delete-desc"
@@ -469,14 +469,14 @@ function DeleteConfirmModal({ title, onConfirm, onCancel }: DeleteConfirmModalPr
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="flex-1 px-4 py-2 border border-border bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             Delete
           </button>
@@ -548,33 +548,33 @@ function ReminderItem({
   return (
     <div
       className={cn(
-        "p-4 rounded-xl border transition-all",
+        "p-4 border transition-all",
         reminder.isPaused
           ? "bg-muted/50 border-border opacity-60"
           : isCompleted
-          ? "bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800"
+          ? "bg-primary/5 border-primary/20"
           : isSkipped
-          ? "bg-gray-50 dark:bg-gray-900/50 border-gray-200 dark:border-gray-700"
+          ? "bg-muted/50 border-border"
           : cn(colors.bg, colors.border)
       )}
     >
       <div className="flex items-start gap-3">
-        <div className={cn("w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0", colors.bg)}>
+        <div className={cn("w-10 h-10 flex items-center justify-center flex-shrink-0", colors.bg)}>
           <Icon className={cn("w-5 h-5", colors.text)} aria-hidden="true" />
         </div>
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h4 className={cn("font-semibold truncate", isCompleted ? "text-green-700 dark:text-green-400 line-through" : "text-foreground")}>
+            <h4 className={cn("font-semibold truncate", isCompleted ? "text-primary line-through" : "text-foreground")}>
               {reminder.title}
             </h4>
             {isCompleted && (
-              <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+              <div className="w-5 h-5 bg-primary flex items-center justify-center flex-shrink-0">
                 <Check className="w-3 h-3 text-white" aria-hidden="true" />
               </div>
             )}
             {reminder.isPaused && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">Paused</span>
+              <span className="text-xs px-2 py-0.5 bg-muted text-muted-foreground">Paused</span>
             )}
           </div>
 
@@ -593,7 +593,7 @@ function ReminderItem({
 
           {/* Inventory warning */}
           {needsRefill && (
-            <div className="flex items-center gap-1.5 mt-2 text-xs text-amber-600 dark:text-amber-400">
+            <div className="flex items-center gap-1.5 mt-2 text-xs text-primary">
               <AlertTriangle className="w-3.5 h-3.5" aria-hidden="true" />
               <span className="tabular-nums">{reminder.quantityRemaining} remaining</span>
               <span>— time to refill!</span>
@@ -614,7 +614,7 @@ function ReminderItem({
               <button
                 type="button"
                 onClick={onComplete}
-                className="p-2 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                className="p-2 bg-primary/10 text-primary hover:bg-primary/20 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                 aria-label={`Mark ${reminder.title} as done`}
               >
                 <Check className="w-4 h-4" aria-hidden="true" />
@@ -622,7 +622,7 @@ function ReminderItem({
               <button
                 type="button"
                 onClick={onSkip}
-                className="p-2 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                className="p-2 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                 aria-label={`Skip ${reminder.title}`}
               >
                 <SkipForward className="w-4 h-4" aria-hidden="true" />
@@ -632,7 +632,7 @@ function ReminderItem({
           <button
             type="button"
             onClick={onTogglePause}
-            className="p-2 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="p-2 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             aria-label={reminder.isPaused ? `Resume ${reminder.title}` : `Pause ${reminder.title}`}
           >
             {reminder.isPaused ? (
@@ -644,7 +644,7 @@ function ReminderItem({
           <button
             type="button"
             onClick={onEdit}
-            className="p-2 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="p-2 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             aria-label={`Edit ${reminder.title}`}
           >
             <Pencil className="w-4 h-4" aria-hidden="true" />
@@ -652,7 +652,7 @@ function ReminderItem({
           <button
             type="button"
             onClick={onDelete}
-            className="p-2 rounded-lg hover:bg-destructive/10 text-destructive transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="p-2 hover:bg-destructive/10 text-destructive transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             aria-label={`Delete ${reminder.title}`}
           >
             <Trash2 className="w-4 h-4" aria-hidden="true" />
@@ -768,7 +768,7 @@ export function ReminderPanel() {
       {/* Header */}
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+          <div className="w-10 h-10 bg-primary/10 flex items-center justify-center">
             <Bell className="w-5 h-5 text-primary" aria-hidden="true" />
           </div>
           <div>
@@ -785,7 +785,7 @@ export function ReminderPanel() {
         <button
           type="button"
           onClick={() => setIsAddingNew(true)}
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           <Plus className="w-4 h-4" aria-hidden="true" />
           New Reminder
@@ -794,14 +794,14 @@ export function ReminderPanel() {
 
       {/* Refill alerts */}
       {needsRefill && needsRefill.length > 0 && (
-        <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl">
-          <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
+        <div className="p-4 bg-primary/5 border-2 border-primary/20">
+          <div className="flex items-center gap-2 text-primary">
             <AlertTriangle className="w-5 h-5" aria-hidden="true" />
             <span className="font-medium">Refill Needed</span>
           </div>
           <ul className="mt-2 space-y-1">
             {needsRefill.map((r) => (
-              <li key={r._id} className="text-sm text-amber-600 dark:text-amber-400">
+              <li key={r._id} className="text-sm text-primary">
                 {r.title} — <span className="tabular-nums">{r.quantityRemaining}</span> remaining
               </li>
             ))}
@@ -815,7 +815,7 @@ export function ReminderPanel() {
           type="button"
           onClick={() => setSelectedCategory("all")}
           className={cn(
-            "px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+            "px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
             selectedCategory === "all"
               ? "bg-primary text-primary-foreground"
               : "bg-muted text-muted-foreground hover:bg-accent"
@@ -831,7 +831,7 @@ export function ReminderPanel() {
               type="button"
               onClick={() => setSelectedCategory(cat.value)}
               className={cn(
-                "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+                "inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
                 selectedCategory === cat.value
                   ? cn(CATEGORY_COLORS[cat.value].bg, CATEGORY_COLORS[cat.value].text)
                   : "bg-muted text-muted-foreground hover:bg-accent"
@@ -870,7 +870,7 @@ export function ReminderPanel() {
             ))}
           </div>
         ) : (
-          <div className="p-8 text-center bg-card rounded-xl border border-border">
+          <div className="p-8 text-center bg-card border-2 border-border">
             <Bell className="w-8 h-8 mx-auto mb-2 text-muted-foreground/50" aria-hidden="true" />
             <p className="text-muted-foreground">No reminders scheduled for this day</p>
             <button

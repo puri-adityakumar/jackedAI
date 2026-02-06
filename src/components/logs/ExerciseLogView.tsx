@@ -93,7 +93,7 @@ function EditExerciseModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div
-        className="bg-card rounded-xl shadow-xl w-full max-w-md mx-4 border border-border"
+        className="bg-card w-full max-w-md mx-4 border border-border"
         role="dialog"
         aria-labelledby="modal-title"
       >
@@ -104,7 +104,7 @@ function EditExerciseModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="p-1.5 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" aria-hidden="true" />
@@ -127,7 +127,7 @@ function EditExerciseModal({
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, exerciseName: e.target.value }))
               }
-              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+              className="w-full px-3 py-2 border border-input bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               placeholder="e.g., Bench Press…"
               required
               autoComplete="off"
@@ -151,7 +151,7 @@ function EditExerciseModal({
                   muscleGroup: e.target.value as MuscleGroup,
                 }))
               }
-              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+              className="w-full px-3 py-2 border border-input bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
             >
               <option value="">Select muscle group…</option>
               {MUSCLE_GROUPS.map((mg) => (
@@ -181,7 +181,7 @@ function EditExerciseModal({
                     sets: parseInt(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={1}
                 required
               />
@@ -204,7 +204,7 @@ function EditExerciseModal({
                     reps: parseInt(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={1}
                 required
               />
@@ -227,7 +227,7 @@ function EditExerciseModal({
                     weight: parseFloat(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={0}
                 step={0.5}
               />
@@ -249,7 +249,7 @@ function EditExerciseModal({
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, notes: e.target.value }))
               }
-              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+              className="w-full px-3 py-2 border border-input bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               placeholder="Optional notes…"
               autoComplete="off"
             />
@@ -259,13 +259,13 @@ function EditExerciseModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              className="flex-1 px-4 py-2 border border-border bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              className="flex-1 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               {isNew ? "Add Exercise" : "Save Changes"}
             </button>
@@ -290,7 +290,7 @@ function DeleteConfirmModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div
-        className="bg-card rounded-xl shadow-xl w-full max-w-sm mx-4 p-6 border border-border"
+        className="bg-card w-full max-w-sm mx-4 p-6 border border-border"
         role="alertdialog"
         aria-labelledby="delete-title"
         aria-describedby="delete-desc"
@@ -306,14 +306,14 @@ function DeleteConfirmModal({
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="flex-1 px-4 py-2 border border-border bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             Delete
           </button>
@@ -346,7 +346,7 @@ export function ExerciseLogView() {
     if (!monthSummary?.byDate) return {};
     const data: Record<string, { count: number; color: string }> = {};
     for (const [date, info] of Object.entries(monthSummary.byDate)) {
-      data[date] = { count: info.count, color: "bg-green-500" };
+      data[date] = { count: info.count, color: "bg-primary" };
     }
     return data;
   }, [monthSummary]);
@@ -410,8 +410,8 @@ export function ExerciseLogView() {
       {/* Header */}
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-950/50 flex items-center justify-center">
-            <Dumbbell className="w-5 h-5 text-green-600 dark:text-green-400" aria-hidden="true" />
+          <div className="w-10 h-10 bg-primary/10 flex items-center justify-center">
+            <Dumbbell className="w-5 h-5 text-primary" aria-hidden="true" />
           </div>
           <h2 className="text-xl font-semibold text-foreground tracking-tight" style={{ textWrap: "balance" }}>
             Exercise Log
@@ -438,18 +438,18 @@ export function ExerciseLogView() {
       />
 
       {/* Day view */}
-      <section className="bg-card rounded-xl border border-border shadow-sm">
+      <section className="bg-card border border-border">
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div>
             <h3 className="font-medium text-foreground">{formattedDate}</h3>
             {dayLabel && (
-              <p className="text-sm text-green-600 dark:text-green-400 font-medium">{dayLabel}</p>
+              <p className="text-sm text-primary font-medium">{dayLabel}</p>
             )}
           </div>
           <button
             type="button"
             onClick={() => setIsAddingNew(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground text-sm rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground text-sm hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             aria-label="Add new exercise"
           >
             <Plus className="w-4 h-4" aria-hidden="true" />
@@ -490,7 +490,7 @@ export function ExerciseLogView() {
                         <button
                           type="button"
                           onClick={() => setEditingExercise(log)}
-                          className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                          className="p-1.5 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                           aria-label={`Edit ${log.exerciseName}`}
                         >
                           <Pencil className="w-4 h-4" aria-hidden="true" />
@@ -498,7 +498,7 @@ export function ExerciseLogView() {
                         <button
                           type="button"
                           onClick={() => setDeletingExercise(log)}
-                          className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                          className="p-1.5 hover:bg-destructive/10 text-destructive transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                           aria-label={`Delete ${log.exerciseName}`}
                         >
                           <Trash2 className="w-4 h-4" aria-hidden="true" />
@@ -517,7 +517,7 @@ export function ExerciseLogView() {
             <button
               type="button"
               onClick={() => setIsAddingNew(true)}
-              className="mt-2 text-primary hover:text-primary/80 font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none rounded"
+              className="mt-2 text-primary hover:text-primary/80 font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               Add your first exercise
             </button>

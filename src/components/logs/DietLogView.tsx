@@ -64,7 +64,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div
-        className="bg-card rounded-xl shadow-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto border border-border"
+        className="bg-card w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto border border-border"
         role="dialog"
         aria-labelledby="modal-title"
       >
@@ -75,7 +75,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="p-1.5 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" aria-hidden="true" />
@@ -100,7 +100,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
                   mealType: e.target.value as MealType,
                 }))
               }
-              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+              className="w-full px-3 py-2 border border-input bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               required
             >
               {MEAL_TYPES.map((mt) => (
@@ -126,7 +126,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, foodName: e.target.value }))
               }
-              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+              className="w-full px-3 py-2 border border-input bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               placeholder="e.g., Chicken Rice…"
               required
               autoComplete="off"
@@ -148,7 +148,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, quantity: e.target.value }))
               }
-              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+              className="w-full px-3 py-2 border border-input bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               placeholder="e.g., 1 bowl, 200g…"
               autoComplete="off"
             />
@@ -173,7 +173,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
                     calories: parseInt(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={0}
                 required
               />
@@ -196,7 +196,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
                     protein: parseInt(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={0}
                 required
               />
@@ -222,7 +222,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
                     carbs: parseInt(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={0}
                 required
               />
@@ -245,7 +245,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
                     fat: parseInt(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={0}
                 required
               />
@@ -268,7 +268,7 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
                     fiber: parseInt(e.target.value) || 0,
                   }))
                 }
-                className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
                 min={0}
               />
             </div>
@@ -278,13 +278,13 @@ function EditMealModal({ meal, isNew, date, onClose, onSave }: EditModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              className="flex-1 px-4 py-2 border border-border bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              className="flex-1 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               {isNew ? "Add Meal" : "Save Changes"}
             </button>
@@ -309,7 +309,7 @@ function DeleteConfirmModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div
-        className="bg-card rounded-xl shadow-xl w-full max-w-sm mx-4 p-6 border border-border"
+        className="bg-card w-full max-w-sm mx-4 p-6 border border-border"
         role="alertdialog"
         aria-labelledby="delete-title"
         aria-describedby="delete-desc"
@@ -325,14 +325,14 @@ function DeleteConfirmModal({
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="flex-1 px-4 py-2 border border-border bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             Delete
           </button>
@@ -367,7 +367,7 @@ export function DietLogView() {
     const data: Record<string, { count: number; color: string }> = {};
     for (const [date, info] of Object.entries(monthSummary.byDate)) {
       // Color based on calorie tracking (simplified)
-      data[date] = { count: info.mealCount, color: "bg-orange-500" };
+      data[date] = { count: info.mealCount, color: "bg-primary" };
     }
     return data;
   }, [monthSummary]);
@@ -436,8 +436,8 @@ export function DietLogView() {
       {/* Header */}
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-950/50 flex items-center justify-center">
-            <Utensils className="w-5 h-5 text-orange-600 dark:text-orange-400" aria-hidden="true" />
+          <div className="w-10 h-10 bg-primary/10 flex items-center justify-center">
+            <Utensils className="w-5 h-5 text-primary" aria-hidden="true" />
           </div>
           <h2 className="text-xl font-semibold text-foreground tracking-tight" style={{ textWrap: "balance" }}>
             Diet Log
@@ -471,13 +471,13 @@ export function DietLogView() {
       />
 
       {/* Day view */}
-      <section className="bg-card rounded-xl border border-border shadow-sm">
+      <section className="bg-card border border-border">
         <div className="flex items-center justify-between p-4 border-b border-border">
           <h3 className="font-medium text-foreground">{formattedDate}</h3>
           <button
             type="button"
             onClick={() => setIsAddingNew(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground text-sm rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground text-sm hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             aria-label="Add new meal"
           >
             <Plus className="w-4 h-4" aria-hidden="true" />
@@ -510,15 +510,15 @@ export function DietLogView() {
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">{log.quantity || "—"}</td>
                     <td className="px-4 py-3 tabular-nums text-foreground">{log.calories}</td>
-                    <td className="px-4 py-3 tabular-nums text-blue-600 dark:text-blue-400">{log.protein}g</td>
-                    <td className="px-4 py-3 tabular-nums text-orange-600 dark:text-orange-400">{log.carbs}g</td>
-                    <td className="px-4 py-3 tabular-nums text-purple-600 dark:text-purple-400">{log.fat}g</td>
+                    <td className="px-4 py-3 tabular-nums text-primary">{log.protein}g</td>
+                    <td className="px-4 py-3 tabular-nums text-primary/80">{log.carbs}g</td>
+                    <td className="px-4 py-3 tabular-nums text-primary/60">{log.fat}g</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1">
                         <button
                           type="button"
                           onClick={() => setEditingMeal(log)}
-                          className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                          className="p-1.5 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                           aria-label={`Edit ${log.foodName}`}
                         >
                           <Pencil className="w-4 h-4" aria-hidden="true" />
@@ -526,7 +526,7 @@ export function DietLogView() {
                         <button
                           type="button"
                           onClick={() => setDeletingMeal(log)}
-                          className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                          className="p-1.5 hover:bg-destructive/10 text-destructive transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                           aria-label={`Delete ${log.foodName}`}
                         >
                           <Trash2 className="w-4 h-4" aria-hidden="true" />
@@ -545,7 +545,7 @@ export function DietLogView() {
             <button
               type="button"
               onClick={() => setIsAddingNew(true)}
-              className="mt-2 text-primary hover:text-primary/80 font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none rounded"
+              className="mt-2 text-primary hover:text-primary/80 font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               Add your first meal
             </button>
@@ -563,13 +563,13 @@ export function DietLogView() {
                 </span>{" "}
                 cal
               </div>
-              <div className="tabular-nums text-blue-600 dark:text-blue-400">
+              <div className="tabular-nums text-primary">
                 <span className="font-semibold">{dailySummary.totalProtein}g</span> protein
               </div>
-              <div className="tabular-nums text-orange-600 dark:text-orange-400">
+              <div className="tabular-nums text-primary/80">
                 <span className="font-semibold">{dailySummary.totalCarbs}g</span> carbs
               </div>
-              <div className="tabular-nums text-purple-600 dark:text-purple-400">
+              <div className="tabular-nums text-primary/60">
                 <span className="font-semibold">{dailySummary.totalFat}g</span> fat
               </div>
             </div>

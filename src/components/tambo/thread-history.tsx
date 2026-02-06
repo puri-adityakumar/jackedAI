@@ -204,7 +204,7 @@ const ThreadHistoryHeader = React.forwardRef<
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
         className={cn(
-          `bg-container p-1 hover:bg-backdrop transition-colors rounded-md cursor-pointer absolute flex items-center justify-center`,
+          `bg-container p-1 hover:bg-backdrop transition-colors cursor-pointer absolute flex items-center justify-center`,
           position === "left" ? "right-1" : "left-0",
         )}
         aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -266,13 +266,13 @@ const ThreadHistoryNewButton = React.forwardRef<
       ref={ref}
       onClick={handleNewThread}
       className={cn(
-        "flex items-center rounded-md mb-4 hover:bg-backdrop transition-colors cursor-pointer relative",
+        "flex items-center mb-4 hover:bg-backdrop transition-colors cursor-pointer relative",
         isCollapsed ? "p-1 justify-center" : "p-2 gap-2",
       )}
       title="New thread"
       {...props}
     >
-      <PlusIcon className="h-4 w-4 bg-green-600 rounded-full text-white" />
+      <PlusIcon className="h-4 w-4 bg-primary text-primary-foreground" />
       <span
         className={cn(
           "text-sm font-medium whitespace-nowrap absolute left-8 pb-[2px] ",
@@ -314,7 +314,7 @@ const ThreadHistorySearch = React.forwardRef<
       <button
         onClick={expandOnSearch}
         className={cn(
-          "p-1 hover:bg-backdrop rounded-md cursor-pointer absolute left-1/2 -translate-x-1/2",
+          "p-1 hover:bg-backdrop cursor-pointer absolute left-1/2 -translate-x-1/2",
           isCollapsed
             ? "opacity-100 pointer-events-auto transition-all duration-300"
             : "opacity-0 pointer-events-none",
@@ -340,7 +340,7 @@ const ThreadHistorySearch = React.forwardRef<
         <input
           ref={searchInputRef}
           type="text"
-          className="pl-10 pr-4 py-2 w-full text-sm rounded-md bg-container focus:outline-none"
+          className="pl-10 pr-4 py-2 w-full text-sm bg-container focus:outline-none"
           placeholder="Search..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -512,7 +512,7 @@ const ThreadHistoryList = React.forwardRef<
             key={thread.id}
             onClick={async () => await handleSwitchThread(thread.id)}
             className={cn(
-              "p-2 rounded-md hover:bg-backdrop cursor-pointer group flex items-center justify-between",
+              "p-2 hover:bg-backdrop cursor-pointer group flex items-center justify-between",
               currentThread?.id === thread.id ? "bg-muted" : "",
               editingThread?.id === thread.id ? "bg-muted" : "",
             )}
@@ -529,7 +529,7 @@ const ThreadHistoryList = React.forwardRef<
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className="w-full bg-background px-1 text-sm font-medium focus:outline-none rounded-sm"
+                    className="w-full bg-background px-1 text-sm font-medium focus:outline-none"
                     onClick={(e) => e.stopPropagation()}
                     placeholder="Thread name..."
                   />
@@ -603,7 +603,7 @@ const ThreadOptionsDropdown = ({
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
-          className="p-1 hover:bg-backdrop rounded-md opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+          className="p-1 hover:bg-backdrop opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
           onClick={(e) => e.stopPropagation()}
         >
           <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
@@ -611,12 +611,12 @@ const ThreadOptionsDropdown = ({
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="min-w-[160px] text-xs bg-popover rounded-md p-1 shadow-md border border-border"
+          className="min-w-[160px] text-xs bg-popover p-1 border border-border"
           sideOffset={5}
           align="end"
         >
           <DropdownMenu.Item
-            className="flex items-center gap-2 px-2 py-1.5 text-foreground hover:bg-backdrop rounded-sm cursor-pointer outline-none transition-colors"
+            className="flex items-center gap-2 px-2 py-1.5 text-foreground hover:bg-backdrop cursor-pointer outline-none transition-colors"
             onClick={(e) => {
               e.stopPropagation();
               onRename(thread);
@@ -626,7 +626,7 @@ const ThreadOptionsDropdown = ({
             Rename
           </DropdownMenu.Item>
           <DropdownMenu.Item
-            className="flex items-center gap-2 px-2 py-1.5 text-foreground hover:bg-backdrop rounded-sm cursor-pointer outline-none transition-colors"
+            className="flex items-center gap-2 px-2 py-1.5 text-foreground hover:bg-backdrop cursor-pointer outline-none transition-colors"
             onClick={(e) => {
               e.stopPropagation();
               onGenerateName(thread);

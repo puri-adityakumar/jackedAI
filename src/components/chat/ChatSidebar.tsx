@@ -49,7 +49,7 @@ export function ChatSidebar({ defaultOpen = true }: ChatSidebarProps) {
               <ModeToggle mode={mode} onModeChange={setMode} />
               <Link
                 href="/chat"
-                className="p-1.5 rounded-lg text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                className="p-1.5 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
                 title="Open full chat with history"
               >
                 <ExternalLink className="w-4 h-4" aria-hidden="true" />
@@ -89,7 +89,7 @@ export function ChatSidebar({ defaultOpen = true }: ChatSidebarProps) {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="absolute -left-10 top-1/2 -translate-y-1/2 bg-card border border-border rounded-l-lg p-2 hover:bg-accent shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        className="absolute -left-10 top-1/2 -translate-y-1/2 bg-card border border-border p-2 hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         aria-label={isOpen ? "Collapse chat panel" : "Expand chat panel"}
         aria-expanded={isOpen}
       >

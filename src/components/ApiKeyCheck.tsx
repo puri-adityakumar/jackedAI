@@ -7,9 +7,9 @@ interface ApiKeyCheckProps {
 }
 
 const ApiKeyMissingAlert = () => (
-  <div className="mb-4 p-6 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-800">
+  <div className="mb-4 p-6 bg-primary/5 border border-primary/20 text-foreground">
     <p className="mb-3">To get started, you need to initialize Tambo:</p>
-    <div className="flex items-center gap-2 bg-gray-100 p-3 rounded mb-3">
+    <div className="flex items-center gap-2 bg-muted p-3 mb-3">
       <code className="text-sm flex-grow">npx tambo init</code>
       <CopyButton text="npx tambo init" />
     </div>
@@ -19,12 +19,12 @@ const ApiKeyMissingAlert = () => (
         href="https://tambo.co/cli-auth"
         target="_blank"
         rel="noopener noreferrer"
-        className="underline hover:text-yellow-900"
+        className="underline hover:text-primary"
       >
         tambo.co/cli-auth
       </a>{" "}
       to get your API key and set it in{" "}
-      <code className="bg-yellow-100 px-2 py-1 rounded">.env.local</code>
+      <code className="bg-primary/10 px-2 py-1">.env.local</code>
     </p>
   </div>
 );
@@ -41,7 +41,7 @@ const CopyButton = ({ text }: { text: string }) => {
   return (
     <button
       onClick={copyToClipboard}
-      className="p-2 text-gray-600 hover:text-gray-900 bg-gray-100 rounded transition-colors relative group"
+      className="p-2 text-muted-foreground hover:text-foreground bg-muted transition-colors relative group"
       title="Copy to clipboard"
     >
       {showCopied ? (
@@ -74,7 +74,7 @@ const CopyButton = ({ text }: { text: string }) => {
           <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
         </svg>
       )}
-      <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-2 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+      <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-foreground text-background px-2 py-1 text-xs opacity-0 group-hover:opacity-100 transition-opacity">
         {showCopied ? "Copied!" : "Copy"}
       </span>
     </button>

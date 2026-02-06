@@ -37,7 +37,7 @@ export default function DictationButton() {
 
   if (isTranscribing) {
     return (
-      <div className="p-2 rounded-md">
+      <div className="p-2">
         <Loader2Icon className="h-5 w-5 animate-spin" />
       </div>
     );
@@ -45,16 +45,16 @@ export default function DictationButton() {
 
   return (
     <div className="flex flex-row items-center gap-2">
-      <span className="text-sm text-red-500">{transcriptionError}</span>
+      <span className="text-sm text-destructive">{transcriptionError}</span>
       {isRecording ? (
         <Tooltip content="Stop">
           <button
             type="button"
             onClick={handleStopRecording}
             aria-label="Stop dictation"
-            className="p-2 rounded-md cursor-pointer hover:bg-muted"
+            className="p-2 cursor-pointer hover:bg-muted"
           >
-            <Square className="h-4 w-4 text-red-500 fill-current animate-pulse" />
+            <Square className="h-4 w-4 text-destructive fill-current animate-pulse" />
           </button>
         </Tooltip>
       ) : (
@@ -63,7 +63,7 @@ export default function DictationButton() {
             type="button"
             onClick={handleStartRecording}
             aria-label="Start dictation"
-            className="p-2 rounded-md cursor-pointer hover:bg-muted"
+            className="p-2 cursor-pointer hover:bg-muted"
           >
             <Mic className="h-5 w-5" />
           </button>

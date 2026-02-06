@@ -20,15 +20,12 @@ type GraphSize = "default" | "sm" | "lg";
  * Variants for the Graph component
  */
 export const graphVariants = cva(
-  "w-full rounded-lg overflow-hidden transition-all duration-200",
+  "w-full overflow-hidden transition-all duration-200",
   {
     variants: {
       variant: {
         default: "bg-background",
-        solid: [
-          "shadow-lg shadow-zinc-900/10 dark:shadow-zinc-900/20",
-          "bg-muted",
-        ].join(" "),
+        solid: "bg-muted",
         bordered: ["border-2", "border-border"].join(" "),
       },
       size: {
@@ -328,7 +325,7 @@ export const Graph = React.forwardRef<HTMLDivElement, GraphProps>(
                 contentStyle={{
                   backgroundColor: "white",
                   border: "1px solid #e5e7eb",
-                  borderRadius: "var(--radius)",
+                  borderRadius: "0",
                   color: "var(--foreground)",
                 }}
               />
@@ -346,7 +343,7 @@ export const Graph = React.forwardRef<HTMLDivElement, GraphProps>(
                   fill={
                     dataset.color ?? defaultColors[index % defaultColors.length]
                   }
-                  radius={[4, 4, 0, 0]}
+                  radius={[0, 0, 0, 0]}
                 />
               ))}
             </RechartsCore.BarChart>
@@ -380,7 +377,7 @@ export const Graph = React.forwardRef<HTMLDivElement, GraphProps>(
                 contentStyle={{
                   backgroundColor: "white",
                   border: "1px solid #e5e7eb",
-                  borderRadius: "var(--radius)",
+                  borderRadius: "0",
                   color: "var(--foreground)",
                 }}
               />
@@ -440,9 +437,9 @@ export const Graph = React.forwardRef<HTMLDivElement, GraphProps>(
                 contentStyle={{
                   backgroundColor: "white",
                   border: "1px solid #e5e7eb",
-                  borderRadius: "var(--radius)",
+                  borderRadius: "0",
                   color: "var(--foreground)",
-                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                  boxShadow: "none",
                 }}
                 itemStyle={{
                   color: "var(--foreground)",

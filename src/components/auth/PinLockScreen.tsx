@@ -137,7 +137,7 @@ export function PinLockScreen({ onUnlock }: PinLockScreenProps) {
         <div className="text-center space-y-2">
           <div
             className={cn(
-              "mx-auto w-16 h-16 rounded-full flex items-center justify-center",
+              "mx-auto w-16 h-16 flex items-center justify-center",
               isLocked
                 ? "bg-destructive/10 text-destructive"
                 : "bg-primary/10 text-primary"
@@ -170,7 +170,7 @@ export function PinLockScreen({ onUnlock }: PinLockScreenProps) {
             <div
               key={index}
               className={cn(
-                "w-12 h-14 rounded-lg border-2 flex items-center justify-center text-2xl font-bold transition-all",
+                "w-12 h-14 border-2 flex items-center justify-center text-2xl font-bold transition-all",
                 digit
                   ? "border-primary bg-primary/5 text-foreground"
                   : "border-border bg-muted/50",
@@ -191,7 +191,7 @@ export function PinLockScreen({ onUnlock }: PinLockScreenProps) {
 
         {/* Attempts Remaining */}
         {!isLocked && pinStatus.attemptsRemaining < 5 && (
-          <p className="text-center text-sm text-amber-500 font-medium">
+          <p className="text-center text-sm text-primary font-medium">
             {pinStatus.attemptsRemaining} attempts remaining
           </p>
         )}
@@ -205,7 +205,7 @@ export function PinLockScreen({ onUnlock }: PinLockScreenProps) {
                 onClick={() => handleDigitClick(String(num))}
                 disabled={isVerifying}
                 className={cn(
-                  "h-16 rounded-xl text-2xl font-semibold transition-all",
+                  "h-16 text-2xl font-semibold transition-all",
                   "bg-muted hover:bg-muted/80 active:scale-95",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                   "disabled:opacity-50 disabled:cursor-not-allowed"
@@ -219,7 +219,7 @@ export function PinLockScreen({ onUnlock }: PinLockScreenProps) {
               onClick={() => handleDigitClick("0")}
               disabled={isVerifying}
               className={cn(
-                "h-16 rounded-xl text-2xl font-semibold transition-all",
+                "h-16 text-2xl font-semibold transition-all",
                 "bg-muted hover:bg-muted/80 active:scale-95",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 "disabled:opacity-50 disabled:cursor-not-allowed"
@@ -231,7 +231,7 @@ export function PinLockScreen({ onUnlock }: PinLockScreenProps) {
               onClick={handleBackspace}
               disabled={isVerifying}
               className={cn(
-                "h-16 rounded-xl flex items-center justify-center transition-all",
+                "h-16 flex items-center justify-center transition-all",
                 "bg-muted hover:bg-muted/80 active:scale-95",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 "disabled:opacity-50 disabled:cursor-not-allowed"

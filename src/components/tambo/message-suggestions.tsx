@@ -247,7 +247,7 @@ const MessageSuggestionsStatus = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "p-2 rounded-md text-sm bg-transparent",
+        "p-2 text-sm bg-transparent",
         !error &&
           !isGenerating &&
           (!thread?.generationStage ||
@@ -261,7 +261,7 @@ const MessageSuggestionsStatus = React.forwardRef<
     >
       {/* Error state */}
       {error && (
-        <div className="p-2 rounded-md text-sm bg-red-50 text-red-500">
+        <div className="p-2 text-sm bg-destructive/10 text-destructive">
           <p>{error.message}</p>
         </div>
       )}
@@ -337,7 +337,7 @@ const MessageSuggestionsList = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "flex space-x-2 overflow-x-auto pb-2 rounded-md bg-transparent min-h-[2.5rem]",
+        "flex space-x-2 overflow-x-auto pb-2 bg-transparent min-h-[2.5rem]",
         isGenerating ? "opacity-70" : "",
         className,
       )}
@@ -357,7 +357,7 @@ const MessageSuggestionsList = React.forwardRef<
             >
               <button
                 className={cn(
-                  "py-2 px-2.5 rounded-2xl text-xs transition-colors",
+                  "py-2 px-2.5 text-xs transition-colors",
                   "border border-flat",
                   getSuggestionButtonClassName({
                     isGenerating,
@@ -379,7 +379,7 @@ const MessageSuggestionsList = React.forwardRef<
           placeholders.map((_, index) => (
             <div
               key={`placeholder-${index}`}
-              className="py-2 px-2.5 rounded-2xl text-xs border border-flat bg-muted/20 text-transparent animate-pulse"
+              className="py-2 px-2.5 text-xs border border-flat bg-muted/20 text-transparent animate-pulse"
               data-placeholder-index={index}
             >
               <span className="invisible">Placeholder</span>

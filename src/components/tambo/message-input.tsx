@@ -296,10 +296,10 @@ const messageInputVariants = cva("w-full", {
       solid: [
         "[&>div]:bg-background",
         "[&>div]:border-0",
-        "[&>div]:shadow-xl [&>div]:shadow-black/5 [&>div]:dark:shadow-black/20",
+        "[&>div]:shadow-none",
         "[&>div]:ring-1 [&>div]:ring-black/5 [&>div]:dark:ring-white/10",
         "[&_textarea]:bg-transparent",
-        "[&_textarea]:rounded-lg",
+        "[&_textarea]:rounded-none",
       ].join(" "),
       bordered: [
         "[&>div]:bg-transparent",
@@ -677,15 +677,15 @@ const MessageInputInternal = React.forwardRef<
       >
         <div
           className={cn(
-            "relative flex flex-col rounded-xl bg-background shadow-md p-2 px-3",
+            "relative flex flex-col bg-background p-2 px-3",
             isDragging
-              ? "border border-dashed border-emerald-400"
-              : "border border-border",
+              ? "border-2 border-dashed border-primary"
+              : "border-2 border-border",
           )}
         >
           {isDragging && (
-            <div className="absolute inset-0 rounded-xl bg-emerald-50/90 dark:bg-emerald-950/30 flex items-center justify-center pointer-events-none z-20">
-              <p className="text-emerald-700 dark:text-emerald-300 font-medium">
+            <div className="absolute inset-0 bg-primary/10 dark:bg-primary/10 flex items-center justify-center pointer-events-none z-20">
+              <p className="text-primary font-medium">
                 Drop files here to add to conversation
               </p>
             </div>
@@ -978,7 +978,7 @@ const MessageInputPlainTextarea = ({
       onKeyDown={handleKeyDown}
       onPaste={handlePaste}
       className={cn(
-        "flex-1 p-3 rounded-t-lg bg-background text-foreground resize-none text-sm min-h-[82px] max-h-[40vh] focus:outline-none placeholder:text-muted-foreground/50",
+        "flex-1 p-3 bg-background text-foreground resize-none text-sm min-h-[82px] max-h-[40vh] focus:outline-none placeholder:text-muted-foreground/50",
         className,
       )}
       disabled={isPending || isUpdatingToken}
@@ -1034,7 +1034,7 @@ const MessageInputSubmitButton = React.forwardRef<
   };
 
   const buttonClasses = cn(
-    "w-10 h-10 bg-foreground text-background rounded-lg hover:bg-foreground/90 disabled:opacity-50 flex items-center justify-center enabled:cursor-pointer",
+    "w-10 h-10 bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50 flex items-center justify-center enabled:cursor-pointer",
     className,
   );
 
@@ -1112,7 +1112,7 @@ const MessageInputMcpConfigButton = React.forwardRef<
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const buttonClasses = cn(
-    "w-10 h-10 rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-muted disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    "w-10 h-10 border border-border bg-background text-foreground transition-colors hover:bg-muted disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     className,
   );
 
@@ -1240,7 +1240,7 @@ const MessageInputFileButton = React.forwardRef<
   };
 
   const buttonClasses = cn(
-    "w-10 h-10 rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-muted disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    "w-10 h-10 border border-border bg-background text-foreground transition-colors hover:bg-muted disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     className,
   );
 
@@ -1404,7 +1404,7 @@ const ImageContextBadge: React.FC<ImageContextBadgeProps> = ({
       onClick={onToggle}
       aria-expanded={isExpanded}
       className={cn(
-        "relative flex items-center rounded-lg border overflow-hidden",
+        "relative flex items-center border overflow-hidden",
         "border-border bg-background hover:bg-muted cursor-pointer",
         "transition-[width,height,padding] duration-200 ease-in-out",
         isExpanded ? "w-40 h-28 p-0" : "w-32 h-9 pl-3 pr-8 gap-2",
@@ -1448,7 +1448,7 @@ const ImageContextBadge: React.FC<ImageContextBadgeProps> = ({
         e.stopPropagation();
         onRemove();
       }}
-      className="absolute -top-1 -right-1 w-5 h-5 bg-background border border-border text-muted-foreground rounded-full flex items-center justify-center hover:bg-muted hover:text-foreground transition-colors shadow-sm z-10"
+      className="absolute -top-1 -right-1 w-5 h-5 bg-background border border-border text-muted-foreground flex items-center justify-center hover:bg-muted hover:text-foreground transition-colors z-10"
       aria-label={`Remove ${displayName}`}
     >
       <X className="w-3 h-3" />

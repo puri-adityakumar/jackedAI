@@ -28,8 +28,8 @@ function ChangeIndicator({ value, unit, label }: { value: number; unit: string; 
           isZero
             ? "text-muted-foreground"
             : isPositive
-            ? "text-orange-500 dark:text-orange-400"
-            : "text-emerald-500 dark:text-emerald-400"
+            ? "text-destructive"
+            : "text-primary"
         )}
         aria-hidden="true"
       />
@@ -38,8 +38,8 @@ function ChangeIndicator({ value, unit, label }: { value: number; unit: string; 
           isZero
             ? "text-muted-foreground"
             : isPositive
-            ? "text-orange-600 dark:text-orange-400"
-            : "text-emerald-600 dark:text-emerald-400"
+            ? "text-destructive"
+            : "text-primary"
         )}
       >
         {isPositive ? "+" : ""}
@@ -59,25 +59,25 @@ export function BodyStatsCard({
   message,
 }: BodyStatsCardProps) {
   return (
-    <div className="bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-200 dark:border-cyan-800 rounded-lg p-4 my-2">
+    <div className="bg-primary/5 border-2 border-primary/20 dark:border-primary/30 p-4 my-2">
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-full bg-cyan-100 dark:bg-cyan-900/50 flex items-center justify-center flex-shrink-0">
-          <Scale className="w-5 h-5 text-cyan-600 dark:text-cyan-400" aria-hidden="true" />
+        <div className="w-10 h-10 bg-primary/10 dark:bg-primary/20 flex items-center justify-center flex-shrink-0">
+          <Scale className="w-5 h-5 text-primary" aria-hidden="true" />
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h4 className="font-semibold text-cyan-900 dark:text-cyan-100">Body Stats Logged</h4>
-            <div className="w-5 h-5 rounded-full bg-cyan-500 flex items-center justify-center">
-              <Check className="w-3 h-3 text-white" aria-hidden="true" />
+            <h4 className="font-semibold text-foreground">Body Stats Logged</h4>
+            <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+              <Check className="w-3 h-3 text-primary-foreground" aria-hidden="true" />
             </div>
           </div>
-          <p className="text-xs text-cyan-600 dark:text-cyan-400 mt-0.5">{date}</p>
+          <p className="text-xs text-primary mt-0.5">{date}</p>
 
           {/* Stats grid */}
           <div className="mt-3 flex flex-wrap gap-4">
             <div>
-              <p className="text-2xl font-bold text-cyan-900 dark:text-cyan-100 tabular-nums">
-                {weight}<span className="text-sm font-normal text-cyan-600 dark:text-cyan-400 ml-0.5">kg</span>
+              <p className="text-2xl font-bold text-foreground tabular-nums">
+                {weight}<span className="text-sm font-normal text-primary ml-0.5">kg</span>
               </p>
               {weightChange !== undefined && weightChange !== null && (
                 <ChangeIndicator value={weightChange} unit="kg" label="" />
@@ -86,8 +86,8 @@ export function BodyStatsCard({
 
             {bodyFat !== undefined && (
               <div>
-                <p className="text-2xl font-bold text-cyan-900 dark:text-cyan-100 tabular-nums">
-                  {bodyFat}<span className="text-sm font-normal text-cyan-600 dark:text-cyan-400 ml-0.5">%</span>
+                <p className="text-2xl font-bold text-foreground tabular-nums">
+                  {bodyFat}<span className="text-sm font-normal text-primary ml-0.5">%</span>
                 </p>
                 {bodyFatChange !== undefined && bodyFatChange !== null && (
                   <ChangeIndicator value={bodyFatChange} unit="%" label="bf" />
@@ -97,7 +97,7 @@ export function BodyStatsCard({
           </div>
 
           {message && (
-            <p className="text-xs text-cyan-600 dark:text-cyan-400 mt-3">{message}</p>
+            <p className="text-xs text-muted-foreground mt-3">{message}</p>
           )}
         </div>
       </div>

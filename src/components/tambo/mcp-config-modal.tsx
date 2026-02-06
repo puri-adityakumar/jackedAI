@@ -192,12 +192,12 @@ function MyApp() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.2 }}
     >
-      <div className="bg-card rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="bg-card max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto border border-border">
         <div className="flex items-center justify-between p-4">
           <h2 className="text-lg font-semibold">MCP Server Configuration</h2>
           <button
             onClick={onClose}
-            className="hover:bg-muted rounded-lg transition-colors cursor-pointer"
+            className="hover:bg-muted transition-colors cursor-pointer"
             aria-label="Close modal"
           >
             <X className="w-4 h-4" />
@@ -206,7 +206,7 @@ function MyApp() {
 
         {/* Content */}
         <div className="px-4 pb-4">
-          <div className="mb-6 bg-container border border-muted rounded-lg">
+          <div className="mb-6 bg-container border border-muted">
             <button
               onClick={() => setShowInstructions(!showInstructions)}
               className="w-full flex items-center justify-between p-2 hover:bg-muted transition-colors cursor-pointer"
@@ -268,7 +268,7 @@ function MyApp() {
                   value={serverUrl}
                   onChange={(e) => setServerUrl(e.target.value)}
                   placeholder="https://your-mcp-server-url.com"
-                  className="w-full px-3 py-2.5 border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 text-sm"
+                  className="w-full px-3 py-2.5 border border-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 text-sm"
                   required
                 />
               </div>
@@ -290,7 +290,7 @@ function MyApp() {
                   value={serverName}
                   onChange={(e) => setServerName(e.target.value)}
                   placeholder="Custom server name"
-                  className="w-full px-3 py-2.5 border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 text-sm"
+                  className="w-full px-3 py-2.5 border border-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-150 text-sm"
                 />
               </div>
 
@@ -303,14 +303,14 @@ function MyApp() {
                   <DropdownMenuTrigger asChild>
                     <button
                       type="button"
-                      className="w-full px-3 py-2.5 border border-muted rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-card text-foreground text-sm flex items-center justify-between hover:bg-muted-backdrop cursor-pointer transition-all duration-150"
+                      className="w-full px-3 py-2.5 border border-muted focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-card text-foreground text-sm flex items-center justify-between hover:bg-muted-backdrop cursor-pointer transition-all duration-150"
                     >
                       <span>{getTransportDisplayText(transportType)}</span>
                       <ChevronDown className="w-4 h-4 text-foreground" />
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
-                    className="w-full min-w-[200px] bg-card border border-muted rounded-lg shadow-lg z-50 py-1 animate-in fade-in-0 zoom-in-95 duration-100"
+                    className="w-full min-w-[200px] bg-card border border-muted z-50 py-1 animate-in fade-in-0 zoom-in-95 duration-100"
                     align="start"
                   >
                     <DropdownMenuItem
@@ -332,7 +332,7 @@ function MyApp() {
 
             <button
               type="submit"
-              className="mt-6 w-full px-4 py-2.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 cursor-pointer transition-all duration-150 font-medium"
+              className="mt-6 w-full px-4 py-2.5 bg-primary text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 cursor-pointer transition-all duration-150 font-medium"
             >
               Add Server
             </button>
@@ -340,9 +340,9 @@ function MyApp() {
 
           {/* Success Message */}
           {savedSuccess && (
-            <div className="mb-6 p-3 bg-green-50 border border-green-200 text-green-800 rounded-lg text-sm animate-in slide-in-from-top-1 duration-200">
+            <div className="mb-6 p-3 bg-primary/10 border border-primary/30 text-primary text-sm animate-in slide-in-from-top-1 duration-200">
               <div className="flex items-center">
-                <span className="text-green-600 mr-2">✓</span>
+                <span className="text-primary mr-2">✓</span>
                 Servers saved to browser storage
               </div>
             </div>
@@ -360,11 +360,11 @@ function MyApp() {
                   return (
                     <div
                       key={index}
-                      className="flex items-start justify-between p-4 border border-muted rounded-lg hover:border-muted-backdrop transition-colors duration-150"
+                      className="flex items-start justify-between p-4 border border-muted hover:border-muted-backdrop transition-colors duration-150"
                     >
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center mb-1">
-                          <div className="w-2 h-2 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                          <div className="w-2 h-2 bg-primary rounded-full mr-3 flex-shrink-0"></div>
                           <span className="text-foreground font-medium truncate">
                             {serverInfo.url}
                           </span>
@@ -384,7 +384,7 @@ function MyApp() {
                       </div>
                       <button
                         onClick={() => removeServer(index)}
-                        className="ml-4 px-3 py-1.5 text-sm bg-destructive/20 text-destructive rounded-md hover:bg-destructive/30 focus:outline-none focus:ring-2 focus:ring-destructive focus:ring-offset-1 transition-colors duration-150 flex-shrink-0"
+                        className="ml-4 px-3 py-1.5 text-sm bg-destructive/20 text-destructive hover:bg-destructive/30 focus:outline-none focus:ring-2 focus:ring-destructive focus:ring-offset-1 transition-colors duration-150 flex-shrink-0"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -394,7 +394,7 @@ function MyApp() {
               </div>
             </div>
           ) : (
-            <div className="text-center p-8 border-2 border-dashed border-muted rounded-lg">
+            <div className="text-center p-8 border-2 border-dashed border-muted">
               <p className="text-muted-foreground text-sm">
                 No MCP servers configured yet
               </p>
@@ -405,7 +405,7 @@ function MyApp() {
           )}
 
           {/* Info Section */}
-          <div className="mt-8 bg-container border border-muted p-4 rounded-lg">
+          <div className="mt-8 bg-container border border-muted p-4">
             <h4 className="font-medium mb-2 text-foreground">What is MCP?</h4>
             <p className="text-foreground text-sm leading-relaxed">
               The{" "}

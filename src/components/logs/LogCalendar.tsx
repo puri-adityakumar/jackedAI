@@ -74,13 +74,13 @@ export function LogCalendar({
   const today = new Date().toISOString().split("T")[0];
 
   return (
-    <div className={cn("bg-card rounded-xl border border-border p-4 shadow-sm", className)}>
+    <div className={cn("bg-card border border-border p-4", className)}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <button
           type="button"
           onClick={goToPrevMonth}
-          className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="p-1.5 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           aria-label="Previous month"
         >
           <ChevronLeft className="w-5 h-5" aria-hidden="true" />
@@ -91,7 +91,7 @@ export function LogCalendar({
         <button
           type="button"
           onClick={goToNextMonth}
-          className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="p-1.5 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           aria-label="Next month"
         >
           <ChevronRight className="w-5 h-5" aria-hidden="true" />
@@ -129,7 +129,7 @@ export function LogCalendar({
               onClick={() => onDateSelect(dateKey)}
               role="gridcell"
               className={cn(
-                "aspect-square flex flex-col items-center justify-center rounded-lg text-sm transition-colors",
+                "aspect-square flex flex-col items-center justify-center text-sm transition-colors",
                 "hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
                 isSelected && "bg-primary text-primary-foreground hover:bg-primary/90",
                 isToday && !isSelected && "ring-1 ring-primary/50",

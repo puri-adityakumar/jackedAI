@@ -31,11 +31,11 @@ import { StatsCard } from "./StatsCard";
 import { WeeklyChart } from "./WeeklyChart";
 
 const GRADE_COLORS: Record<string, string> = {
-  A: "text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/50",
-  B: "text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/50",
-  C: "text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/50",
-  D: "text-orange-600 dark:text-orange-400 bg-orange-100 dark:bg-orange-900/50",
-  F: "text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/50",
+  A: "text-primary bg-primary/10",
+  B: "text-primary/80 bg-primary/10",
+  C: "text-muted-foreground bg-muted",
+  D: "text-destructive bg-destructive/10",
+  F: "text-destructive bg-destructive/10",
 };
 
 function MacroBar({
@@ -43,7 +43,6 @@ function MacroBar({
   consumed,
   target,
   unit,
-  color,
 }: {
   label: string;
   consumed: number;
@@ -60,9 +59,9 @@ function MacroBar({
           {consumed}{unit} / {target}{unit}
         </span>
       </div>
-      <div className="h-2 bg-muted rounded-full overflow-hidden" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
+      <div className="h-2 bg-muted overflow-hidden" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
         <div
-          className={cn("h-full rounded-full transition-all duration-300", color)}
+          className="h-full bg-primary transition-all duration-300"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -74,7 +73,7 @@ function GradeBadge({ grade }: { grade: string }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center justify-center w-8 h-8 rounded-full text-sm font-bold",
+        "inline-flex items-center justify-center w-8 h-8 text-sm font-bold",
         GRADE_COLORS[grade] || GRADE_COLORS.F
       )}
     >
@@ -107,13 +106,13 @@ function LogWeightModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div
-        className="bg-card rounded-xl shadow-xl w-full max-w-sm mx-4 border border-border"
+        className="bg-card w-full max-w-sm mx-4 border-2 border-border"
         role="dialog"
         aria-labelledby="log-weight-title"
       >
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2">
-            <Scale className="w-5 h-5 text-cyan-600 dark:text-cyan-400" aria-hidden="true" />
+            <Scale className="w-5 h-5 text-primary" aria-hidden="true" />
             <h2 id="log-weight-title" className="text-lg font-semibold text-foreground">
               Log Weight
             </h2>
@@ -121,7 +120,7 @@ function LogWeightModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="p-1.5 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             aria-label="Close"
           >
             <X className="w-5 h-5" aria-hidden="true" />
@@ -137,7 +136,7 @@ function LogWeightModal({
               id="weight"
               value={weight}
               onChange={(e) => setWeight(e.target.value)}
-              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+              className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               placeholder="e.g. 75.5"
               step={0.1}
               min={20}
@@ -155,7 +154,7 @@ function LogWeightModal({
               id="log-date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+              className="w-full px-3 py-2 border border-input bg-background text-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               required
             />
           </div>
@@ -168,7 +167,7 @@ function LogWeightModal({
               id="log-notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+              className="w-full px-3 py-2 border border-input bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
               placeholder="Morning weigh-in..."
               autoComplete="off"
             />
@@ -177,14 +176,14 @@ function LogWeightModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              className="flex-1 px-4 py-2 border border-border bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSaving || !weight}
-              className="flex-1 px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:opacity-50"
+              className="flex-1 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:opacity-50"
             >
               {isSaving ? "Saving..." : "Log Weight"}
             </button>
@@ -233,23 +232,23 @@ function WeightSection() {
   const currentWeight = latest?.weight;
   const weightChange = trend?.stats?.change;
 
-  const lineColor = isDark ? "#22d3ee" : "#0891b2";
+  const lineColor = isDark ? "#34d399" : "#10b981";
   const tickColor = isDark ? "hsl(0 0% 63.9%)" : "hsl(0 0% 45.1%)";
   const tooltipBg = isDark ? "hsl(0 0% 14.9%)" : "hsl(0 0% 100%)";
   const tooltipBorder = isDark ? "hsl(0 0% 27%)" : "hsl(0 0% 89.8%)";
 
   return (
     <>
-      <section className="bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-200 dark:border-cyan-800 rounded-xl p-6 shadow-sm">
+      <section className="bg-primary/5 border-2 border-primary/20 dark:border-primary/30 p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-cyan-100 dark:bg-cyan-900/50 flex items-center justify-center">
-              <Scale className="w-5 h-5 text-cyan-600 dark:text-cyan-400" aria-hidden="true" />
+            <div className="w-10 h-10 bg-primary/10 flex items-center justify-center">
+              <Scale className="w-5 h-5 text-primary" aria-hidden="true" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-cyan-900 dark:text-cyan-100">Weight</h3>
+              <h3 className="text-lg font-semibold text-foreground">Weight</h3>
               {latest && (
-                <p className="text-xs text-cyan-600 dark:text-cyan-400">
+                <p className="text-xs text-primary">
                   Last logged: {new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(new Date(latest.date))}
                 </p>
               )}
@@ -258,7 +257,7 @@ function WeightSection() {
           <button
             type="button"
             onClick={() => setShowLogModal(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-cyan-600 text-white text-sm rounded-lg hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary text-primary-foreground text-sm hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             <Plus className="w-4 h-4" aria-hidden="true" />
             Log
@@ -269,13 +268,13 @@ function WeightSection() {
         <div className="flex items-end gap-4 mb-4">
           {currentWeight != null ? (
             <>
-              <p className="text-3xl font-bold text-cyan-900 dark:text-cyan-100 tabular-nums">
-                {currentWeight}<span className="text-lg font-medium text-cyan-600 dark:text-cyan-400 ml-0.5">kg</span>
+              <p className="text-3xl font-bold text-foreground tabular-nums">
+                {currentWeight}<span className="text-lg font-medium text-primary ml-0.5">kg</span>
               </p>
               {weightChange != null && Math.abs(weightChange) >= 0.01 && (
                 <div className={cn(
                   "inline-flex items-center gap-1 text-sm font-medium pb-1",
-                  weightChange > 0 ? "text-orange-600 dark:text-orange-400" : "text-emerald-600 dark:text-emerald-400"
+                  weightChange > 0 ? "text-destructive" : "text-primary"
                 )}>
                   {weightChange > 0 ? (
                     <TrendingUp className="w-4 h-4" aria-hidden="true" />
@@ -326,7 +325,7 @@ function WeightSection() {
                   contentStyle={{
                     backgroundColor: tooltipBg,
                     border: `1px solid ${tooltipBorder}`,
-                    borderRadius: "8px",
+                    borderRadius: "0px",
                     fontSize: 12,
                   }}
                   formatter={(value: number) => [`${value.toFixed(1)} kg`, "Weight"]}
@@ -416,20 +415,17 @@ export function DashboardPanel() {
             value={`${caloriesConsumed.toLocaleString()}`}
             subtitle={`of ${calorieTarget.toLocaleString()} target`}
             progress={calorieProgress}
-            color="orange"
           />
           <StatsCard
             title="Protein"
             value={`${proteinConsumed}g`}
             subtitle={`of ${proteinTarget}g target`}
             progress={proteinTarget > 0 ? Math.min(Math.round((proteinConsumed / proteinTarget) * 100), 100) : undefined}
-            color="blue"
           />
           <StatsCard
             title="Exercises"
             value={`${exerciseCount}`}
             subtitle="completed today"
-            color="green"
           />
           <StatsCard
             title="Goal"
@@ -441,7 +437,6 @@ export function DashboardPanel() {
                   : "Maintain"
             }
             subtitle={profile ? "Keep it up!" : "Set your goal"}
-            color="purple"
           />
         </div>
       </section>
@@ -450,19 +445,19 @@ export function DashboardPanel() {
       <BadgeChains />
 
       {/* Macro Tracking */}
-      <section className="bg-card rounded-xl border border-border p-6 shadow-sm">
+      <section className="bg-card border-2 border-border p-6">
         <h3 className="text-lg font-semibold text-foreground mb-4 text-pretty">
           Today&apos;s Macros
         </h3>
         <div className="space-y-3">
-          <MacroBar label="Protein" consumed={proteinConsumed} target={proteinTarget} unit="g" color="bg-blue-500 dark:bg-blue-400" />
-          <MacroBar label="Carbs" consumed={carbsConsumed} target={carbsTarget} unit="g" color="bg-cyan-500 dark:bg-cyan-400" />
-          <MacroBar label="Fat" consumed={fatConsumed} target={fatTarget} unit="g" color="bg-amber-500 dark:bg-amber-400" />
+          <MacroBar label="Protein" consumed={proteinConsumed} target={proteinTarget} unit="g" color="bg-primary" />
+          <MacroBar label="Carbs" consumed={carbsConsumed} target={carbsTarget} unit="g" color="bg-primary" />
+          <MacroBar label="Fat" consumed={fatConsumed} target={fatTarget} unit="g" color="bg-primary" />
         </div>
       </section>
 
       {/* Weekly Chart */}
-      <section className="bg-card rounded-xl border border-border p-6 shadow-sm">
+      <section className="bg-card border-2 border-border p-6">
         <h3 className="text-lg font-semibold text-foreground mb-4 text-pretty">
           Weekly Progress
         </h3>
@@ -477,65 +472,65 @@ export function DashboardPanel() {
 
       {/* Weekly Report Summary */}
       {weeklyReport && (
-        <section className="bg-violet-50 dark:bg-violet-950/30 border border-violet-200 dark:border-violet-800 rounded-xl p-6 shadow-sm">
+        <section className="bg-primary/5 border-2 border-primary/20 dark:border-primary/30 p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-violet-100 dark:bg-violet-900/50 flex items-center justify-center">
-                <BarChart3 className="w-5 h-5 text-violet-600 dark:text-violet-400" aria-hidden="true" />
+              <div className="w-10 h-10 bg-primary/10 flex items-center justify-center">
+                <BarChart3 className="w-5 h-5 text-primary" aria-hidden="true" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-violet-900 dark:text-violet-100">Weekly Report</h3>
-                <p className="text-xs text-violet-600 dark:text-violet-400">This week&apos;s summary</p>
+                <h3 className="text-lg font-semibold text-foreground">Weekly Report</h3>
+                <p className="text-xs text-primary">This week&apos;s summary</p>
               </div>
             </div>
             <div className="text-center">
               <GradeBadge grade={weeklyReport.overallGrade} />
-              <p className="text-xs text-violet-500 dark:text-violet-400 mt-0.5 tabular-nums">{weeklyReport.overallScore}/100</p>
+              <p className="text-xs text-muted-foreground mt-0.5 tabular-nums">{weeklyReport.overallScore}/100</p>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-3 mb-4">
-            <div className="bg-white/60 dark:bg-white/5 rounded-lg p-3 text-center border border-violet-100 dark:border-violet-800/50">
+            <div className="bg-card/60 dark:bg-card/30 p-3 text-center border border-border">
               <div className="flex items-center justify-center gap-1.5 mb-1">
-                <Flame className="w-4 h-4 text-violet-500 dark:text-violet-400" aria-hidden="true" />
+                <Flame className="w-4 h-4 text-primary" aria-hidden="true" />
                 <GradeBadge grade={weeklyReport.workout.grade} />
               </div>
-              <p className="text-lg font-bold text-violet-900 dark:text-violet-100 tabular-nums">
+              <p className="text-lg font-bold text-foreground tabular-nums">
                 {weeklyReport.workout.totalDays}/{weeklyReport.workout.targetDays}
               </p>
-              <p className="text-xs text-violet-600 dark:text-violet-400">workout days</p>
+              <p className="text-xs text-muted-foreground">workout days</p>
             </div>
-            <div className="bg-white/60 dark:bg-white/5 rounded-lg p-3 text-center border border-violet-100 dark:border-violet-800/50">
+            <div className="bg-card/60 dark:bg-card/30 p-3 text-center border border-border">
               <div className="flex items-center justify-center gap-1.5 mb-1">
-                <Utensils className="w-4 h-4 text-violet-500 dark:text-violet-400" aria-hidden="true" />
+                <Utensils className="w-4 h-4 text-primary" aria-hidden="true" />
                 <GradeBadge grade={weeklyReport.nutrition.grade} />
               </div>
-              <p className="text-lg font-bold text-violet-900 dark:text-violet-100 tabular-nums">
+              <p className="text-lg font-bold text-foreground tabular-nums">
                 {weeklyReport.nutrition.averageCalories}
               </p>
-              <p className="text-xs text-violet-600 dark:text-violet-400">avg cal/day</p>
+              <p className="text-xs text-muted-foreground">avg cal/day</p>
             </div>
-            <div className="bg-white/60 dark:bg-white/5 rounded-lg p-3 text-center border border-violet-100 dark:border-violet-800/50">
+            <div className="bg-card/60 dark:bg-card/30 p-3 text-center border border-border">
               <div className="flex items-center justify-center gap-1.5 mb-1">
-                <Bell className="w-4 h-4 text-violet-500 dark:text-violet-400" aria-hidden="true" />
+                <Bell className="w-4 h-4 text-primary" aria-hidden="true" />
                 <GradeBadge grade={weeklyReport.reminders.grade} />
               </div>
-              <p className="text-lg font-bold text-violet-900 dark:text-violet-100 tabular-nums">
+              <p className="text-lg font-bold text-foreground tabular-nums">
                 {weeklyReport.reminders.adherenceRate}%
               </p>
-              <p className="text-xs text-violet-600 dark:text-violet-400">adherence</p>
+              <p className="text-xs text-muted-foreground">adherence</p>
             </div>
           </div>
 
           {weeklyReport.insights.length > 0 && (
-            <div className="border-t border-violet-200 dark:border-violet-800 pt-3">
+            <div className="border-t border-border pt-3">
               <div className="flex items-center gap-1.5 mb-2">
-                <Lightbulb className="w-3.5 h-3.5 text-violet-500 dark:text-violet-400" aria-hidden="true" />
-                <span className="text-xs font-medium text-violet-700 dark:text-violet-300">Insights</span>
+                <Lightbulb className="w-3.5 h-3.5 text-primary" aria-hidden="true" />
+                <span className="text-xs font-medium text-foreground">Insights</span>
               </div>
               <ul className="space-y-1">
                 {weeklyReport.insights.map((insight, i) => (
-                  <li key={i} className="text-xs text-violet-600 dark:text-violet-400">
+                  <li key={i} className="text-xs text-muted-foreground">
                     {insight}
                   </li>
                 ))}

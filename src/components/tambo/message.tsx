@@ -70,7 +70,7 @@ const messageVariants = cva("flex", {
     variant: {
       default: "",
       solid: [
-        "[&>div>div:first-child]:shadow-md",
+        "[&>div>div:first-child]:shadow-none",
         "[&>div>div:first-child]:bg-container/50",
         "[&>div>div:first-child]:hover:bg-container",
         "[&>div>div:first-child]:transition-all",
@@ -275,7 +275,7 @@ const MessageImages = React.forwardRef<HTMLDivElement, MessageImagesProps>(
         {images.map((imageUrl: string, index: number) => (
           <div
             key={index}
-            className="w-32 h-32 rounded-md overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200"
+            className="w-32 h-32 overflow-hidden border border-border transition-all duration-200"
           >
             <img
               src={imageUrl}
@@ -336,7 +336,7 @@ const MessageContent = React.forwardRef<HTMLDivElement, MessageContentProps>(
       <div
         ref={ref}
         className={cn(
-          "relative block rounded-3xl px-4 py-2 text-[15px] leading-relaxed transition-all duration-200 font-medium max-w-full [&_p]:py-1 [&_li]:list-item",
+          "relative block px-4 py-2 text-[15px] leading-relaxed transition-all duration-200 font-medium max-w-full [&_p]:py-1 [&_li]:list-item",
           className,
         )}
         data-slot="message-content"
@@ -480,7 +480,7 @@ const ToolcallInfo = React.forwardRef<HTMLDivElement, ToolcallInfoProps>(
             aria-controls={toolDetailsId}
             onClick={() => setIsExpanded(!isExpanded)}
             className={cn(
-              "flex items-center gap-1 cursor-pointer hover:bg-muted rounded-md p-1 select-none w-fit",
+              "flex items-center gap-1 cursor-pointer hover:bg-muted p-1 select-none w-fit",
             )}
           >
             <ToolcallStatusIcon
@@ -565,7 +565,7 @@ const SamplingSubThread = ({
         aria-controls={samplingDetailsId}
         onClick={() => setIsExpanded(!isExpanded)}
         className={cn(
-          "flex items-center gap-1 cursor-pointer hover:bg-muted-foreground/10 rounded-md p-2 select-none w-fit",
+          "flex items-center gap-1 cursor-pointer hover:bg-muted-foreground/10 p-2 select-none w-fit",
         )}
       >
         <span>{titleText}</span>
@@ -594,7 +594,7 @@ const SamplingSubThread = ({
                   className={cn(
                     "whitespace-pre-wrap",
                     m.role === "assistant" &&
-                      "bg-muted/50 rounded-md p-2 inline-block w-fit",
+                      "bg-muted/50 p-2 inline-block w-fit",
                   )}
                 >
                   {getSafeContent(m.content)}
@@ -682,7 +682,7 @@ const ReasoningInfo = React.forwardRef<HTMLDivElement, ReasoningInfoProps>(
             aria-controls={reasoningDetailsId}
             onClick={() => setIsExpanded(!isExpanded)}
             className={cn(
-              "flex items-center gap-1 cursor-pointer hover:bg-muted-foreground/10 rounded-md px-3 py-1 select-none w-fit",
+              "flex items-center gap-1 cursor-pointer hover:bg-muted-foreground/10 px-3 py-1 select-none w-fit",
             )}
           >
             <span className={isLoading ? "animate-thinking-gradient" : ""}>
@@ -715,7 +715,7 @@ const ReasoningInfo = React.forwardRef<HTMLDivElement, ReasoningInfoProps>(
                   </span>
                 )}
                 {reasoningStep ? (
-                  <div className="bg-muted/50 rounded-md p-3 text-xs overflow-x-auto overflow-y-auto max-w-full">
+                  <div className="bg-muted/50 p-3 text-xs overflow-x-auto overflow-y-auto max-w-full">
                     <div className="whitespace-pre-wrap break-words">
                       <Streamdown components={markdownComponents}>
                         {reasoningStep}
@@ -798,7 +798,7 @@ function renderImageContent(url: string, index: number): React.ReactNode {
   return (
     <div
       key={`image-${index}`}
-      className="rounded-md overflow-hidden shadow-sm max-w-xs"
+      className="overflow-hidden border border-border max-w-xs"
     >
       <img
         src={url}
@@ -834,7 +834,7 @@ function renderResourceContent(
     return (
       <div
         key={`resource-blob-${index}`}
-        className="rounded-md overflow-hidden shadow-sm max-w-xs"
+        className="overflow-hidden border border-border max-w-xs"
       >
         <img
           src={dataUrl}
@@ -957,7 +957,7 @@ function formatTextContent(
     return (
       <pre
         className={cn(
-          "bg-muted/50 rounded-md p-3 text-xs overflow-x-auto overflow-y-auto max-w-full max-h-64",
+          "bg-muted/50 p-3 text-xs overflow-x-auto overflow-y-auto max-w-full max-h-64",
         )}
       >
         <code className="font-mono break-words whitespace-pre-wrap">

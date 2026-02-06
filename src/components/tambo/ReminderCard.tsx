@@ -53,51 +53,6 @@ const CATEGORY_ICONS = {
   custom: Bell,
 };
 
-const CATEGORY_COLORS = {
-  medicine: {
-    bg: "bg-rose-50 dark:bg-rose-950/30",
-    border: "border-rose-200 dark:border-rose-800",
-    iconBg: "bg-rose-100 dark:bg-rose-900/50",
-    text: "text-rose-600 dark:text-rose-400",
-    accent: "text-rose-900 dark:text-rose-100",
-  },
-  supplement: {
-    bg: "bg-purple-50 dark:bg-purple-950/30",
-    border: "border-purple-200 dark:border-purple-800",
-    iconBg: "bg-purple-100 dark:bg-purple-900/50",
-    text: "text-purple-600 dark:text-purple-400",
-    accent: "text-purple-900 dark:text-purple-100",
-  },
-  workout: {
-    bg: "bg-green-50 dark:bg-green-950/30",
-    border: "border-green-200 dark:border-green-800",
-    iconBg: "bg-green-100 dark:bg-green-900/50",
-    text: "text-green-600 dark:text-green-400",
-    accent: "text-green-900 dark:text-green-100",
-  },
-  meal: {
-    bg: "bg-orange-50 dark:bg-orange-950/30",
-    border: "border-orange-200 dark:border-orange-800",
-    iconBg: "bg-orange-100 dark:bg-orange-900/50",
-    text: "text-orange-600 dark:text-orange-400",
-    accent: "text-orange-900 dark:text-orange-100",
-  },
-  water: {
-    bg: "bg-blue-50 dark:bg-blue-950/30",
-    border: "border-blue-200 dark:border-blue-800",
-    iconBg: "bg-blue-100 dark:bg-blue-900/50",
-    text: "text-blue-600 dark:text-blue-400",
-    accent: "text-blue-900 dark:text-blue-100",
-  },
-  custom: {
-    bg: "bg-gray-50 dark:bg-gray-900/30",
-    border: "border-gray-200 dark:border-gray-700",
-    iconBg: "bg-gray-100 dark:bg-gray-800",
-    text: "text-gray-600 dark:text-gray-400",
-    accent: "text-gray-900 dark:text-gray-100",
-  },
-};
-
 const CATEGORY_LABELS = {
   medicine: "Medicine",
   supplement: "Supplement",
@@ -128,8 +83,7 @@ export function ReminderCard({
   action = "created",
 }: ReminderCardProps) {
   const Icon = CATEGORY_ICONS[category];
-  const colors = CATEGORY_COLORS[category];
-  
+
   // Use custom category name if provided, otherwise use default label
   const categoryLabel = category === "custom" && customCategoryName
     ? customCategoryName
@@ -158,19 +112,19 @@ export function ReminderCard({
     switch (action) {
       case "completed":
         return (
-          <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center">
-            <Check className="w-3 h-3 text-white" aria-hidden="true" />
+          <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+            <Check className="w-3 h-3 text-primary-foreground" aria-hidden="true" />
           </div>
         );
       case "skipped":
         return (
-          <span className="text-xs px-2 py-0.5 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+          <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
             Skipped
           </span>
         );
       case "updated":
         return (
-          <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
+          <span className="text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary">
             Updated
           </span>
         );
@@ -184,19 +138,19 @@ export function ReminderCard({
   };
 
   return (
-    <div className={cn("rounded-lg p-4 my-2 border", colors.bg, colors.border)}>
+    <div className="bg-primary/5 dark:bg-primary/5 border-2 border-primary/20 dark:border-primary/30 p-4 my-2">
       <div className="flex items-start gap-3">
-        <div className={cn("w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0", colors.iconBg)}>
-          <Icon className={cn("w-5 h-5", colors.text)} aria-hidden="true" />
+        <div className="w-10 h-10 bg-primary/10 dark:bg-primary/20 flex items-center justify-center flex-shrink-0">
+          <Icon className="w-5 h-5 text-primary" aria-hidden="true" />
         </div>
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h4 className={cn("font-semibold truncate", colors.accent)}>{title}</h4>
+            <h4 className="font-semibold truncate text-foreground">{title}</h4>
             {getActionBadge()}
           </div>
 
-          <p className={cn("text-xs mt-0.5", colors.text)}>
+          <p className="text-xs mt-0.5 text-primary">
             {categoryLabel}
           </p>
 
@@ -228,13 +182,13 @@ export function ReminderCard({
 
           {/* Inventory info */}
           {trackInventory && quantityRemaining !== undefined && (
-            <p className={cn("text-xs mt-2 tabular-nums", colors.text)}>
+            <p className="text-xs mt-2 tabular-nums text-primary">
               {quantityRemaining} remaining in stock
             </p>
           )}
 
           {message && (
-            <p className={cn("text-xs mt-2", colors.text)}>{message}</p>
+            <p className="text-xs mt-2 text-muted-foreground">{message}</p>
           )}
         </div>
       </div>

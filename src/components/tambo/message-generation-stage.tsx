@@ -50,7 +50,7 @@ export function MessageGenerationStage({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-2 px-2 py-1 text-xs rounded-md bg-transparent text-muted-foreground",
+        "inline-flex items-center gap-2 px-2 py-1 text-xs bg-transparent text-muted-foreground",
         className,
       )}
       {...props}

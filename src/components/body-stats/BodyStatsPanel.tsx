@@ -155,8 +155,8 @@ function ChangeIndicator({
           isZero
             ? "text-muted-foreground"
             : isPositive
-            ? "text-orange-500 dark:text-orange-400"
-            : "text-emerald-500 dark:text-emerald-400"
+            ? "text-primary/70"
+            : "text-primary"
         )}
         aria-hidden="true"
       />
@@ -166,8 +166,8 @@ function ChangeIndicator({
           isZero
             ? "text-muted-foreground"
             : isPositive
-            ? "text-orange-600 dark:text-orange-400"
-            : "text-emerald-600 dark:text-emerald-400"
+            ? "text-primary/70"
+            : "text-primary"
         )}
       >
         {isPositive ? "+" : ""}
@@ -207,20 +207,20 @@ function StatsFormModal({
   };
 
   const inputClass =
-    "w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground placeholder:text-muted-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none";
+    "w-full px-3 py-2 border border-input  bg-background text-foreground placeholder:text-muted-foreground tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none";
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div
-        className="bg-card rounded-xl shadow-xl w-full max-w-lg mx-4 border border-border max-h-[90vh] overflow-y-auto"
+        className="bg-card w-full max-w-lg mx-4 border-2 border-border max-h-[90vh] overflow-y-auto"
         role="dialog"
         aria-labelledby="stats-modal-title"
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border sticky top-0 bg-card z-10">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-cyan-100 dark:bg-cyan-900/50 flex items-center justify-center">
-              <Scale className="w-4 h-4 text-cyan-600 dark:text-cyan-400" aria-hidden="true" />
+            <div className="w-8 h-8 bg-primary/10 flex items-center justify-center">
+              <Scale className="w-4 h-4 text-primary" aria-hidden="true" />
             </div>
             <h2
               id="stats-modal-title"
@@ -232,7 +232,7 @@ function StatsFormModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="p-1.5 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" aria-hidden="true" />
@@ -505,14 +505,14 @@ function StatsFormModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              className="flex-1 px-4 py-2 border border-border bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSaving ? "Saving..." : "Save"}
             </button>
@@ -539,7 +539,7 @@ function DeleteConfirmModal({
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div
-        className="bg-card rounded-xl shadow-xl w-full max-w-sm mx-4 p-6 border border-border"
+        className="bg-card w-full max-w-sm mx-4 p-6 border-2 border-border"
         role="alertdialog"
         aria-labelledby="delete-stats-title"
         aria-describedby="delete-stats-desc"
@@ -558,14 +558,14 @@ function DeleteConfirmModal({
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 px-4 py-2 border border-border rounded-lg bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="flex-1 px-4 py-2 border border-border bg-card text-foreground hover:bg-accent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="flex-1 px-4 py-2 bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             Delete
           </button>
@@ -636,7 +636,7 @@ function TrendChart({
   if (weightTrend === undefined || bodyFatTrend === undefined) {
     return (
       <div className="h-[250px] flex items-center justify-center">
-        <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -699,7 +699,7 @@ function TrendChart({
           contentStyle={{
             backgroundColor: tooltipBg,
             border: `1px solid ${tooltipBorder}`,
-            borderRadius: "8px",
+            borderRadius: "0px",
             color: isDark ? "hsl(0 0% 98%)" : "hsl(0 0% 3.9%)",
             fontSize: 13,
           }}
@@ -848,8 +848,8 @@ export function BodyStatsPanel() {
       <div className="space-y-6">
         <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-cyan-100 dark:bg-cyan-900/50 flex items-center justify-center">
-              <Scale className="w-5 h-5 text-cyan-600 dark:text-cyan-400" aria-hidden="true" />
+            <div className="w-10 h-10 bg-primary/10 flex items-center justify-center">
+              <Scale className="w-5 h-5 text-primary" aria-hidden="true" />
             </div>
             <h2 className="text-xl font-semibold text-foreground tracking-tight">
               Body Stats
@@ -857,7 +857,7 @@ export function BodyStatsPanel() {
           </div>
         </header>
         <div className="flex items-center justify-center py-16">
-          <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
       </div>
     );
@@ -872,8 +872,8 @@ export function BodyStatsPanel() {
       <div className="space-y-6">
         <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-cyan-100 dark:bg-cyan-900/50 flex items-center justify-center">
-              <Scale className="w-5 h-5 text-cyan-600 dark:text-cyan-400" aria-hidden="true" />
+            <div className="w-10 h-10 bg-primary/10 flex items-center justify-center">
+              <Scale className="w-5 h-5 text-primary" aria-hidden="true" />
             </div>
             <h2 className="text-xl font-semibold text-foreground tracking-tight">
               Body Stats
@@ -882,14 +882,14 @@ export function BodyStatsPanel() {
           <button
             type="button"
             onClick={() => setShowLogModal(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             <Plus className="w-4 h-4" aria-hidden="true" />
             Log Stats
           </button>
         </header>
 
-        <div className="p-12 text-center bg-card rounded-xl border border-border">
+        <div className="p-12 text-center bg-card border-2 border-border">
           <Scale className="w-12 h-12 mx-auto mb-3 text-muted-foreground/40" aria-hidden="true" />
           <h3 className="text-lg font-semibold text-foreground mb-1">
             No body stats yet
@@ -901,7 +901,7 @@ export function BodyStatsPanel() {
           <button
             type="button"
             onClick={() => setShowLogModal(true)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             <Plus className="w-4 h-4" aria-hidden="true" />
             Log Your First Entry
@@ -930,8 +930,8 @@ export function BodyStatsPanel() {
       {/* Header */}
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-cyan-100 dark:bg-cyan-900/50 flex items-center justify-center">
-            <Scale className="w-5 h-5 text-cyan-600 dark:text-cyan-400" aria-hidden="true" />
+          <div className="w-10 h-10 bg-primary/10 flex items-center justify-center">
+            <Scale className="w-5 h-5 text-primary" aria-hidden="true" />
           </div>
           <div>
             <h2 className="text-xl font-semibold text-foreground tracking-tight">
@@ -947,7 +947,7 @@ export function BodyStatsPanel() {
         <button
           type="button"
           onClick={() => setShowLogModal(true)}
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           <Plus className="w-4 h-4" aria-hidden="true" />
           Log Stats
@@ -957,9 +957,9 @@ export function BodyStatsPanel() {
       {/* Current Stats Summary Cards */}
       <section aria-label="Current body stats" className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Weight */}
-        <article className="rounded-xl p-4 border border-border shadow-sm bg-cyan-50 dark:bg-cyan-950/30">
+        <article className="p-4 border-2 border-primary/20 bg-primary/5">
           <p className="text-sm font-medium text-muted-foreground">Weight</p>
-          <p className="text-2xl font-bold mt-1 text-cyan-600 dark:text-cyan-400 tabular-nums">
+          <p className="text-2xl font-bold mt-1 text-primary tabular-nums">
             {latest.weight}
             <span className="text-sm font-normal text-muted-foreground ml-0.5">
               kg
@@ -968,7 +968,7 @@ export function BodyStatsPanel() {
         </article>
 
         {/* Weight Change */}
-        <article className="rounded-xl p-4 border border-border shadow-sm bg-card">
+        <article className="p-4 border-2 border-border bg-card">
           <p className="text-sm font-medium text-muted-foreground">Change</p>
           {weightChange !== null ? (
             <div className="mt-1">
@@ -985,11 +985,11 @@ export function BodyStatsPanel() {
         </article>
 
         {/* Body Fat */}
-        <article className="rounded-xl p-4 border border-border shadow-sm bg-violet-50 dark:bg-violet-950/30">
+        <article className="p-4 border-2 border-primary/20 bg-primary/5">
           <p className="text-sm font-medium text-muted-foreground">Body Fat</p>
           {latest.bodyFat != null ? (
             <>
-              <p className="text-2xl font-bold mt-1 text-violet-600 dark:text-violet-400 tabular-nums">
+              <p className="text-2xl font-bold mt-1 text-primary tabular-nums">
                 {latest.bodyFat}
                 <span className="text-sm font-normal text-muted-foreground ml-0.5">
                   %
@@ -1005,7 +1005,7 @@ export function BodyStatsPanel() {
         </article>
 
         {/* Last Updated */}
-        <article className="rounded-xl p-4 border border-border shadow-sm bg-card">
+        <article className="p-4 border-2 border-border bg-card">
           <p className="text-sm font-medium text-muted-foreground">Logged</p>
           <div className="flex items-center gap-1.5 mt-1.5">
             <Calendar className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
@@ -1023,7 +1023,7 @@ export function BodyStatsPanel() {
 
       {/* Measurements summary (if any exist on latest) */}
       {(latest.waist || latest.chest || latest.hips || latest.neck) && (
-        <section className="bg-card rounded-xl border border-border p-4 shadow-sm">
+        <section className="bg-card border-2 border-border p-4">
           <div className="flex items-center gap-2 mb-3">
             <Activity className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
             <h3 className="text-sm font-semibold text-foreground">
@@ -1100,22 +1100,22 @@ export function BodyStatsPanel() {
       )}
 
       {/* Trend Chart */}
-      <section className="bg-card rounded-xl border border-border p-6 shadow-sm">
+      <section className="bg-card border-2 border-border p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
           <h3 className="text-lg font-semibold text-foreground">
             Trends
           </h3>
           {/* Period Filter */}
-          <div className="flex gap-1 bg-muted rounded-lg p-1">
+          <div className="flex gap-1 bg-muted p-1">
             {PERIOD_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
                 type="button"
                 onClick={() => setPeriod(opt.value)}
                 className={cn(
-                  "px-3 py-1.5 rounded-md text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+                  "px-3 py-1.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
                   period === opt.value
-                    ? "bg-background text-foreground shadow-sm"
+                    ? "bg-background text-foreground "
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -1128,7 +1128,7 @@ export function BodyStatsPanel() {
       </section>
 
       {/* History Table */}
-      <section className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
+      <section className="bg-card border-2 border-border overflow-hidden">
         <div className="p-4 border-b border-border">
           <h3 className="text-lg font-semibold text-foreground">History</h3>
         </div>
@@ -1185,8 +1185,8 @@ export function BodyStatsPanel() {
                                 Math.abs(wChange) < 0.01
                                   ? "text-muted-foreground"
                                   : wChange > 0
-                                  ? "text-orange-600 dark:text-orange-400"
-                                  : "text-emerald-600 dark:text-emerald-400"
+                                  ? "text-primary/70"
+                                  : "text-primary"
                               )}
                             >
                               {wChange > 0 ? "+" : ""}
@@ -1211,7 +1211,7 @@ export function BodyStatsPanel() {
                             onClick={() =>
                               setEditingEntry(entry as BodyStatsEntry)
                             }
-                            className="p-1.5 rounded-lg hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                            className="p-1.5 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                             aria-label={`Edit entry from ${formatDate(entry.date)}`}
                           >
                             <Pencil className="w-4 h-4" aria-hidden="true" />
@@ -1221,7 +1221,7 @@ export function BodyStatsPanel() {
                             onClick={() =>
                               setDeletingEntry(entry as BodyStatsEntry)
                             }
-                            className="p-1.5 rounded-lg hover:bg-destructive/10 text-destructive transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                            className="p-1.5 hover:bg-destructive/10 text-destructive transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                             aria-label={`Delete entry from ${formatDate(entry.date)}`}
                           >
                             <Trash2 className="w-4 h-4" aria-hidden="true" />

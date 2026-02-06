@@ -115,51 +115,51 @@ function SettingsPanelBase(props: SettingsProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 max-w-2xl">
-      <h2 className="text-2xl font-semibold text-gray-900 mb-6">Settings</h2>
+    <div className="bg-background border border-border p-6 max-w-2xl">
+      <h2 className="text-2xl font-semibold text-foreground mb-6">Settings</h2>
 
       {/* Personal Information */}
       <div className="space-y-6">
-        <div className="border-b border-gray-200 pb-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
+        <div className="border-b border-border pb-6">
+          <h3 className="text-lg font-medium text-foreground mb-4">
             Personal Information
           </h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Name
               </label>
               <input
                 type="text"
                 value={settings.name}
                 onChange={(e) => handleChange({ name: e.target.value })}
-                className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`w-full px-3 py-2 border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary ${
                   updatedFields.has("name") ? "animate-pulse" : ""
                 }`}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Email
               </label>
               <input
                 type="email"
                 value={settings.email}
                 onChange={(e) => handleChange({ email: e.target.value })}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  emailError ? "border-red-500" : "border-gray-300"
+                className={`w-full px-3 py-2 border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary ${
+                  emailError ? "border-destructive" : "border-border"
                 } ${updatedFields.has("email") ? "animate-pulse" : ""}`}
               />
               {emailError && (
-                <p className="mt-1 text-sm text-red-600">{emailError}</p>
+                <p className="mt-1 text-sm text-destructive">{emailError}</p>
               )}
             </div>
           </div>
         </div>
 
         {/* Notifications */}
-        <div className="border-b border-gray-200 pb-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
+        <div className="border-b border-border pb-6">
+          <h3 className="text-lg font-medium text-foreground mb-4">
             Notifications
           </h3>
           <div className="space-y-3">
@@ -179,9 +179,9 @@ function SettingsPanelBase(props: SettingsProps) {
                     },
                   })
                 }
-                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-primary accent-primary focus:ring-primary"
               />
-              <span className="ml-2 text-sm text-gray-700">
+              <span className="ml-2 text-sm text-muted-foreground">
                 Email notifications
               </span>
             </label>
@@ -201,9 +201,9 @@ function SettingsPanelBase(props: SettingsProps) {
                     },
                   })
                 }
-                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-primary accent-primary focus:ring-primary"
               />
-              <span className="ml-2 text-sm text-gray-700">
+              <span className="ml-2 text-sm text-muted-foreground">
                 Push notifications
               </span>
             </label>
@@ -223,9 +223,9 @@ function SettingsPanelBase(props: SettingsProps) {
                     },
                   })
                 }
-                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-primary accent-primary focus:ring-primary"
               />
-              <span className="ml-2 text-sm text-gray-700">
+              <span className="ml-2 text-sm text-muted-foreground">
                 SMS notifications
               </span>
             </label>
@@ -233,11 +233,11 @@ function SettingsPanelBase(props: SettingsProps) {
         </div>
 
         {/* Appearance */}
-        <div className="border-b border-gray-200 pb-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Appearance</h3>
+        <div className="border-b border-border pb-6">
+          <h3 className="text-lg font-medium text-foreground mb-4">Appearance</h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Theme
               </label>
               <select
@@ -247,7 +247,7 @@ function SettingsPanelBase(props: SettingsProps) {
                     theme: e.target.value as "light" | "dark" | "system",
                   })
                 }
-                className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`w-full px-3 py-2 border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary ${
                   updatedFields.has("theme") ? "animate-pulse" : ""
                 }`}
               >
@@ -257,7 +257,7 @@ function SettingsPanelBase(props: SettingsProps) {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 Language
               </label>
               <select
@@ -267,7 +267,7 @@ function SettingsPanelBase(props: SettingsProps) {
                     language: e.target.value as "en" | "es" | "fr" | "de",
                   })
                 }
-                className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`w-full px-3 py-2 border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary ${
                   updatedFields.has("language") ? "animate-pulse" : ""
                 }`}
               >
@@ -282,7 +282,7 @@ function SettingsPanelBase(props: SettingsProps) {
 
         {/* Privacy */}
         <div>
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Privacy</h3>
+          <h3 className="text-lg font-medium text-foreground mb-4">Privacy</h3>
           <div className="space-y-3">
             <label
               className={`flex items-center ${
@@ -302,9 +302,9 @@ function SettingsPanelBase(props: SettingsProps) {
                     },
                   })
                 }
-                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-primary accent-primary focus:ring-primary"
               />
-              <span className="ml-2 text-sm text-gray-700">
+              <span className="ml-2 text-sm text-muted-foreground">
                 Share usage analytics
               </span>
             </label>
@@ -326,9 +326,9 @@ function SettingsPanelBase(props: SettingsProps) {
                     },
                   })
                 }
-                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-primary accent-primary focus:ring-primary"
               />
-              <span className="ml-2 text-sm text-gray-700">
+              <span className="ml-2 text-sm text-muted-foreground">
                 Enable personalization
               </span>
             </label>
@@ -337,11 +337,11 @@ function SettingsPanelBase(props: SettingsProps) {
       </div>
 
       {/* Current Settings Display */}
-      <div className="mt-8 p-4 bg-gray-50 rounded-md">
-        <h4 className="text-sm font-medium text-gray-700 mb-2">
+      <div className="mt-8 p-4 bg-muted">
+        <h4 className="text-sm font-medium text-muted-foreground mb-2">
           Current Settings (JSON)
         </h4>
-        <pre className="text-xs text-gray-600 overflow-auto">
+        <pre className="text-xs text-muted-foreground overflow-auto">
           {JSON.stringify(settings, null, 2)}
         </pre>
       </div>

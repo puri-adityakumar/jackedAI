@@ -1,7 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-
 interface StatsCardProps {
   title: string;
   value: string;
@@ -10,53 +8,17 @@ interface StatsCardProps {
   color?: "orange" | "blue" | "green" | "purple" | "cyan" | "amber";
 }
 
-const colorClasses = {
-  orange: {
-    bg: "bg-orange-50 dark:bg-orange-950/30",
-    text: "text-orange-600 dark:text-orange-400",
-    progress: "bg-orange-500 dark:bg-orange-400",
-  },
-  blue: {
-    bg: "bg-blue-50 dark:bg-blue-950/30",
-    text: "text-blue-600 dark:text-blue-400",
-    progress: "bg-blue-500 dark:bg-blue-400",
-  },
-  green: {
-    bg: "bg-green-50 dark:bg-green-950/30",
-    text: "text-green-600 dark:text-green-400",
-    progress: "bg-green-500 dark:bg-green-400",
-  },
-  purple: {
-    bg: "bg-purple-50 dark:bg-purple-950/30",
-    text: "text-purple-600 dark:text-purple-400",
-    progress: "bg-purple-500 dark:bg-purple-400",
-  },
-  cyan: {
-    bg: "bg-cyan-50 dark:bg-cyan-950/30",
-    text: "text-cyan-600 dark:text-cyan-400",
-    progress: "bg-cyan-500 dark:bg-cyan-400",
-  },
-  amber: {
-    bg: "bg-amber-50 dark:bg-amber-950/30",
-    text: "text-amber-600 dark:text-amber-400",
-    progress: "bg-amber-500 dark:bg-amber-400",
-  },
-};
-
 export function StatsCard({
   title,
   value,
   subtitle,
   progress,
-  color = "blue",
 }: StatsCardProps) {
-  const colors = colorClasses[color];
-
   return (
-    <article className={cn("rounded-xl p-4 border border-border shadow-sm", colors.bg)}>
+    <article className="border-2 border-primary/20 dark:border-primary/30 p-4 bg-primary/5">
       <p className="text-sm font-medium text-muted-foreground">{title}</p>
       <p
-        className={cn("text-2xl font-bold mt-1", colors.text)}
+        className="text-2xl font-bold mt-1 text-primary"
         style={{ fontVariantNumeric: "tabular-nums" }}
       >
         {value}
@@ -64,9 +26,9 @@ export function StatsCard({
       <p className="text-xs text-muted-foreground mt-1">{subtitle}</p>
       {progress !== undefined && (
         <div className="mt-3" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
-          <div className="h-2 bg-muted rounded-full overflow-hidden">
+          <div className="h-2 bg-muted overflow-hidden">
             <div
-              className={cn("h-full rounded-full transition-all duration-300", colors.progress)}
+              className="h-full bg-primary transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>

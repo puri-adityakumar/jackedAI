@@ -26,7 +26,7 @@ function applyTheme(theme: Theme) {
   if (metaThemeColor) {
     metaThemeColor.setAttribute(
       "content",
-      isDark ? "hsl(20, 14%, 11%)" : "hsl(30, 20%, 97%)"
+      isDark ? "#000000" : "#ffffff"
     );
   }
 }

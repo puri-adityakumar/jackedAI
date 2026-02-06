@@ -28,19 +28,19 @@ export function WorkoutPlanCard({
   message,
 }: WorkoutPlanCardProps) {
   return (
-    <div className="bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 rounded-lg p-4 my-2">
+    <div className="bg-primary/5 border-2 border-primary/20 dark:border-primary/30 p-4 my-2">
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center flex-shrink-0">
-          <ClipboardList className="w-5 h-5 text-indigo-600 dark:text-indigo-400" aria-hidden="true" />
+        <div className="w-10 h-10 bg-primary/10 dark:bg-primary/20 flex items-center justify-center flex-shrink-0">
+          <ClipboardList className="w-5 h-5 text-primary" aria-hidden="true" />
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h4 className="font-semibold text-indigo-900 dark:text-indigo-100">{name}</h4>
-            <div className="w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center">
-              <Check className="w-3 h-3 text-white" aria-hidden="true" />
+            <h4 className="font-semibold text-foreground">{name}</h4>
+            <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+              <Check className="w-3 h-3 text-primary-foreground" aria-hidden="true" />
             </div>
           </div>
-          <p className="text-xs text-indigo-600 dark:text-indigo-400 mt-0.5">
+          <p className="text-xs text-primary mt-0.5">
             {exerciseCount} exercise{exerciseCount !== 1 ? "s" : ""}
           </p>
 
@@ -49,11 +49,11 @@ export function WorkoutPlanCard({
             {exercises.map((exercise, index) => (
               <div
                 key={index}
-                className="flex items-center gap-2 text-sm text-indigo-800 dark:text-indigo-200"
+                className="flex items-center gap-2 text-sm text-foreground"
               >
-                <Dumbbell className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 flex-shrink-0" aria-hidden="true" />
+                <Dumbbell className="w-3.5 h-3.5 text-primary flex-shrink-0" aria-hidden="true" />
                 <span className="font-medium">{exercise.name}</span>
-                <span className="text-indigo-500 dark:text-indigo-400">
+                <span className="text-muted-foreground">
                   {exercise.sets} x {exercise.reps}
                 </span>
               </div>
@@ -61,7 +61,7 @@ export function WorkoutPlanCard({
           </div>
 
           {message && (
-            <p className="text-xs text-indigo-600 dark:text-indigo-400 mt-3">{message}</p>
+            <p className="text-xs text-muted-foreground mt-3">{message}</p>
           )}
         </div>
       </div>

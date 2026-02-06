@@ -160,7 +160,7 @@ export const McpPromptButton = React.forwardRef<
   }
 
   const buttonClasses = cn(
-    "w-10 h-10 rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-muted disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    "w-10 h-10 border border-border bg-background text-foreground transition-colors hover:bg-muted disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     className,
   );
 
@@ -196,7 +196,7 @@ export const McpPromptButton = React.forwardRef<
           </DropdownMenu.Trigger>
           <DropdownMenu.Portal>
             <DropdownMenu.Content
-              className="z-50 min-w-[200px] max-w-[300px] overflow-hidden rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-md"
+              className="z-50 min-w-[200px] max-w-[300px] overflow-hidden border border-border bg-popover p-1 text-popover-foreground"
               side="top"
               align="start"
               sideOffset={5}
@@ -257,7 +257,7 @@ function PromptListContent({
       {promptList.map((promptEntry) => (
         <DropdownMenu.Item
           key={`${promptEntry.server.url}-${promptEntry.prompt.name}`}
-          className="relative flex cursor-pointer select-none items-start flex-col rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+          className="relative flex cursor-pointer select-none items-start flex-col px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
           onSelect={() => {
             onSelectPrompt(promptEntry.prompt.name);
           }}
@@ -303,7 +303,7 @@ const ResourceCombobox: React.FC<ResourceComboboxProps> = ({
   return (
     <DropdownMenu.Portal>
       <DropdownMenu.Content
-        className="z-50 w-[400px] max-h-[400px] overflow-hidden rounded-md border border-border bg-popover text-popover-foreground shadow-md"
+        className="z-50 w-[400px] max-h-[400px] overflow-hidden border border-border bg-popover text-popover-foreground"
         side="top"
         align="start"
         sideOffset={5}
@@ -321,7 +321,7 @@ const ResourceCombobox: React.FC<ResourceComboboxProps> = ({
               placeholder="Search resources..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-sm bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
+              className="w-full pl-8 pr-3 py-1.5 text-sm bg-background border border-border focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent"
               onClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => {
                 // Prevent dropdown from closing on key events
@@ -383,7 +383,7 @@ function ResourceListContent({
       {filteredResources.map((resourceEntry) => (
         <DropdownMenu.Item
           key={resourceEntry.resource.uri}
-          className="relative flex cursor-pointer select-none items-start flex-col rounded-sm px-2 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground"
+          className="relative flex cursor-pointer select-none items-start flex-col px-2 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground"
           onSelect={() => {
             onSelectResource(
               resourceEntry.resource.uri,
@@ -477,7 +477,7 @@ export const McpResourceButton = React.forwardRef<
   }
 
   const buttonClasses = cn(
-    "w-10 h-10 rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-muted disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    "w-10 h-10 border border-border bg-background text-foreground transition-colors hover:bg-muted disabled:opacity-50 disabled:pointer-events-none flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
     className,
   );
 

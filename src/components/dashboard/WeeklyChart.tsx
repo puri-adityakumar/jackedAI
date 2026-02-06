@@ -57,8 +57,8 @@ export function WeeklyChart({ exerciseData, mealData }: WeeklyChartProps) {
   const tickColor = isDark ? "hsl(0 0% 63.9%)" : "hsl(0 0% 45.1%)";
   const tooltipBg = isDark ? "hsl(0 0% 14.9%)" : "hsl(0 0% 100%)";
   const tooltipBorder = isDark ? "hsl(0 0% 27%)" : "hsl(0 0% 89.8%)";
-  const exerciseColor = isDark ? "#4ade80" : "#22C55E";
-  const calorieColor = isDark ? "#fb923c" : "#F97316";
+  const exerciseColor = "#10b981";
+  const calorieColor = isDark ? "#34d399" : "#10b981";
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -85,11 +85,11 @@ export function WeeklyChart({ exerciseData, mealData }: WeeklyChartProps) {
               contentStyle={{
                 backgroundColor: tooltipBg,
                 border: `1px solid ${tooltipBorder}`,
-                borderRadius: "8px",
+                borderRadius: "0px",
                 color: isDark ? "hsl(0 0% 98%)" : "hsl(0 0% 3.9%)",
               }}
             />
-            <Bar dataKey="exercises" fill={exerciseColor} radius={[4, 4, 0, 0]} />
+            <Bar dataKey="exercises" fill={exerciseColor} radius={0} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -116,7 +116,7 @@ export function WeeklyChart({ exerciseData, mealData }: WeeklyChartProps) {
               contentStyle={{
                 backgroundColor: tooltipBg,
                 border: `1px solid ${tooltipBorder}`,
-                borderRadius: "8px",
+                borderRadius: "0px",
                 color: isDark ? "hsl(0 0% 98%)" : "hsl(0 0% 3.9%)",
               }}
             />
