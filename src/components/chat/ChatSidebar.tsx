@@ -11,7 +11,8 @@ import {
   ThreadContent,
   ThreadContentMessages,
 } from "@/components/tambo/thread-content";
-import { ChevronLeft, ChevronRight, MessageSquare } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, MessageSquare } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { AgentMode, ModeToggle } from "./ModeToggle";
 
@@ -44,7 +45,16 @@ export function ChatSidebar({ defaultOpen = true }: ChatSidebarProps) {
                 {mode === "butler" ? "Butler" : "Trainer"}
               </h2>
             </div>
-            <ModeToggle mode={mode} onModeChange={setMode} />
+            <div className="flex items-center gap-2">
+              <ModeToggle mode={mode} onModeChange={setMode} />
+              <Link
+                href="/chat"
+                className="p-1.5 rounded-lg text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                title="Open full chat with history"
+              >
+                <ExternalLink className="w-4 h-4" aria-hidden="true" />
+              </Link>
+            </div>
           </header>
 
           {/* Mode description */}
