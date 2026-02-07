@@ -13,7 +13,7 @@ import {
 } from "@/components/tambo/thread-content";
 import { cn } from "@/lib/utils";
 import { useTamboThread, useTamboThreadList } from "@tambo-ai/react";
-import { ChevronLeft, ChevronRight, ExternalLink, History, MessageSquare, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, History, MessageSquare, Plus, X } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { AgentMode, ModeToggle } from "./ModeToggle";
@@ -34,7 +34,7 @@ export function ChatSidebar({
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [mode, setMode] = useState<AgentMode>("butler");
   const { data: threads } = useTamboThreadList();
-  const { switchCurrentThread, thread: currentThread } = useTamboThread();
+  const { switchCurrentThread, startNewThread, thread: currentThread } = useTamboThread();
 
   const recentThreads = useMemo(() => {
     if (!threads?.items) return [];
@@ -73,13 +73,23 @@ export function ChatSidebar({
                 {mode === "butler" ? "Butler" : "Trainer"}
               </h2>
             </div>
-            <Link
-              href="/chat"
-              className="p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-              title="Open full chat"
-            >
-              <ExternalLink className="w-4 h-4" aria-hidden="true" />
-            </Link>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => startNewThread()}
+                className="p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer"
+                title="New chat"
+                aria-label="New chat"
+              >
+                <Plus className="w-4 h-4" aria-hidden="true" />
+              </button>
+              <Link
+                href="/chat"
+                className="p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                title="Open full chat"
+              >
+                <ExternalLink className="w-4 h-4" aria-hidden="true" />
+              </Link>
+            </div>
           </header>
 
           {/* Recent threads */}
@@ -141,13 +151,23 @@ export function ChatSidebar({
                   {mode === "butler" ? "Butler" : "Trainer"}
                 </h2>
               </div>
-              <Link
-                href="/chat"
-                className="p-1.5 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-                title="Open full chat with history"
-              >
-                <ExternalLink className="w-4 h-4" aria-hidden="true" />
-              </Link>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => startNewThread()}
+                  className="p-1.5 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer"
+                  title="New chat"
+                  aria-label="New chat"
+                >
+                  <Plus className="w-4 h-4" aria-hidden="true" />
+                </button>
+                <Link
+                  href="/chat"
+                  className="p-1.5 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+                  title="Open full chat with history"
+                >
+                  <ExternalLink className="w-4 h-4" aria-hidden="true" />
+                </Link>
+              </div>
             </header>
 
             {/* Recent threads */}

@@ -38,6 +38,24 @@ const GRADE_COLORS: Record<string, string> = {
   F: "text-destructive bg-destructive/10",
 };
 
+const MOTIVATION_QUOTES = [
+  "The only bad workout is the one that didn't happen.",
+  "Your body can stand almost anything. It's your mind that you have to convince.",
+  "Discipline is choosing between what you want now and what you want most.",
+  "The pain you feel today will be the strength you feel tomorrow.",
+  "Don't count the days, make the days count.",
+  "Success isn't given. It's earned — in the gym, on the field, in the kitchen.",
+  "You don't have to be extreme, just consistent.",
+  "Strive for progress, not perfection.",
+  "The best project you'll ever work on is you.",
+  "Small daily improvements over time lead to stunning results.",
+  "It never gets easier — you just get stronger.",
+  "Motivation gets you started. Habit keeps you going.",
+  "You're only one workout away from a good mood.",
+  "Fall in love with taking care of yourself.",
+  "What seems impossible today will one day become your warm-up.",
+];
+
 function MacroBar({
   label,
   consumed,
@@ -398,12 +416,20 @@ export function DashboardPanel() {
     100
   );
 
+  const quote = useMemo(
+    () => MOTIVATION_QUOTES[Math.floor(Math.random() * MOTIVATION_QUOTES.length)],
+    []
+  );
+
   return (
     <div className="space-y-6">
       <header>
         <h2 className="text-2xl font-bold text-foreground tracking-tight text-pretty">Dashboard</h2>
         <p className="text-muted-foreground mt-1">
           {profile?.name ? `Welcome back, ${profile.name}!` : "Your daily overview"}
+        </p>
+        <p className="text-sm italic text-muted-foreground/80 mt-2">
+          &ldquo;{quote}&rdquo;
         </p>
       </header>
 
