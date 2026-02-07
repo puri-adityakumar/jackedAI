@@ -11,7 +11,7 @@ interface ModeToggleProps {
 
 export function ModeToggle({ mode, onModeChange }: ModeToggleProps) {
   return (
-    <fieldset className="flex items-center bg-muted p-1" role="radiogroup" aria-label="Assistant mode">
+    <fieldset className="flex items-center bg-muted p-0.5" role="radiogroup" aria-label="Assistant mode">
       <legend className="sr-only">Select assistant mode</legend>
       <button
         type="button"
@@ -19,7 +19,7 @@ export function ModeToggle({ mode, onModeChange }: ModeToggleProps) {
         aria-checked={mode === "butler"}
         onClick={() => onModeChange("butler")}
         className={cn(
-          "px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+          "px-2.5 py-1 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background cursor-pointer",
           mode === "butler"
             ? "bg-card text-foreground border border-border"
             : "text-muted-foreground hover:text-foreground"
@@ -33,7 +33,7 @@ export function ModeToggle({ mode, onModeChange }: ModeToggleProps) {
         aria-checked={mode === "trainer"}
         onClick={() => onModeChange("trainer")}
         className={cn(
-          "px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background",
+          "px-2.5 py-1 text-xs font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background cursor-pointer",
           mode === "trainer"
             ? "bg-card text-foreground border border-border"
             : "text-muted-foreground hover:text-foreground"

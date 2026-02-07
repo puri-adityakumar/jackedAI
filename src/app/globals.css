@@ -142,24 +142,24 @@
 }
 
 .dark {
-  /* DARK MODE — Pitch Black + Tambo Green (#10b981) */
-  --background: oklch(0.0000 0 0);
+  /* DARK MODE — Elevated Dark + Tambo Green (#10b981) */
+  --background: oklch(0.0700 0 0);
   --foreground: oklch(0.9500 0 0);
-  --card: oklch(0.0800 0 0);
+  --card: oklch(0.1200 0 0);
   --card-foreground: oklch(0.9500 0 0);
-  --popover: oklch(0.0800 0 0);
+  --popover: oklch(0.1200 0 0);
   --popover-foreground: oklch(0.9500 0 0);
   --primary: oklch(0.6960 0.1740 163.00);
   --primary-foreground: oklch(0.0000 0 0);
-  --secondary: oklch(0.1500 0.0200 163.00);
+  --secondary: oklch(0.1800 0.0200 163.00);
   --secondary-foreground: oklch(0.6960 0.1740 163.00);
-  --muted: oklch(0.1500 0 0);
-  --muted-foreground: oklch(0.6000 0 0);
-  --accent: oklch(0.1500 0.0200 163.00);
+  --muted: oklch(0.1800 0 0);
+  --muted-foreground: oklch(0.6500 0 0);
+  --accent: oklch(0.1800 0.0200 163.00);
   --accent-foreground: oklch(0.9500 0 0);
   --destructive: oklch(0.5770 0.2150 27.33);
-  --border: oklch(0.2000 0 0);
-  --input: oklch(0.2500 0 0);
+  --border: oklch(0.2400 0 0);
+  --input: oklch(0.2200 0 0);
   --ring: oklch(0.6960 0.1740 163.00);
   --chart-1: oklch(0.6960 0.1740 163.00);
   --chart-2: oklch(0.5800 0.1400 163.00);
@@ -168,20 +168,20 @@
   --chart-5: oklch(0.9000 0.0500 163.00);
 
   /* Tambo Specific Variables */
-  --container: oklch(0.0800 0 0);
+  --container: oklch(0.1200 0 0);
   --backdrop: oklch(0.95 0 0 / 0.08);
   --muted-backdrop: oklch(0.95 0 0 / 0.04);
   --radius: 0px;
   --panel-left-width: 500px;
   --panel-right-width: 500px;
   --sidebar-width: 3rem;
-  --sidebar: oklch(0.0500 0 0);
+  --sidebar: oklch(0.0900 0 0);
   --sidebar-foreground: oklch(0.9500 0 0);
   --sidebar-primary: oklch(0.6960 0.1740 163.00);
   --sidebar-primary-foreground: oklch(0.0000 0 0);
-  --sidebar-accent: oklch(0.1500 0 0);
+  --sidebar-accent: oklch(0.1800 0 0);
   --sidebar-accent-foreground: oklch(0.9500 0 0);
-  --sidebar-border: oklch(0.2000 0 0);
+  --sidebar-border: oklch(0.2400 0 0);
   --sidebar-ring: oklch(0.6960 0.1740 163.00);
   --destructive-foreground: oklch(1.0000 0 0);
   --shadow-color: oklch(0 0 0);
@@ -222,6 +222,7 @@
     letter-spacing: var(--tracking-normal);
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    overscroll-behavior: contain;
   }
 
   h1, h2, h3, h4, h5, h6 {

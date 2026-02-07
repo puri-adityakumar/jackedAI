@@ -38,7 +38,7 @@ export function AppSidebar({
   return (
     <aside
       className={cn(
-        "flex flex-col bg-card border-r border-border transition-all duration-300 relative shrink-0",
+        "hidden md:flex flex-col bg-card border-r border-border transition-all duration-300 relative shrink-0",
         isExpanded ? "w-56" : "w-16"
       )}
       aria-label="Main navigation"

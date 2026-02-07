@@ -3,20 +3,28 @@
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery } from "convex/react";
 import {
+  Activity,
+  Apple,
   Calculator,
   ChevronDown,
   ChevronUp,
+  Flame,
   Loader2,
-  Moon,
-  Save,
-  Sun,
-  User,
-  Monitor,
   Lock,
+  Monitor,
+  Moon,
+  Palette,
+  Save,
+  Scale,
+  Shield,
   ShieldCheck,
   ShieldOff,
+  Sun,
+  Target,
+  User,
   Eye,
   EyeOff,
+  Dumbbell,
 } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 import { api } from "../../../convex/_generated/api";
@@ -44,9 +52,9 @@ interface FormData {
 
 // Hoisted static data
 const FITNESS_GOALS = [
-  { id: "lose_weight" as const, label: "Lose Weight", icon: "🔥" },
-  { id: "build_muscle" as const, label: "Build Muscle", icon: "💪" },
-  { id: "maintain" as const, label: "Maintain", icon: "⚖️" },
+  { id: "lose_weight" as const, label: "Lose Weight", icon: Flame },
+  { id: "build_muscle" as const, label: "Build Muscle", icon: Dumbbell },
+  { id: "maintain" as const, label: "Maintain", icon: Scale },
 ] as const;
 
 const GENDERS = [
@@ -57,9 +65,9 @@ const GENDERS = [
 
 const ACTIVITY_LEVELS = [
   { id: "sedentary" as const, label: "Sedentary", desc: "Little to no exercise" },
-  { id: "lightly_active" as const, label: "Lightly Active", desc: "1–3 days/week" },
-  { id: "active" as const, label: "Active", desc: "3–5 days/week" },
-  { id: "very_active" as const, label: "Very Active", desc: "6–7 days/week" },
+  { id: "lightly_active" as const, label: "Lightly Active", desc: "1-3 days/week" },
+  { id: "active" as const, label: "Active", desc: "3-5 days/week" },
+  { id: "very_active" as const, label: "Very Active", desc: "6-7 days/week" },
 ] as const;
 
 const ACTIVITY_MULTIPLIERS: Record<ActivityLevel, number> = {
@@ -69,7 +77,6 @@ const ACTIVITY_MULTIPLIERS: Record<ActivityLevel, number> = {
   very_active: 1.725,
 };
 
-// Calculate BMR using Mifflin-St Jeor equation
 function calculateBMR(
   weight: number,
   height: number,
@@ -142,11 +149,13 @@ function calculateMacros(
 // Collapsible Section Component
 function Section({
   title,
+  description,
   icon,
   children,
   defaultOpen = true,
 }: {
   title: string;
+  description?: string;
   icon: React.ReactNode;
   children: React.ReactNode;
   defaultOpen?: boolean;
@@ -155,7 +164,7 @@ function Section({
   const contentId = useId();
 
   return (
-    <div className="border-2 border-border overflow-hidden bg-card ">
+    <div className="border border-border overflow-hidden bg-card">
       <button
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={(e) => {
@@ -166,23 +175,30 @@ function Section({
         }}
         aria-expanded={isOpen}
         aria-controls={contentId}
-        className="w-full flex items-center justify-between p-4 bg-muted/50 hover:bg-muted transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+        className="w-full flex items-center justify-between p-4 hover:bg-muted/50 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
       >
         <div className="flex items-center gap-3">
-          <span aria-hidden="true">{icon}</span>
-          <span className="font-semibold text-foreground">{title}</span>
+          <div className="w-8 h-8 flex items-center justify-center bg-primary/10 text-primary shrink-0">
+            {icon}
+          </div>
+          <div className="text-left">
+            <span className="font-semibold text-foreground text-sm">{title}</span>
+            {description && (
+              <p className="text-xs text-muted-foreground">{description}</p>
+            )}
+          </div>
         </div>
         {isOpen ? (
-          <ChevronUp className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
+          <ChevronUp className="w-4 h-4 text-muted-foreground shrink-0" aria-hidden="true" />
         ) : (
-          <ChevronDown className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
+          <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0" aria-hidden="true" />
         )}
       </button>
       <div
         id={contentId}
         role="region"
         hidden={!isOpen}
-        className={cn("p-4 space-y-4", !isOpen && "hidden")}
+        className={cn("px-4 pb-4 space-y-4", !isOpen && "hidden")}
       >
         {children}
       </div>
@@ -190,7 +206,7 @@ function Section({
   );
 }
 
-// Form Input Component with proper accessibility
+// Form Input Component
 function FormInput({
   label,
   type = "text",
@@ -218,7 +234,7 @@ function FormInput({
 
   return (
     <div>
-      <label htmlFor={inputId} className="block text-sm font-medium text-foreground mb-1.5">
+      <label htmlFor={inputId} className="block text-xs font-medium text-muted-foreground mb-1.5 uppercase tracking-wide">
         {label}
       </label>
       <div className="relative">
@@ -227,22 +243,22 @@ function FormInput({
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder ? `${placeholder}…` : undefined}
+          placeholder={placeholder}
           min={min}
           max={max}
           step={step}
           autoComplete={autoComplete}
           spellCheck={type === "email" ? false : undefined}
           className={cn(
-            "w-full px-3 py-2.5 border border-input bg-background text-foreground",
-            "placeholder:text-muted-foreground",
+            "w-full px-3 py-2.5 border border-input bg-background text-foreground text-sm",
+            "placeholder:text-muted-foreground/50",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-transparent",
             "transition-colors",
             suffix && "pr-16"
           )}
         />
         {suffix && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm pointer-events-none">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs pointer-events-none">
             {suffix}
           </span>
         )}
@@ -270,7 +286,7 @@ function SelectionButton({
       aria-checked={selected}
       onClick={onClick}
       className={cn(
-        "border-2 font-medium transition-all",
+        "border font-medium transition-all cursor-pointer text-sm",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
         selected
           ? "border-primary bg-primary/10 text-primary"
@@ -287,7 +303,6 @@ export function SettingsPanel() {
   const profile = useQuery(api.userProfile.get);
   const updateProfile = useMutation(api.userProfile.update);
 
-  // PIN Protection
   const pinStatus = useQuery(api.pinProtection.getPinStatus);
   const setPin = useMutation(api.pinProtection.setPin);
   const removePin = useMutation(api.pinProtection.removePin);
@@ -429,7 +444,6 @@ export function SettingsPanel() {
     setPinError(null);
     setPinSuccess(null);
 
-    // Validation
     if (!/^\d{6}$/.test(newPin)) {
       setPinError("PIN must be exactly 6 digits");
       return;
@@ -481,7 +495,7 @@ export function SettingsPanel() {
     return (
       <div className="flex items-center justify-center p-8 gap-2">
         <Loader2 className="w-5 h-5 animate-spin text-primary" aria-hidden="true" />
-        <span className="text-muted-foreground">Loading settings…</span>
+        <span className="text-muted-foreground">Loading settings...</span>
       </div>
     );
   }
@@ -495,15 +509,18 @@ export function SettingsPanel() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-2xl mx-auto space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-foreground tracking-tight">Settings</h1>
+      <div className="flex items-center justify-between mb-2">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">Settings</h1>
+          <p className="text-sm text-muted-foreground">Manage your profile, goals, and preferences</p>
+        </div>
         <button
           onClick={handleSave}
           disabled={!hasChanges || isSaving}
           className={cn(
-            "flex items-center gap-2 px-4 py-2 font-medium transition-all",
+            "flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-all cursor-pointer",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
             hasChanges && !isSaving
               ? "bg-primary text-primary-foreground hover:bg-primary/90"
@@ -515,17 +532,14 @@ export function SettingsPanel() {
           {isSaving ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
-              Saving…
+              Saving
             </>
           ) : saveSuccess ? (
-            <>
-              <Save className="w-4 h-4" aria-hidden="true" />
-              Saved!
-            </>
+            "Saved!"
           ) : (
             <>
               <Save className="w-4 h-4" aria-hidden="true" />
-              Save Changes
+              Save
             </>
           )}
         </button>
@@ -536,16 +550,17 @@ export function SettingsPanel() {
         <div
           role="alert"
           aria-live="polite"
-          className="bg-destructive/10 border-2 border-destructive/30 text-destructive px-4 py-3"
+          className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 text-sm"
         >
           {saveError}
         </div>
       )}
 
-      {/* Section 1: Profile */}
+      {/* ── ACCOUNT ── */}
       <Section
         title="Profile"
-        icon={<User className="w-5 h-5 text-primary" />}
+        description="Your basic information"
+        icon={<User className="w-4 h-4" />}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
@@ -558,7 +573,7 @@ export function SettingsPanel() {
             />
           </div>
           <FormInput
-            label="Height (cm)"
+            label="Height"
             type="number"
             value={formData.height}
             onChange={(v) => updateField("height", v ? Number(v) : "")}
@@ -566,10 +581,11 @@ export function SettingsPanel() {
             min={50}
             max={300}
             step={0.1}
+            suffix="cm"
             autoComplete="off"
           />
           <FormInput
-            label="Weight (kg)"
+            label="Weight"
             type="number"
             value={formData.weight}
             onChange={(v) => updateField("weight", v ? Number(v) : "")}
@@ -577,6 +593,7 @@ export function SettingsPanel() {
             min={20}
             max={500}
             step={0.1}
+            suffix="kg"
             autoComplete="off"
           />
           <FormInput
@@ -587,37 +604,39 @@ export function SettingsPanel() {
             placeholder="25"
             min={10}
             max={120}
+            suffix="years"
             autoComplete="off"
           />
+          <div>
+            <fieldset>
+              <legend className="block text-xs font-medium text-muted-foreground mb-1.5 uppercase tracking-wide">Gender</legend>
+              <div className="flex gap-2" role="radiogroup" aria-label="Gender selection">
+                {GENDERS.map((g) => (
+                  <SelectionButton
+                    key={g.id}
+                    selected={formData.gender === g.id}
+                    onClick={() => updateField("gender", g.id)}
+                    className="flex-1 px-3 py-2.5"
+                  >
+                    {g.label}
+                  </SelectionButton>
+                ))}
+              </div>
+            </fieldset>
+          </div>
         </div>
       </Section>
 
-      {/* Section 2: Body & Goals */}
+      {/* ── FITNESS GOALS ── */}
       <Section
-        title="Body & Goals"
-        icon={<span className="text-xl">🎯</span>}
+        title="Fitness Goals"
+        description="Activity level and training objective"
+        icon={<Target className="w-4 h-4" />}
       >
         <div className="space-y-5">
-          {/* Gender */}
-          <fieldset>
-            <legend className="block text-sm font-medium text-foreground mb-2">Gender</legend>
-            <div className="flex gap-3" role="radiogroup" aria-label="Gender selection">
-              {GENDERS.map((g) => (
-                <SelectionButton
-                  key={g.id}
-                  selected={formData.gender === g.id}
-                  onClick={() => updateField("gender", g.id)}
-                  className="flex-1 px-4 py-2.5"
-                >
-                  {g.label}
-                </SelectionButton>
-              ))}
-            </div>
-          </fieldset>
-
           {/* Activity Level */}
           <fieldset>
-            <legend className="block text-sm font-medium text-foreground mb-2">Activity Level</legend>
+            <legend className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">Activity Level</legend>
             <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Activity level selection">
               {ACTIVITY_LEVELS.map((level) => (
                 <SelectionButton
@@ -626,7 +645,7 @@ export function SettingsPanel() {
                   onClick={() => updateField("activityLevel", level.id)}
                   className="p-3 text-left"
                 >
-                  <p className="font-medium">{level.label}</p>
+                  <p className="font-medium text-sm">{level.label}</p>
                   <p className="text-xs text-muted-foreground">{level.desc}</p>
                 </SelectionButton>
               ))}
@@ -635,37 +654,40 @@ export function SettingsPanel() {
 
           {/* Fitness Goal */}
           <fieldset>
-            <legend className="block text-sm font-medium text-foreground mb-2">Fitness Goal</legend>
-            <div className="flex gap-3" role="radiogroup" aria-label="Fitness goal selection">
-              {FITNESS_GOALS.map((goal) => (
-                <SelectionButton
-                  key={goal.id}
-                  selected={formData.fitnessGoal === goal.id}
-                  onClick={() => updateField("fitnessGoal", goal.id)}
-                  className="flex-1 px-4 py-3"
-                >
-                  <span className="text-lg mr-2" aria-hidden="true">{goal.icon}</span>
-                  {goal.label}
-                </SelectionButton>
-              ))}
+            <legend className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">Goal</legend>
+            <div className="flex gap-2" role="radiogroup" aria-label="Fitness goal selection">
+              {FITNESS_GOALS.map((goal) => {
+                const GoalIcon = goal.icon;
+                return (
+                  <SelectionButton
+                    key={goal.id}
+                    selected={formData.fitnessGoal === goal.id}
+                    onClick={() => updateField("fitnessGoal", goal.id)}
+                    className="flex-1 flex items-center justify-center gap-2 px-3 py-3"
+                  >
+                    <GoalIcon className="w-4 h-4 shrink-0" aria-hidden="true" />
+                    {goal.label}
+                  </SelectionButton>
+                );
+              })}
             </div>
           </fieldset>
         </div>
       </Section>
 
-      {/* Section 3: Nutrition Targets */}
+      {/* ── NUTRITION ── */}
       <Section
         title="Nutrition Targets"
-        icon={<span className="text-xl">🍎</span>}
+        description="Daily calorie and macro goals"
+        icon={<Apple className="w-4 h-4" />}
       >
         <div className="space-y-4">
-          {/* Auto-calculate button */}
           <button
             type="button"
             onClick={handleAutoCalculate}
             disabled={!formData.weight || !formData.height || !formData.fitnessGoal}
             className={cn(
-              "w-full flex items-center justify-center gap-2 px-4 py-2.5 font-medium transition-all",
+              "w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium transition-all cursor-pointer",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
               formData.weight && formData.height && formData.fitnessGoal
                 ? "bg-secondary text-secondary-foreground hover:bg-secondary/80"
@@ -673,12 +695,11 @@ export function SettingsPanel() {
             )}
           >
             <Calculator className="w-4 h-4" aria-hidden="true" />
-            Auto-calculate Based on My Stats
+            Auto-calculate from my stats
           </button>
 
-          {/* Calorie Target */}
           <FormInput
-            label="Daily Calorie Target"
+            label="Daily Calories"
             type="number"
             value={formData.dailyCalorieTarget}
             onChange={(v) => updateField("dailyCalorieTarget", v ? Number(v) : "")}
@@ -690,8 +711,7 @@ export function SettingsPanel() {
             autoComplete="off"
           />
 
-          {/* Macro Targets */}
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-3">
             <FormInput
               label="Protein"
               type="number"
@@ -731,8 +751,8 @@ export function SettingsPanel() {
           </div>
 
           {formData.dailyCalorieTarget && formData.proteinTarget && formData.carbsTarget && formData.fatTarget && (
-            <p className="text-sm text-muted-foreground text-center font-variant-numeric: tabular-nums">
-              Total from macros:{" "}
+            <p className="text-xs text-muted-foreground text-center tabular-nums">
+              Macro total:{" "}
               <span className="font-medium text-foreground">
                 {(formData.proteinTarget as number) * 4 +
                   (formData.carbsTarget as number) * 4 +
@@ -744,14 +764,15 @@ export function SettingsPanel() {
         </div>
       </Section>
 
-      {/* Section 4: App Preferences */}
+      {/* ── APPEARANCE ── */}
       <Section
-        title="App Preferences"
-        icon={<Sun className="w-5 h-5 text-primary" />}
+        title="Appearance"
+        description="Theme and display preferences"
+        icon={<Palette className="w-4 h-4" />}
       >
         <fieldset>
-          <legend className="block text-sm font-medium text-foreground mb-2">Theme</legend>
-          <div className="flex gap-3" role="radiogroup" aria-label="Theme selection">
+          <legend className="block text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">Theme</legend>
+          <div className="flex gap-2" role="radiogroup" aria-label="Theme selection">
             <SelectionButton
               selected={formData.theme === "light"}
               onClick={() => updateField("theme", "light")}
@@ -780,66 +801,61 @@ export function SettingsPanel() {
         </fieldset>
       </Section>
 
-      {/* Section 5: Security - PIN Protection */}
+      {/* ── SECURITY ── */}
       <Section
         title="Security"
-        icon={<Lock className="w-5 h-5 text-primary" />}
+        description="PIN lock and app protection"
+        icon={<Shield className="w-4 h-4" />}
         defaultOpen={false}
       >
         <div className="space-y-4">
           {/* Current Status */}
-          <div className="flex items-center justify-between p-3 bg-muted/50">
-            <div className="flex items-center gap-3">
-              {pinStatus?.enabled ? (
-                <ShieldCheck className="w-5 h-5 text-primary" aria-hidden="true" />
-              ) : (
-                <ShieldOff className="w-5 h-5 text-muted-foreground" aria-hidden="true" />
-              )}
-              <div>
-                <p className="font-medium text-foreground">
-                  PIN Lock {pinStatus?.enabled ? "Enabled" : "Disabled"}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {pinStatus?.enabled
-                    ? "App requires PIN on startup"
-                    : "Anyone can access this app"}
-                </p>
-              </div>
+          <div className="flex items-center gap-3 p-3 bg-muted/30 border border-border">
+            {pinStatus?.enabled ? (
+              <ShieldCheck className="w-5 h-5 text-primary shrink-0" aria-hidden="true" />
+            ) : (
+              <ShieldOff className="w-5 h-5 text-muted-foreground shrink-0" aria-hidden="true" />
+            )}
+            <div>
+              <p className="font-medium text-foreground text-sm">
+                PIN Lock {pinStatus?.enabled ? "Enabled" : "Disabled"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {pinStatus?.enabled
+                  ? "App requires PIN on startup"
+                  : "Anyone can access this app"}
+              </p>
             </div>
           </div>
 
-          {/* Lockout Warning */}
           {pinStatus?.isLocked && (
             <div
               role="alert"
-              className="bg-destructive/10 border-2 border-destructive/30 text-destructive px-4 py-3"
+              className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 text-sm"
             >
-              Account is locked due to too many failed attempts. Lockout will expire automatically,
-              or you can clear it from the Convex dashboard.
+              Account locked due to too many failed attempts.
             </div>
           )}
 
-          {/* Success Message */}
           {pinSuccess && (
             <div
               role="status"
-              className="bg-primary/10 border-2 border-primary/30 text-primary px-4 py-3"
+              className="bg-primary/10 border border-primary/30 text-primary px-4 py-3 text-sm"
             >
               {pinSuccess}
             </div>
           )}
 
-          {/* Error Message */}
           {pinError && (
             <div
               role="alert"
-              className="bg-destructive/10 border-2 border-destructive/30 text-destructive px-4 py-3"
+              className="bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 text-sm"
             >
               {pinError}
             </div>
           )}
 
-          {/* Enable PIN Button */}
+          {/* Enable PIN */}
           {!pinStatus?.enabled && !showPinSetup && (
             <button
               type="button"
@@ -848,7 +864,7 @@ export function SettingsPanel() {
                 resetPinForm();
               }}
               className={cn(
-                "w-full flex items-center justify-center gap-2 px-4 py-3 font-medium transition-all",
+                "w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium transition-all cursor-pointer",
                 "bg-primary text-primary-foreground hover:bg-primary/90",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               )}
@@ -860,15 +876,14 @@ export function SettingsPanel() {
 
           {/* Setup PIN Form */}
           {showPinSetup && (
-            <div className="space-y-4 p-4 border-2 border-border bg-card">
-              <h3 className="font-semibold text-foreground">
+            <div className="space-y-4 p-4 border border-border bg-background">
+              <h3 className="font-semibold text-foreground text-sm">
                 {pinStatus?.enabled ? "Change PIN" : "Set Up PIN"}
               </h3>
 
-              {/* Current PIN (if changing) */}
               {pinStatus?.enabled && (
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">
+                  <label className="block text-xs font-medium text-muted-foreground mb-1.5 uppercase tracking-wide">
                     Current PIN
                   </label>
                   <div className="relative">
@@ -880,16 +895,12 @@ export function SettingsPanel() {
                       value={currentPinInput}
                       onChange={(e) => setCurrentPinInput(e.target.value.replace(/\D/g, ""))}
                       placeholder="Enter current PIN"
-                      className={cn(
-                        "w-full px-3 py-2.5 border border-input bg-background text-foreground",
-                        "placeholder:text-muted-foreground pr-10",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      )}
+                      className="w-full px-3 py-2.5 border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground/50 pr-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     />
                     <button
                       type="button"
                       onClick={() => setShowCurrentPin(!showCurrentPin)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
                       aria-label={showCurrentPin ? "Hide PIN" : "Show PIN"}
                     >
                       {showCurrentPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -898,9 +909,8 @@ export function SettingsPanel() {
                 </div>
               )}
 
-              {/* New PIN */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1.5">
+                <label className="block text-xs font-medium text-muted-foreground mb-1.5 uppercase tracking-wide">
                   New PIN (6 digits)
                 </label>
                 <div className="relative">
@@ -912,16 +922,12 @@ export function SettingsPanel() {
                     value={newPin}
                     onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ""))}
                     placeholder="Enter 6-digit PIN"
-                    className={cn(
-                      "w-full px-3 py-2.5 border border-input bg-background text-foreground",
-                      "placeholder:text-muted-foreground pr-10",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    )}
+                    className="w-full px-3 py-2.5 border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground/50 pr-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   />
                   <button
                     type="button"
                     onClick={() => setShowNewPin(!showNewPin)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
                     aria-label={showNewPin ? "Hide PIN" : "Show PIN"}
                   >
                     {showNewPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -929,9 +935,8 @@ export function SettingsPanel() {
                 </div>
               </div>
 
-              {/* Confirm PIN */}
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1.5">
+                <label className="block text-xs font-medium text-muted-foreground mb-1.5 uppercase tracking-wide">
                   Confirm PIN
                 </label>
                 <div className="relative">
@@ -943,16 +948,12 @@ export function SettingsPanel() {
                     value={confirmPin}
                     onChange={(e) => setConfirmPin(e.target.value.replace(/\D/g, ""))}
                     placeholder="Re-enter PIN"
-                    className={cn(
-                      "w-full px-3 py-2.5 border border-input bg-background text-foreground",
-                      "placeholder:text-muted-foreground pr-10",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    )}
+                    className="w-full px-3 py-2.5 border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground/50 pr-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPin(!showConfirmPin)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
                     aria-label={showConfirmPin ? "Hide PIN" : "Show PIN"}
                   >
                     {showConfirmPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -960,7 +961,6 @@ export function SettingsPanel() {
                 </div>
               </div>
 
-              {/* Action Buttons */}
               <div className="flex gap-3">
                 <button
                   type="button"
@@ -968,11 +968,7 @@ export function SettingsPanel() {
                     setShowPinSetup(false);
                     resetPinForm();
                   }}
-                  className={cn(
-                    "flex-1 px-4 py-2.5 font-medium transition-all",
-                    "bg-muted text-muted-foreground hover:bg-muted/80",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  )}
+                  className="flex-1 px-4 py-2.5 text-sm font-medium transition-all bg-muted text-muted-foreground hover:bg-muted/80 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   Cancel
                 </button>
@@ -980,17 +976,12 @@ export function SettingsPanel() {
                   type="button"
                   onClick={handleSetPin}
                   disabled={isPinLoading || newPin.length !== 6 || confirmPin.length !== 6}
-                  className={cn(
-                    "flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-medium transition-all",
-                    "bg-primary text-primary-foreground hover:bg-primary/90",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                    "disabled:opacity-50 disabled:cursor-not-allowed"
-                  )}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium transition-all bg-primary text-primary-foreground hover:bg-primary/90 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isPinLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
-                      Saving...
+                      Saving
                     </>
                   ) : (
                     "Save PIN"
@@ -1000,7 +991,7 @@ export function SettingsPanel() {
             </div>
           )}
 
-          {/* Disable/Change PIN Options (when PIN is enabled) */}
+          {/* Change/Disable PIN (when enabled) */}
           {pinStatus?.enabled && !showPinSetup && !showPinRemove && (
             <div className="flex gap-3">
               <button
@@ -1009,11 +1000,7 @@ export function SettingsPanel() {
                   setShowPinSetup(true);
                   resetPinForm();
                 }}
-                className={cn(
-                  "flex-1 px-4 py-2.5 font-medium transition-all",
-                  "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                )}
+                className="flex-1 px-4 py-2.5 text-sm font-medium transition-all bg-secondary text-secondary-foreground hover:bg-secondary/80 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 Change PIN
               </button>
@@ -1023,11 +1010,7 @@ export function SettingsPanel() {
                   setShowPinRemove(true);
                   resetPinForm();
                 }}
-                className={cn(
-                  "flex-1 px-4 py-2.5 font-medium transition-all",
-                  "bg-destructive/10 text-destructive hover:bg-destructive/20",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                )}
+                className="flex-1 px-4 py-2.5 text-sm font-medium transition-all bg-destructive/10 text-destructive hover:bg-destructive/20 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 Disable PIN
               </button>
@@ -1036,14 +1019,14 @@ export function SettingsPanel() {
 
           {/* Remove PIN Confirmation */}
           {showPinRemove && (
-            <div className="space-y-4 p-4 border-2 border-destructive/30 bg-destructive/5">
-              <h3 className="font-semibold text-foreground">Disable PIN Protection</h3>
-              <p className="text-sm text-muted-foreground">
-                Enter your current PIN to disable protection. Anyone will be able to access the app.
+            <div className="space-y-4 p-4 border border-destructive/30 bg-destructive/5">
+              <h3 className="font-semibold text-foreground text-sm">Disable PIN Protection</h3>
+              <p className="text-xs text-muted-foreground">
+                Enter your current PIN to disable protection.
               </p>
 
               <div>
-                <label className="block text-sm font-medium text-foreground mb-1.5">
+                <label className="block text-xs font-medium text-muted-foreground mb-1.5 uppercase tracking-wide">
                   Current PIN
                 </label>
                 <div className="relative">
@@ -1055,16 +1038,12 @@ export function SettingsPanel() {
                     value={currentPinInput}
                     onChange={(e) => setCurrentPinInput(e.target.value.replace(/\D/g, ""))}
                     placeholder="Enter current PIN"
-                    className={cn(
-                      "w-full px-3 py-2.5 border border-input bg-background text-foreground",
-                      "placeholder:text-muted-foreground pr-10",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    )}
+                    className="w-full px-3 py-2.5 border border-input bg-background text-foreground text-sm placeholder:text-muted-foreground/50 pr-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   />
                   <button
                     type="button"
                     onClick={() => setShowCurrentPin(!showCurrentPin)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer"
                     aria-label={showCurrentPin ? "Hide PIN" : "Show PIN"}
                   >
                     {showCurrentPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -1079,11 +1058,7 @@ export function SettingsPanel() {
                     setShowPinRemove(false);
                     resetPinForm();
                   }}
-                  className={cn(
-                    "flex-1 px-4 py-2.5 font-medium transition-all",
-                    "bg-muted text-muted-foreground hover:bg-muted/80",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  )}
+                  className="flex-1 px-4 py-2.5 text-sm font-medium transition-all bg-muted text-muted-foreground hover:bg-muted/80 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   Cancel
                 </button>
@@ -1091,17 +1066,12 @@ export function SettingsPanel() {
                   type="button"
                   onClick={handleRemovePin}
                   disabled={isPinLoading || currentPinInput.length !== 6}
-                  className={cn(
-                    "flex-1 flex items-center justify-center gap-2 px-4 py-2.5 font-medium transition-all",
-                    "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                    "disabled:opacity-50 disabled:cursor-not-allowed"
-                  )}
+                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium transition-all bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isPinLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
-                      Removing...
+                      Removing
                     </>
                   ) : (
                     "Disable PIN"
@@ -1111,10 +1081,8 @@ export function SettingsPanel() {
             </div>
           )}
 
-          {/* Info Text */}
           <p className="text-xs text-muted-foreground">
-            PIN protection requires a 6-digit code on app startup. After 5 incorrect attempts,
-            you will be locked out for 5 hours. Lockout can also be cleared from the database.
+            PIN requires a 6-digit code on startup. 5 failed attempts triggers a 5-hour lockout.
           </p>
         </div>
       </Section>

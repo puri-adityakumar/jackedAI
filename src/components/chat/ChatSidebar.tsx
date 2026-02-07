@@ -11,42 +11,105 @@ import {
   ThreadContent,
   ThreadContentMessages,
 } from "@/components/tambo/thread-content";
-import { ChevronLeft, ChevronRight, ExternalLink, MessageSquare } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ChevronLeft, ChevronRight, ExternalLink, MessageSquare, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { AgentMode, ModeToggle } from "./ModeToggle";
 
 interface ChatSidebarProps {
   defaultOpen?: boolean;
+  /** Mobile full-screen mode controlled by parent */
+  mobileOpen?: boolean;
+  /** Callback to close mobile chat */
+  onMobileClose?: () => void;
 }
 
-export function ChatSidebar({ defaultOpen = true }: ChatSidebarProps) {
+export function ChatSidebar({
+  defaultOpen = true,
+  mobileOpen = false,
+  onMobileClose,
+}: ChatSidebarProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [mode, setMode] = useState<AgentMode>("butler");
 
   const placeholder =
     mode === "butler"
-      ? "Log exercise or meal… (e.g., 'I did 3 sets of bench press at 60kg')"
-      : "Ask for fitness advice… (e.g., 'How do I improve my squat form?')";
+      ? "Log exercise or meal..."
+      : "Ask for fitness advice...";
 
   return (
-    <aside
-      className={`${isOpen ? "w-96" : "w-0"
-        } border-l border-border bg-card transition-all duration-300 flex flex-col relative`}
-      aria-label="AI Assistant"
-    >
-      {isOpen && (
-        <>
-          {/* Header with mode toggle */}
-          <header className="p-4 border-b border-border flex items-center justify-between">
+    <>
+      {/* Mobile full-screen chat overlay */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-background flex flex-col md:hidden"
+          role="dialog"
+          aria-label="Chat"
+          aria-modal="true"
+        >
+          {/* Mobile header */}
+          <header className="px-4 h-14 border-b border-border flex items-center justify-between shrink-0 bg-card">
             <div className="flex items-center gap-2">
+              <button
+                onClick={onMobileClose}
+                className="p-2 -ml-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                aria-label="Close chat"
+              >
+                <X className="w-5 h-5" aria-hidden="true" />
+              </button>
               <MessageSquare className="w-5 h-5 text-primary" aria-hidden="true" />
               <h2 className="text-lg font-semibold text-foreground">
                 {mode === "butler" ? "Butler" : "Trainer"}
               </h2>
             </div>
-            <div className="flex items-center gap-2">
-              <ModeToggle mode={mode} onModeChange={setMode} />
+            <Link
+              href="/chat"
+              className="p-2 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
+              title="Open full chat"
+            >
+              <ExternalLink className="w-4 h-4" aria-hidden="true" />
+            </Link>
+          </header>
+
+          {/* Mobile messages */}
+          <ScrollableMessageContainer className="flex-1 p-4">
+            <ThreadContent variant="default">
+              <ThreadContentMessages />
+            </ThreadContent>
+          </ScrollableMessageContainer>
+
+          {/* Mobile input */}
+          <div className="p-3 border-t border-border bg-card pb-[env(safe-area-inset-bottom)]">
+            <MessageInput variant="bordered">
+              <MessageInputTextarea placeholder={placeholder} />
+              <MessageInputToolbar>
+                <ModeToggle mode={mode} onModeChange={setMode} />
+                <MessageInputSubmitButton />
+              </MessageInputToolbar>
+            </MessageInput>
+          </div>
+        </div>
+      )}
+
+      {/* Desktop sidebar */}
+      <aside
+        className={cn(
+          "hidden md:flex border-l border-border bg-card transition-all duration-300 flex-col relative",
+          isOpen ? "md:w-96" : "md:w-0"
+        )}
+        aria-label="AI Assistant"
+      >
+        {isOpen && (
+          <>
+            {/* Header */}
+            <header className="px-4 h-14 border-b border-border flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="w-5 h-5 text-primary" aria-hidden="true" />
+                <h2 className="text-lg font-semibold text-foreground">
+                  {mode === "butler" ? "Butler" : "Trainer"}
+                </h2>
+              </div>
               <Link
                 href="/chat"
                 className="p-1.5 text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
@@ -54,51 +117,43 @@ export function ChatSidebar({ defaultOpen = true }: ChatSidebarProps) {
               >
                 <ExternalLink className="w-4 h-4" aria-hidden="true" />
               </Link>
+            </header>
+
+            {/* Chat messages */}
+            <ScrollableMessageContainer className="flex-1 p-4">
+              <ThreadContent variant="default">
+                <ThreadContentMessages />
+              </ThreadContent>
+            </ScrollableMessageContainer>
+
+            {/* Input */}
+            <div className="p-4 border-t border-border">
+              <MessageInput variant="bordered">
+                <MessageInputTextarea placeholder={placeholder} />
+                <MessageInputToolbar>
+                  <ModeToggle mode={mode} onModeChange={setMode} />
+                  <MessageInputSubmitButton />
+                </MessageInputToolbar>
+              </MessageInput>
             </div>
-          </header>
-
-          {/* Mode description */}
-          <div className="px-4 py-2 bg-muted/50 border-b border-border">
-            <p className="text-xs text-muted-foreground">
-              {mode === "butler"
-                ? "Quick logging for exercises and meals"
-                : "Expert advice, workout plans, and form tips"}
-            </p>
-          </div>
-
-          {/* Chat messages */}
-          <ScrollableMessageContainer className="flex-1 p-4">
-            <ThreadContent variant="default">
-              <ThreadContentMessages />
-            </ThreadContent>
-          </ScrollableMessageContainer>
-
-          {/* Input */}
-          <div className="p-4 border-t border-border">
-            <MessageInput variant="bordered">
-              <MessageInputTextarea placeholder={placeholder} />
-              <MessageInputToolbar>
-                <MessageInputSubmitButton />
-              </MessageInputToolbar>
-            </MessageInput>
-          </div>
-        </>
-      )}
-
-      {/* Toggle Button */}
-      <button
-        type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="absolute -left-10 top-1/2 -translate-y-1/2 bg-card border border-border p-2 hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        aria-label={isOpen ? "Collapse chat panel" : "Expand chat panel"}
-        aria-expanded={isOpen}
-      >
-        {isOpen ? (
-          <ChevronRight className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
-        ) : (
-          <ChevronLeft className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
+          </>
         )}
-      </button>
-    </aside>
+
+        {/* Desktop Toggle Button */}
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="absolute -left-10 top-1/2 -translate-y-1/2 bg-card border border-border p-2 hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          aria-label={isOpen ? "Collapse chat panel" : "Expand chat panel"}
+          aria-expanded={isOpen}
+        >
+          {isOpen ? (
+            <ChevronRight className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
+          ) : (
+            <ChevronLeft className="w-4 h-4 text-muted-foreground" aria-hidden="true" />
+          )}
+        </button>
+      </aside>
+    </>
   );
 }
