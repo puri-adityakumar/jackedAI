@@ -6,6 +6,8 @@ import { api } from "../../convex/_generated/api";
 
 type Theme = "light" | "dark" | "system";
 
+const THEME_STORAGE_KEY = "jackedai-theme";
+
 // Use layoutEffect on client, effect on server to avoid hydration mismatch
 const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
@@ -34,9 +36,19 @@ function applyTheme(theme: Theme) {
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const profile = useQuery(api.userProfile.get);
 
-  // Apply theme when profile loads or theme changes
+  // On first mount, apply cached theme from localStorage immediately
   useIsomorphicLayoutEffect(() => {
+    const cached = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
+    if (cached) {
+      applyTheme(cached);
+    }
+  }, []);
+
+  // Apply theme when profile loads and cache it for next page load
+  useIsomorphicLayoutEffect(() => {
+    if (profile === undefined) return; // still loading, keep cached theme
     const theme: Theme = profile?.theme ?? "system";
+    localStorage.setItem(THEME_STORAGE_KEY, theme);
     applyTheme(theme);
   }, [profile?.theme]);
 
