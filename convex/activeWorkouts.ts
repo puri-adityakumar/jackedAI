@@ -97,6 +97,29 @@ export const logSet = mutation({
       progressEntry.completedSets += 1;
       if (args.weight !== undefined) progressEntry.loggedWeight = args.weight;
       if (args.reps !== undefined) progressEntry.loggedReps = args.reps;
+
+      // Auto-log to exerciseLogs when all sets for this exercise are complete
+      if (
+        exercise.sets > 0 &&
+        progressEntry.completedSets >= exercise.sets &&
+        !progressEntry.exerciseLogId
+      ) {
+        // Parse reps: take first number from string like "8-12" or "10"
+        const parsedReps =
+          progressEntry.loggedReps ??
+          (parseInt(exercise.reps, 10) || 0);
+
+        const logId = await ctx.db.insert("exerciseLogs", {
+          date: workout.date,
+          exerciseName: exercise.name,
+          sets: progressEntry.completedSets,
+          reps: parsedReps,
+          weight: progressEntry.loggedWeight,
+          createdAt: Date.now(),
+        });
+
+        progressEntry.exerciseLogId = logId;
+      }
     }
 
     await ctx.db.patch(args.workoutId, {

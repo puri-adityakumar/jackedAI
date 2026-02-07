@@ -92,7 +92,7 @@ export default function Home() {
               <img
                 src="/Tambo-Lockup.svg"
                 alt="Tambo"
-                className="h-4 md:h-5 dark:invert"
+                className="h-4 md:h-5 w-auto max-w-[80px] md:max-w-[100px] dark:invert"
               />
             </div>
             {/* Mobile settings shortcut */}

@@ -13,9 +13,10 @@ export const workoutPlanCardSchema = z.object({
         name: z.string(),
         sets: z.number(),
         reps: z.string(),
+        weight: z.number().optional(),
       })
     )
-    .describe("List of exercises with sets and reps"),
+    .describe("List of exercises with sets, reps, and optional weight"),
   message: z.string().optional().describe("Optional confirmation message"),
 });
 
@@ -46,7 +47,7 @@ export function WorkoutPlanCard({
 
           {/* Exercise list */}
           <div className="mt-3 space-y-1.5">
-            {exercises.map((exercise, index) => (
+            {exercises?.map((exercise, index) => (
               <div
                 key={index}
                 className="flex items-center gap-2 text-sm text-foreground"
@@ -55,6 +56,7 @@ export function WorkoutPlanCard({
                 <span className="font-medium">{exercise.name}</span>
                 <span className="text-muted-foreground">
                   {exercise.sets} x {exercise.reps}
+                  {exercise.weight ? ` @ ${exercise.weight}kg` : ""}
                 </span>
               </div>
             ))}

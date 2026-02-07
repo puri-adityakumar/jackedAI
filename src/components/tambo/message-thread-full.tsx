@@ -31,6 +31,7 @@ import {
   ThreadHistorySearch,
 } from "@/components/tambo/thread-history";
 import { useMergeRefs } from "@/lib/thread-hooks";
+import { AgentMode, ModeToggle } from "@/components/chat/ModeToggle";
 import type { Suggestion } from "@tambo-ai/react";
 import type { VariantProps } from "class-variance-authority";
 import * as React from "react";
@@ -57,6 +58,12 @@ export const MessageThreadFull = React.forwardRef<
 >(({ className, variant, ...props }, ref) => {
   const { containerRef, historyPosition } = useThreadContainerContext();
   const mergedRef = useMergeRefs<HTMLDivElement | null>(ref, containerRef);
+  const [mode, setMode] = React.useState<AgentMode>("butler");
+
+  const placeholder =
+    mode === "butler"
+      ? "Log exercise or meal..."
+      : "Ask for fitness advice...";
 
   const threadHistorySidebar = (
     <ThreadHistory position={historyPosition}>
@@ -113,12 +120,12 @@ export const MessageThreadFull = React.forwardRef<
         {/* Message input */}
         <div className="px-4 pb-4">
           <MessageInput>
-            <MessageInputTextarea placeholder="Type your message or paste images..." />
+            <MessageInputTextarea placeholder={placeholder} />
             <MessageInputToolbar>
+              <ModeToggle mode={mode} onModeChange={setMode} />
               <MessageInputFileButton />
               <MessageInputMcpPromptButton />
               <MessageInputMcpResourceButton />
-              {/* Uncomment this to enable client-side MCP config modal button */}
               <MessageInputMcpConfigButton />
               <MessageInputSubmitButton />
             </MessageInputToolbar>

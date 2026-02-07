@@ -1215,6 +1215,7 @@ interface CreateWorkoutPlanInput {
     name: string;
     sets: number;
     reps: string;
+    weight?: number;
     notes?: string;
   }>;
 }
@@ -1223,7 +1224,7 @@ interface CreateWorkoutPlanOutput {
   success: boolean;
   name: string;
   exerciseCount: number;
-  exercises: Array<{ name: string; sets: number; reps: string }>;
+  exercises: Array<{ name: string; sets: number; reps: string; weight?: number }>;
   message: string;
 }
 
@@ -1254,6 +1255,7 @@ export async function createWorkoutPlan(
         name: e.name,
         sets: e.sets,
         reps: e.reps,
+        weight: e.weight,
       })),
       message: `Created "${input.name}" with ${input.exercises.length} exercises`,
     };

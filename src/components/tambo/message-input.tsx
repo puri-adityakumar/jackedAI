@@ -465,6 +465,7 @@ const MessageInputInternal = React.forwardRef<
   const [isDragging, setIsDragging] = React.useState(false);
   const editorRef = React.useRef<TamboEditor>(null!);
   const dragCounter = React.useRef(0);
+  const isSubmittingRef = React.useRef(false);
 
   // Use elicitation context (optional)
   const { elicitation, resolveElicitation } = useTamboElicitationContext();
@@ -477,6 +478,9 @@ const MessageInputInternal = React.forwardRef<
   }, [setValue, thread.id]);
 
   React.useEffect(() => {
+    // Skip re-saving to storage while a submission is in flight to prevent
+    // the old value from being restored before setValue("") propagates.
+    if (isSubmittingRef.current) return;
     setDisplayValue(value);
     storeValueInSessionStorage(thread.id, value);
     if (value && editorRef.current) {
@@ -495,6 +499,7 @@ const MessageInputInternal = React.forwardRef<
       setDisplayValue("");
       storeValueInSessionStorage(thread.id);
       setIsSubmitting(true);
+      isSubmittingRef.current = true;
 
       // Extract resource names directly from editor at submit time to ensure we have the latest
       let latestResourceNames: Record<string, string> = {};
@@ -512,12 +517,19 @@ const MessageInputInternal = React.forwardRef<
           resourceNames: latestResourceNames,
         });
         setValue("");
+        isSubmittingRef.current = false;
+        // Sync display and storage now that value is cleared
+        setDisplayValue("");
+        storeValueInSessionStorage(thread.id);
         // Clear only the images that were staged when submission started so
         // any images added while the request was in-flight are preserved.
         if (imageIdsAtSubmitTime.length > 0) {
           imageIdsAtSubmitTime.forEach((id) => removeImage(id));
         }
-        // Refocus the editor after a successful submission
+        // Clear the editor content and refocus
+        if (editorRef.current) {
+          editorRef.current.setContent("");
+        }
         setTimeout(() => {
           editorRef.current?.focus();
         }, 0);
@@ -536,6 +548,7 @@ const MessageInputInternal = React.forwardRef<
         await cancel();
       } finally {
         setIsSubmitting(false);
+        isSubmittingRef.current = false;
       }
     },
     [

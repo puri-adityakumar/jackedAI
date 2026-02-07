@@ -6,6 +6,7 @@ import { api } from "../../../convex/_generated/api";
 import { Id } from "../../../convex/_generated/dataModel";
 import { cn } from "@/lib/utils";
 import {
+  ArrowLeft,
   ClipboardList,
   Plus,
   X,
@@ -31,6 +32,7 @@ interface PlanExercise {
   name: string;
   sets: number;
   reps: string;
+  weight?: number;
   notes?: string;
 }
 
@@ -65,6 +67,7 @@ interface ExerciseFormRow {
   name: string;
   sets: number;
   reps: string;
+  weight: number;
   notes: string;
 }
 
@@ -79,7 +82,7 @@ interface PlanFormData {
 // ---------------------------------------------------------------------------
 
 function emptyExerciseRow(): ExerciseFormRow {
-  return { name: "", sets: 3, reps: "8-12", notes: "" };
+  return { name: "", sets: 3, reps: "8-12", weight: 0, notes: "" };
 }
 
 function formatDuration(ms: number): string {
@@ -172,6 +175,7 @@ function PlanFormModal({
             name: e.name,
             sets: e.sets,
             reps: e.reps,
+            weight: e.weight ?? 0,
             notes: e.notes ?? "",
           }))
         : [emptyExerciseRow()],
@@ -179,10 +183,12 @@ function PlanFormModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Filter out empty exercises
+    // Filter out empty/invalid exercises
     const cleanedData: PlanFormData = {
       ...formData,
-      exercises: formData.exercises.filter((ex) => ex.name.trim() !== ""),
+      exercises: formData.exercises
+        .filter((ex) => ex.name.trim() !== "")
+        .map((ex) => ({ ...ex, sets: Math.max(1, ex.sets) })),
     };
     if (cleanedData.exercises.length === 0) return;
     onSave(cleanedData);
@@ -400,6 +406,37 @@ function PlanFormModal({
                         </span>
                       </div>
                     </div>
+                    <span className="text-muted-foreground text-sm">@</span>
+                    <div className="flex-1">
+                      <label
+                        className="sr-only"
+                        htmlFor={`exercise-weight-${index}`}
+                      >
+                        Weight (kg)
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          id={`exercise-weight-${index}`}
+                          value={exercise.weight || ""}
+                          onChange={(e) =>
+                            updateExercise(
+                              index,
+                              "weight",
+                              parseFloat(e.target.value) || 0
+                            )
+                          }
+                          className="w-full px-3 py-1.5 border border-input bg-background text-foreground text-sm tabular-nums focus:ring-2 focus:ring-ring focus:border-ring focus:outline-none"
+                          placeholder="0"
+                          min={0}
+                          step={0.5}
+                          aria-label={`Exercise ${index + 1} weight (kg)`}
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none">
+                          kg
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Notes (collapsible) */}
@@ -538,6 +575,7 @@ function PlanCard({
               <span className="font-medium truncate">{exercise.name}</span>
               <span className="text-muted-foreground tabular-nums whitespace-nowrap">
                 {exercise.sets} x {exercise.reps}
+                {exercise.weight ? ` @ ${exercise.weight}kg` : ""}
               </span>
             </div>
           ))}
@@ -613,13 +651,13 @@ function ActiveExerciseRow({
   isLogging: boolean;
 }) {
   const [weight, setWeight] = useState<string>(
-    progress.loggedWeight?.toString() ?? ""
+    progress.loggedWeight?.toString() ?? exercise.weight?.toString() ?? ""
   );
   const [reps, setReps] = useState<string>(
     progress.loggedReps?.toString() ?? ""
   );
 
-  const isDone = progress.completedSets >= exercise.sets;
+  const isDone = exercise.sets > 0 && progress.completedSets >= exercise.sets;
 
   const handleLogSet = () => {
     const w = weight.trim() ? parseFloat(weight) : undefined;
@@ -679,6 +717,7 @@ function ActiveExerciseRow({
 
           <p className="text-sm text-muted-foreground mt-0.5 tabular-nums">
             Target: {exercise.sets} sets x {exercise.reps} reps
+            {exercise.weight ? ` @ ${exercise.weight}kg` : ""}
           </p>
 
           {exercise.notes && (
@@ -782,18 +821,23 @@ function ActiveWorkoutView({
   plan,
   onComplete,
   onAbandon,
+  onBack,
 }: {
   workout: ActiveWorkout;
   plan: Plan;
   onComplete: () => void;
   onAbandon: () => void;
+  onBack: () => void;
 }) {
   const logSet = useMutation(api.activeWorkouts.logSet);
   const [loggingIndex, setLoggingIndex] = useState<number | null>(null);
   const [showAbandonConfirm, setShowAbandonConfirm] = useState(false);
 
   const completedExercises = workout.exerciseProgress.filter(
-    (p) => p.completedSets >= plan.exercises[p.exerciseIndex]?.sets
+    (p) => {
+      const sets = plan.exercises[p.exerciseIndex]?.sets ?? 0;
+      return sets > 0 && p.completedSets >= sets;
+    }
   ).length;
   const totalExercises = plan.exercises.length;
   const overallProgress =
@@ -828,6 +872,14 @@ function ActiveWorkoutView({
       {/* Active workout header */}
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={onBack}
+            className="p-2 hover:bg-accent text-muted-foreground hover:text-foreground transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            aria-label="Back to plans"
+          >
+            <ArrowLeft className="w-5 h-5" aria-hidden="true" />
+          </button>
           <div className="w-10 h-10 bg-primary/10 flex items-center justify-center">
             <Play
               className="w-5 h-5 text-primary"
@@ -975,6 +1027,7 @@ export function PlansPanel() {
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
   const [deletingPlan, setDeletingPlan] = useState<Plan | null>(null);
   const [startingPlanId, setStartingPlanId] = useState<Id<"workoutPlans"> | null>(null);
+  const [showPlans, setShowPlans] = useState(false);
 
   // Loading state
   const isLoading = plans === undefined;
@@ -987,6 +1040,7 @@ export function PlansPanel() {
         name: e.name.trim(),
         sets: e.sets,
         reps: e.reps.trim() || "1",
+        weight: e.weight > 0 ? e.weight : undefined,
         notes: e.notes.trim() || undefined,
       }));
 
@@ -1054,14 +1108,16 @@ export function PlansPanel() {
     }
   };
 
-  // If there is an active workout, show the active workout view
-  if (activeWorkoutData && activeWorkoutData.workout && activeWorkoutData.plan) {
+  // If there is an active workout and user hasn't navigated to plans, show active workout
+  const hasActiveWorkout = activeWorkoutData && activeWorkoutData.workout && activeWorkoutData.plan;
+  if (hasActiveWorkout && !showPlans) {
     return (
       <ActiveWorkoutView
         workout={activeWorkoutData.workout as ActiveWorkout}
         plan={activeWorkoutData.plan as Plan}
         onComplete={handleCompleteWorkout}
         onAbandon={handleAbandonWorkout}
+        onBack={() => setShowPlans(true)}
       />
     );
   }
@@ -1070,6 +1126,23 @@ export function PlansPanel() {
 
   return (
     <div className="space-y-6">
+      {/* Resume active workout banner */}
+      {hasActiveWorkout && showPlans && (
+        <button
+          type="button"
+          onClick={() => setShowPlans(false)}
+          className="w-full flex items-center justify-between p-3 bg-primary/10 border-2 border-primary/20 text-sm hover:bg-primary/15 transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+        >
+          <div className="flex items-center gap-2">
+            <Play className="w-4 h-4 text-primary" aria-hidden="true" />
+            <span className="font-medium text-foreground">
+              Active workout in progress: {activeWorkoutData.plan?.name}
+            </span>
+          </div>
+          <span className="text-primary font-medium">Resume</span>
+        </button>
+      )}
+
       {/* Header */}
       <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-3">

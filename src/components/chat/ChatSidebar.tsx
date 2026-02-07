@@ -12,9 +12,10 @@ import {
   ThreadContentMessages,
 } from "@/components/tambo/thread-content";
 import { cn } from "@/lib/utils";
-import { ChevronLeft, ChevronRight, ExternalLink, MessageSquare, X } from "lucide-react";
+import { useTamboThread, useTamboThreadList } from "@tambo-ai/react";
+import { ChevronLeft, ChevronRight, ExternalLink, History, MessageSquare, X } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { AgentMode, ModeToggle } from "./ModeToggle";
 
 interface ChatSidebarProps {
@@ -32,6 +33,15 @@ export function ChatSidebar({
 }: ChatSidebarProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [mode, setMode] = useState<AgentMode>("butler");
+  const { data: threads } = useTamboThreadList();
+  const { switchCurrentThread, thread: currentThread } = useTamboThread();
+
+  const recentThreads = useMemo(() => {
+    if (!threads?.items) return [];
+    return threads.items
+      .filter((t) => t.id !== currentThread?.id)
+      .slice(0, 3);
+  }, [threads, currentThread?.id]);
 
   const placeholder =
     mode === "butler"
@@ -71,6 +81,27 @@ export function ChatSidebar({
               <ExternalLink className="w-4 h-4" aria-hidden="true" />
             </Link>
           </header>
+
+          {/* Recent threads */}
+          {recentThreads.length > 0 && (
+            <div className="px-4 py-2 border-b border-border bg-card/50">
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <History className="w-3.5 h-3.5 text-muted-foreground" aria-hidden="true" />
+                <span className="text-xs font-medium text-muted-foreground">Recent</span>
+              </div>
+              <div className="space-y-0.5">
+                {recentThreads.map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => switchCurrentThread(t.id)}
+                    className="w-full text-left px-2 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors truncate cursor-pointer"
+                  >
+                    {t.name ?? `Thread ${t.id.substring(0, 8)}`}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Mobile messages */}
           <ScrollableMessageContainer className="flex-1 p-4">
@@ -118,6 +149,27 @@ export function ChatSidebar({
                 <ExternalLink className="w-4 h-4" aria-hidden="true" />
               </Link>
             </header>
+
+            {/* Recent threads */}
+            {recentThreads.length > 0 && (
+              <div className="px-4 py-2 border-b border-border">
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <History className="w-3.5 h-3.5 text-muted-foreground" aria-hidden="true" />
+                  <span className="text-xs font-medium text-muted-foreground">Recent</span>
+                </div>
+                <div className="space-y-0.5">
+                  {recentThreads.map((t) => (
+                    <button
+                      key={t.id}
+                      onClick={() => switchCurrentThread(t.id)}
+                      className="w-full text-left px-2 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-accent transition-colors truncate cursor-pointer"
+                    >
+                      {t.name ?? `Thread ${t.id.substring(0, 8)}`}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Chat messages */}
             <ScrollableMessageContainer className="flex-1 p-4">

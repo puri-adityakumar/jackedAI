@@ -10,6 +10,7 @@ export const create = mutation({
         name: v.string(),
         sets: v.number(),
         reps: v.string(),
+        weight: v.optional(v.number()),
         notes: v.optional(v.string()),
       })
     ),
@@ -59,6 +60,7 @@ export const update = mutation({
           name: v.string(),
           sets: v.number(),
           reps: v.string(),
+          weight: v.optional(v.number()),
           notes: v.optional(v.string()),
         })
       )

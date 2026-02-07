@@ -134,6 +134,7 @@ export default defineSchema({
         name: v.string(),
         sets: v.number(),
         reps: v.string(), // "8-12" or "10"
+        weight: v.optional(v.number()), // target weight in kg
         notes: v.optional(v.string()),
       })
     ),

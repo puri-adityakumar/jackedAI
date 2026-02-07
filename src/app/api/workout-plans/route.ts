@@ -63,10 +63,22 @@ export async function POST(request: Request) {
     const action = body.action;
 
     if (action === "create") {
+      // Coerce types to match Convex schema — AI may send reps as number instead of string
+      const exercises = Array.isArray(body.exercises)
+        ? body.exercises.map((e: Record<string, unknown>) => ({
+            name: String(e.name ?? ""),
+            sets: Math.max(1, Number(e.sets ?? 0)),
+            reps: String(e.reps ?? "1"),
+            ...(e.weight != null && Number(e.weight) > 0
+              ? { weight: Number(e.weight) }
+              : {}),
+            ...(e.notes ? { notes: String(e.notes) } : {}),
+          }))
+        : [];
       const planId = await convex.mutation(api.workoutPlans.create, {
         name: body.name,
         description: body.description,
-        exercises: body.exercises,
+        exercises,
       });
       return NextResponse.json({ success: true, planId });
     }
@@ -139,11 +151,22 @@ export async function PUT(request: Request) {
   try {
     const body = await request.json();
 
+    const exercises = Array.isArray(body.exercises)
+      ? body.exercises.map((e: Record<string, unknown>) => ({
+          name: String(e.name ?? ""),
+          sets: Math.max(1, Number(e.sets ?? 0)),
+          reps: String(e.reps ?? "1"),
+          ...(e.weight != null && Number(e.weight) > 0
+            ? { weight: Number(e.weight) }
+            : {}),
+          ...(e.notes ? { notes: String(e.notes) } : {}),
+        }))
+      : undefined;
     await convex.mutation(api.workoutPlans.update, {
       id: body.id,
       name: body.name,
       description: body.description,
-      exercises: body.exercises,
+      exercises,
     });
 
     return NextResponse.json({ success: true });
