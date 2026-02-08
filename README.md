@@ -1,131 +1,156 @@
-# Tambo Template
+<h1 align="center">JackedAI</h1>
 
-This is a starter NextJS app with Tambo hooked up to get your AI app development started quickly.
+<p align="center">
+  <img src="public/logo.svg" alt="JackedAI" width="60" />
+  &nbsp;&nbsp;<b>x</b>&nbsp;&nbsp;
+  <img src="public/Tambo-Lockup.svg" alt="Tambo" width="120" />
+</p>
 
-## Get Started
+<p align="center">
+  <video src="https://github.com/user-attachments/assets/de7e3a64-d700-436a-a230-4ec888fc29d5" width="800" controls></video>
+</p>
 
-1. Run `npm create-tambo@latest my-tambo-app` for a new project
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Convex-EE342F?style=for-the-badge&logo=convex&logoColor=white" alt="Convex" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/Tambo_AI-8B5CF6?style=for-the-badge" alt="Tambo AI" />
+</p>
 
-2. `npm install`
+<p align="center">AI-powered gym tracker — log workouts, meals, and calories through natural language conversations.</p>
 
-3. `npx tambo init`
+<h3 align="center">
+  <a href="https://jacked-ai.vercel.app/">LIVE</a> &nbsp;|&nbsp; <a href="https://youtu.be/SDbjxEYgZVc?si=ADw7NUsnS_C5VVcX">YOUTUBE</a>
+</h3>
 
-- or rename `example.env.local` to `.env.local` and add your tambo API key you can get for free [here](https://tambo.co/dashboard).
+> **PIN:** `123456` — Use this PIN to access the demo.
 
-4. Run `npm run dev` and go to `localhost:3000` to use the app!
+---
 
-## Customizing
+## Architecture
 
-### Change what components tambo can control
+```mermaid
+graph TD
+    subgraph Client["Next.js 15 App"]
+        UI["Dashboard / Chat / Settings"]
+        UI --> Tambo
 
-You can see how components are registered with tambo in `src/lib/tambo.ts`:
+        subgraph Tambo["Tambo AI Provider"]
+            Butler["Butler Mode<br/><i>Quick Logging</i>"]
+            Trainer["Trainer Mode<br/><i>Fitness Advice</i>"]
+            Butler --> Tools
+            Trainer --> Tools
+            Tools["Tool Selection<br/><i>fitness-tools.ts</i>"]
+        end
 
-```tsx
-export const components: TamboComponent[] = [
-  {
-    name: "Graph",
-    description:
-      "A component that renders various types of charts (bar, line, pie) using Recharts. Supports customizable data visualization with labels, datasets, and styling options.",
-    component: Graph,
-    propsSchema: graphSchema,
-  },
-  // Add more components here
-];
+        subgraph GenUI["Generative UI Components"]
+            ELC["ExerciseLogCard"]
+            MLC["MealLogCard"]
+            DPC["DailyProgressCard"]
+            RC["ReminderCard"]
+            GR["Graph"]
+        end
+
+        Tools --> API["API Routes<br/>/api/*"]
+        Tools --> GenUI
+    end
+
+    API --> Convex
+    API --> ExerciseDB["ExerciseDB API<br/><i>RapidAPI</i>"]
+
+    subgraph Convex["Convex (Real-time DB)"]
+        exerciseLogs
+        mealLogs
+        workoutPlans
+        reminders
+        userProfile
+        bodyStats
+        personalRecords
+        achievements
+    end
+
+    Convex --> GenUI
 ```
 
-You can install the graph component into any project with:
+### Data Flow
+
+```mermaid
+flowchart LR
+    A["User Input"] --> B["Tambo AI"]
+    B --> C["Tool Selection"]
+    C --> D["API Route"]
+    D --> E["Convex DB"]
+    E --> F["Tool Output"]
+    F --> G["Component Render"]
+```
+
+### Key Concepts
+
+- **Two AI Modes** — **Butler** for quick data logging ("Log 3 sets of bench at 60kg"), **Trainer** for fitness advice ("How do I fix my squat form?")
+- **Generative UI** — Tambo renders rich components (cards, charts, progress summaries) inline in the chat based on tool outputs
+- **Real-time Database** — Convex provides reactive queries, so dashboards update instantly when data changes
+- **PIN Protection** — App-level lock screen with hashed PIN storage and lockout after failed attempts
+
+### Project Structure
+
+```
+src/
+├── app/
+│   ├── page.tsx              # Main app (tabs + chat sidebar)
+│   ├── chat/                 # Full-screen chat view
+│   └── api/                  # API routes (Convex bridge)
+├── components/
+│   ├── tambo/                # AI-rendered components
+│   └── ui/                   # Shared UI components
+├── lib/
+│   └── tambo.ts              # Component & tool registry
+└── services/
+    ├── fitness-tools.ts      # Tool implementations
+    └── exercisedb.ts         # ExerciseDB API client
+convex/
+├── schema.ts                 # Database schema
+├── exerciseLogs.ts           # Exercise CRUD + queries
+├── mealLogs.ts               # Meal CRUD + queries
+├── workoutPlans.ts           # Workout plan management
+├── reminders.ts              # Reminder system
+├── bodyStats.ts              # Body measurements
+├── personalRecords.ts        # PR tracking
+└── achievements.ts           # Badge system
+```
+
+---
+
+## Setup
 
 ```bash
-npx tambo add graph
+git clone https://github.com/puri-adityakumar/jackedAI.git
+cd jackedAI
+npm install
+cp .env.example .env.local  # fill in your keys
+npm run dev
 ```
 
-The example Graph component demonstrates several key features:
+## Environment Variables
 
-- Different prop types (strings, arrays, enums, nested objects)
-- Multiple chart types (bar, line, pie)
-- Customizable styling (variants, sizes)
-- Optional configurations (title, legend, colors)
-- Data visualization capabilities
+| Variable | Description |
+|---|---|
+| `NEXT_PUBLIC_TAMBO_API_KEY` | Tambo API key ([get one](https://tambo.co/dashboard)) |
+| `CONVEX_DEPLOYMENT` | Convex dev deployment reference |
+| `NEXT_PUBLIC_CONVEX_URL` | Convex deployment URL |
+| `NEXT_PUBLIC_CONVEX_SITE_URL` | Convex site URL |
+| `NEXT_CONVEX_DEPLOY_KEY` | Convex production deploy key |
+| `EXERCISEDB_API_KEY` | RapidAPI key for ExerciseDB |
 
-Update the `components` array with any component(s) you want tambo to be able to use in a response!
+## Scripts
 
-You can find more information about the options [here](https://docs.tambo.co/concepts/generative-interfaces/generative-components)
-
-### Add tools for tambo to use
-
-Tools are defined with `inputSchema` and `outputSchema`:
-
-```tsx
-export const tools: TamboTool[] = [
-  {
-    name: "globalPopulation",
-    description:
-      "A tool to get global population trends with optional year range filtering",
-    tool: getGlobalPopulationTrend,
-    inputSchema: z.object({
-      startYear: z.number().optional(),
-      endYear: z.number().optional(),
-    }),
-    outputSchema: z.array(
-      z.object({
-        year: z.number(),
-        population: z.number(),
-        growthRate: z.number(),
-      }),
-    ),
-  },
-];
+```bash
+npm run dev          # Run Convex + Next.js dev servers
+npm run build        # Production build
+npm run lint         # ESLint
 ```
 
-Find more information about tools [here.](https://docs.tambo.co/concepts/tools)
+## License
 
-### The Magic of Tambo Requires the TamboProvider
-
-Make sure in the TamboProvider wrapped around your app:
-
-```tsx
-...
-<TamboProvider
-  apiKey={process.env.NEXT_PUBLIC_TAMBO_API_KEY!}
-  components={components} // Array of components to control
-  tools={tools} // Array of tools it can use
->
-  {children}
-</TamboProvider>
-```
-
-In this example we do this in the `Layout.tsx` file, but you can do it anywhere in your app that is a client component.
-
-### Voice input
-
-The template includes a `DictationButton` component using the `useTamboVoice` hook for speech-to-text input.
-
-### MCP (Model Context Protocol)
-
-The template includes MCP support for connecting to external tools and resources. You can use the MCP hooks from `@tambo-ai/react/mcp`:
-
-- `useTamboMcpPromptList` - List available prompts from MCP servers
-- `useTamboMcpPrompt` - Get a specific prompt
-- `useTamboMcpResourceList` - List available resources
-
-See `src/components/tambo/mcp-components.tsx` for example usage.
-
-### Change where component responses are shown
-
-The components used by tambo are shown alongside the message response from tambo within the chat thread, but you can have the result components show wherever you like by accessing the latest thread message's `renderedComponent` field:
-
-```tsx
-const { thread } = useTambo();
-const latestComponent =
-  thread?.messages[thread.messages.length - 1]?.renderedComponent;
-
-return (
-  <div>
-    {latestComponent && (
-      <div className="my-custom-wrapper">{latestComponent}</div>
-    )}
-  </div>
-);
-```
-
-For more detailed documentation, visit [Tambo's official docs](https://docs.tambo.co).
+[MIT](./LICENSE)
