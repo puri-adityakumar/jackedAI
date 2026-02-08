@@ -1,7 +1,7 @@
 <h1 align="center">JackedAI</h1>
 
 <p align="center">
-  <a href="#">Demo Video (coming soon)</a>
+  <a href="https://youtu.be/SDbjxEYgZVc?si=ADw7NUsnS_C5VVcX">Demo Video</a>
 </p>
 
 <p align="center">
@@ -16,10 +16,103 @@
 <p align="center">AI-powered gym tracker — log workouts, meals, and calories through natural language conversations.</p>
 
 <h3 align="center">
-  <a href="#">LIVE</a> &nbsp;|&nbsp; <a href="#">DEMO</a>
+  <a href="#">LIVE</a> &nbsp;|&nbsp; <a href="https://youtu.be/SDbjxEYgZVc?si=ADw7NUsnS_C5VVcX">DEMO</a>
 </h3>
 
 > **PIN:** `123456` — Use this PIN to access the demo.
+
+---
+
+## Architecture
+
+```mermaid
+graph TD
+    subgraph Client["Next.js 15 App"]
+        UI["Dashboard / Chat / Settings"]
+        UI --> Tambo
+
+        subgraph Tambo["Tambo AI Provider"]
+            Butler["Butler Mode<br/><i>Quick Logging</i>"]
+            Trainer["Trainer Mode<br/><i>Fitness Advice</i>"]
+            Butler --> Tools
+            Trainer --> Tools
+            Tools["Tool Selection<br/><i>fitness-tools.ts</i>"]
+        end
+
+        subgraph GenUI["Generative UI Components"]
+            ELC["ExerciseLogCard"]
+            MLC["MealLogCard"]
+            DPC["DailyProgressCard"]
+            RC["ReminderCard"]
+            GR["Graph"]
+        end
+
+        Tools --> API["API Routes<br/>/api/*"]
+        Tools --> GenUI
+    end
+
+    API --> Convex
+    API --> ExerciseDB["ExerciseDB API<br/><i>RapidAPI</i>"]
+
+    subgraph Convex["Convex (Real-time DB)"]
+        exerciseLogs
+        mealLogs
+        workoutPlans
+        reminders
+        userProfile
+        bodyStats
+        personalRecords
+        achievements
+    end
+
+    Convex --> GenUI
+```
+
+### Data Flow
+
+```mermaid
+flowchart LR
+    A["User Input"] --> B["Tambo AI"]
+    B --> C["Tool Selection"]
+    C --> D["API Route"]
+    D --> E["Convex DB"]
+    E --> F["Tool Output"]
+    F --> G["Component Render"]
+```
+
+### Key Concepts
+
+- **Two AI Modes** — **Butler** for quick data logging ("Log 3 sets of bench at 60kg"), **Trainer** for fitness advice ("How do I fix my squat form?")
+- **Generative UI** — Tambo renders rich components (cards, charts, progress summaries) inline in the chat based on tool outputs
+- **Real-time Database** — Convex provides reactive queries, so dashboards update instantly when data changes
+- **PIN Protection** — App-level lock screen with hashed PIN storage and lockout after failed attempts
+
+### Project Structure
+
+```
+src/
+├── app/
+│   ├── page.tsx              # Main app (tabs + chat sidebar)
+│   ├── chat/                 # Full-screen chat view
+│   └── api/                  # API routes (Convex bridge)
+├── components/
+│   ├── tambo/                # AI-rendered components
+│   └── ui/                   # Shared UI components
+├── lib/
+│   └── tambo.ts              # Component & tool registry
+└── services/
+    ├── fitness-tools.ts      # Tool implementations
+    └── exercisedb.ts         # ExerciseDB API client
+convex/
+├── schema.ts                 # Database schema
+├── exerciseLogs.ts           # Exercise CRUD + queries
+├── mealLogs.ts               # Meal CRUD + queries
+├── workoutPlans.ts           # Workout plan management
+├── reminders.ts              # Reminder system
+├── bodyStats.ts              # Body measurements
+├── personalRecords.ts        # PR tracking
+└── achievements.ts           # Badge system
+```
 
 ---
 
