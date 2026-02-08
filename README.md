@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://youtu.be/SDbjxEYgZVc?si=ADw7NUsnS_C5VVcX">Demo Video</a>
+  <img src="https://github.com/user-attachments/assets/de7e3a64-d700-436a-a230-4ec888fc29d5" alt="JackedAI Demo" width="800" />
 </p>
 
 <p align="center">
@@ -22,7 +22,7 @@
 <p align="center">AI-powered gym tracker — log workouts, meals, and calories through natural language conversations.</p>
 
 <h3 align="center">
-  <a href="https://jacked-ai.vercel.app/">LIVE</a> &nbsp;|&nbsp; <a href="https://youtu.be/SDbjxEYgZVc?si=ADw7NUsnS_C5VVcX">DEMO</a>
+  <a href="https://jacked-ai.vercel.app/">LIVE</a> &nbsp;|&nbsp; <a href="https://youtu.be/SDbjxEYgZVc?si=ADw7NUsnS_C5VVcX">YOUTUBE</a>
 </h3>
 
 > **PIN:** `123456` — Use this PIN to access the demo.

@@ -48,3 +48,7 @@ next-env.d.ts
 
 # agents
 .agents/
+
+# dir
+market/
+blog/
