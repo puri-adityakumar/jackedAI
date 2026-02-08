@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/de7e3a64-d700-436a-a230-4ec888fc29d5" alt="JackedAI Demo" width="800" />
+  <video src="https://github.com/user-attachments/assets/de7e3a64-d700-436a-a230-4ec888fc29d5" width="800" controls></video>
 </p>
 
 <p align="center">
