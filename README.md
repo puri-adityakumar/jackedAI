@@ -1,6 +1,12 @@
 <h1 align="center">JackedAI</h1>
 
 <p align="center">
+  <img src="public/logo.svg" alt="JackedAI" width="60" />
+  &nbsp;&nbsp;<b>x</b>&nbsp;&nbsp;
+  <img src="public/Tambo-Lockup.svg" alt="Tambo" width="120" />
+</p>
+
+<p align="center">
   <a href="https://youtu.be/SDbjxEYgZVc?si=ADw7NUsnS_C5VVcX">Demo Video</a>
 </p>
 
@@ -16,7 +22,7 @@
 <p align="center">AI-powered gym tracker — log workouts, meals, and calories through natural language conversations.</p>
 
 <h3 align="center">
-  <a href="#">LIVE</a> &nbsp;|&nbsp; <a href="https://youtu.be/SDbjxEYgZVc?si=ADw7NUsnS_C5VVcX">DEMO</a>
+  <a href="https://jacked-ai.vercel.app/">LIVE</a> &nbsp;|&nbsp; <a href="https://youtu.be/SDbjxEYgZVc?si=ADw7NUsnS_C5VVcX">DEMO</a>
 </h3>
 
 > **PIN:** `123456` — Use this PIN to access the demo.
@@ -119,7 +125,7 @@ convex/
 ## Setup
 
 ```bash
-git clone https://github.com/your-username/jackedAI.git
+git clone https://github.com/puri-adityakumar/jackedAI.git
 cd jackedAI
 npm install
 cp .env.example .env.local  # fill in your keys
